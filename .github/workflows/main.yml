@@ -94,5 +94,5 @@ jobs:
       - name: Download libroadrunner-deps install artifacts
         uses: actions/download-artifact@v3
         with:
-          name: libroadrunner-deps-$(runner.os)-$(BuildType)
+          name: sys-bio/libroadrunner-deps-$(runner.os)-$(BuildType)
           path: ${{ env.DEPS_INSTALL_PREFIX }}
