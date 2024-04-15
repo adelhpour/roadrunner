@@ -17,13 +17,6 @@ jobs:
       - name: Checkout RoadRunner
         uses: actions/checkout@v3
 
-      - name: Download llvm binaries
-        shell: bash
-        run: |
-          curl -L ${{ matrix.os.llvm_link }} > llvm.zip
-          unzip llvm.zip
-          ls llvm
-
       - name: Create build directory
         run: mkdir -p ${{ runner.workspace }}/build-roadrunner
 
