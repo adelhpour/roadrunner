@@ -25,12 +25,9 @@ jobs:
       - name: Setup Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
 
-      - name: Configure CMake
+      - name: Download llvm binaries
         shell: bash
-        working-directory: ${{runner.workspace}}/build-roadrunner
         run: |
-          cmake $GITHUB_WORKSPACE \
-          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-          -DCMAKE_C_COMPILER_LAUNCHER=${COMPILER_LAUNCHER} \
-          -DCMAKE_CXX_COMPILER_LAUNCHER=${COMPILER_LAUNCHER} \
-          -DCMAKE_INSTALL_PREFIX="${{runner.workspace}}/install-roadrunner"
+          curl -L 'https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-macosx_11_7_x86_64.zip' > llvm.zip
+          unzip llvm.zip
+          mv llvm-13.x-macosx_11_7_x86_64 llvm
