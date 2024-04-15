@@ -18,11 +18,13 @@ jobs:
           - name: macos-latest
             llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-macosx_11_7_x86_64.zip"
           - name: windows-latest
-            if : matrix.build_type == 'Release':
-              llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-msvc2022-x64-rel.zip"
-            else:
-              llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-msvc2022-x64-dbg.zip"
-        build_type: [Release, Debug]
+            llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-msvc2022-x64-${{ matrix.build_type.abbreviation }}.zip"
+        build_type:
+          - name: Release
+            abbreviation: rel
+          - name: Debug
+            abbreviation: dbg
+
     runs-on: ${{ matrix.os.name }}
 
     steps:
