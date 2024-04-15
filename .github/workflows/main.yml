@@ -8,7 +8,7 @@ on:
 jobs:
   build_on_OSs:
     name:
-      Build on ${{ matrix.os }}
+      Build on ${{ matrix.os.name }}
     strategy:
       fail-fast: false
       matrix:
@@ -20,7 +20,7 @@ jobs:
           - name: windows-latest
             llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-msvc2022-x64-rel.zip"
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os.name }}
 
     steps:
       - name: Checkout RoadRunner
