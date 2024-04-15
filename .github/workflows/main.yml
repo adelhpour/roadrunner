@@ -7,11 +7,11 @@ on:
 
 jobs:
   build_on_OSs:
-    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         platform: [ "ubuntu-latest", "macos-latest", "windows-latest" ]
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout RoadRunner
