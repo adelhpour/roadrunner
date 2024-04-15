@@ -10,24 +10,28 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        os:
+          - name: ubuntu-latest
+            llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-macosx_11_7_x86_64.zip"
+          - name: macos-latest
+            llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-macosx_11_7_x86_64.zip"
+          - name: windows-latest
+            llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-macosx_11_7_x86_64.zip"
         build_type: [ Release, Debug ]
 
     steps:
-      - name: Checkout with submodules
+      - name: Checkout RoadRunner
         uses: actions/checkout@v3
-        with:
-          submodules: true
+
+      - name: Download llvm binaries
+        shell: bash
+        run: |
+          curl -L ${{ matrix.os.llvm_link }} > llvm.zip
+          unzip llvm.zip
+          ls llvm
 
       - name: Create build directory
         run: mkdir -p ${{ runner.workspace }}/build-roadrunner
 
       - name: Setup Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
-
-      - name: Download llvm binaries
-        shell: bash
-        run: |
-          curl -L 'https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-macosx_11_7_x86_64.zip' > llvm.zip
-          unzip llvm.zip
-          mv llvm-13.x-macosx_11_7_x86_64 llvm
