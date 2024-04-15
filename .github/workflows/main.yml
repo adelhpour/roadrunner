@@ -1,4 +1,4 @@
-name: BuildRoadRunner - ${{ matrix.os }} - ${{ matrix.build_type }}
+name: BuildRoadRunner - ${{ steps.set_date.outputs.current_datetime }}
 
 on:
   push:
