@@ -1,4 +1,4 @@
-name: BuildRoadRunner - ${{ steps.set_date.outputs.current_datetime }}
+name: BuildRoadRunner
 
 on:
   push:
