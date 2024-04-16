@@ -33,13 +33,13 @@ jobs:
           curl -L -o libroadrunner-deps.zip ${{ matrix.platform.libroadrunner_deps_link }}
           unzip -q libroadrunner-deps.zip
           rm libroadrunner-deps.zip
-          echo "showing ${{runner.workspace}} contents"
+          echo "a) showing ${{runner.workspace}} contents"
           ls ${{runner.workspace}}
-          echo "showing ${{runner.workspace}}/libroadrunner-deps contents"
+          echo "b) showing ${{runner.workspace}}/libroadrunner-deps contents"
           ls ${{runner.workspace}}/libroadrunner-deps
-          echo "showing ${{runner.workspace}}/libroadrunner-deps/install-azure contents"
+          echo "c) showing ${{runner.workspace}}/libroadrunner-deps/install-azure contents"
           ls ${{runner.workspace}}/libroadrunner-deps/install-azure
-          echo "showing ${{runner.workspace}}/libroadrunner-deps/install-azure/Release contents"
+          echo "d) showing ${{runner.workspace}}/libroadrunner-deps/install-azure/Release contents"
           ls ${{runner.workspace}}/libroadrunner-deps/install-azure/Release
           echo "${{runner.workspace}}/libroadrunner-deps/install-azure/Release" >> $GITHUB_PATH
 
