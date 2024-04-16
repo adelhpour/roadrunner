@@ -52,9 +52,9 @@ jobs:
       - name: Install ccache
         shell: bash
         run: |
-          if [ {{ matrix.platform.os_name }} == 'macos-latest' ]; then
+          if [ "${{ matrix.platform.os_name }}" == 'macos-latest' ]; then
             brew install ccache
-          else if [ {{ matrix.platform.os_name }} == 'ubuntu-latest' ]; then
+          elif [ "${{ matrix.platform.os_name }}" == 'ubuntu-latest' ]; then
             apt-get update
             apt-get install -y ccache
           fi
