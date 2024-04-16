@@ -38,7 +38,7 @@ jobs:
 
       - name: Download LLVM
         run: |
-          curl -L -o llvm.zip ${{ matrix.platform.llvm_link }}
+          curl -L -o llvm.zip ${{ matrix.platform.llvm_link }} > llvm.zip
           unzip -q llvm.zip
           rm llvm.zip
           echo "displaying ${{runner.workspace}}"
