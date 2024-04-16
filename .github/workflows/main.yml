@@ -110,8 +110,8 @@ jobs:
           -DBUILD_TESTS=ON \
           -DBUILD_RR_PLUGINS=ON \
           -DBUILD_RR_CAPI=ON \
-          -DCMAKE_INSTALL_PREFIX="${{runner.workspace}}/install-roadrunner"
-          -DRR_DEPENDENCIES_INSTALL_PREFIX="${{runner.workspace}}/roadrunner/libroadrunner-deps/install-azure/Release"
+          -DCMAKE_INSTALL_PREFIX="${{runner.workspace}}/install-roadrunner" \
+          -DRR_DEPENDENCIES_INSTALL_PREFIX="${{runner.workspace}}/roadrunner/libroadrunner-deps/install-azure/Release" \
           ${LLVM_OPTIONS}
 
       - name: Build and Install RoadRunner
