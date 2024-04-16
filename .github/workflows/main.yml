@@ -154,9 +154,6 @@ jobs:
           ${LLVM_DIR} \
           ${SWIG_DIR} \
           -DBUILD_PYTHON=ON \
-          -DBUILD_TESTS=ON \
-          -DBUILD_RR_PLUGINS=ON \
-          -DBUILD_RR_CAPI=ON \
           -DCMAKE_INSTALL_PREFIX="${{ runner.workspace }}/install-roadrunner"
 
       - name: Build and Install RoadRunner
