@@ -35,7 +35,6 @@ jobs:
         if: matrix.platform.os_name == 'macos-latest'
         shell: bash
         run: |
-          cd ${{runner.workspace}}/roadrunner
           brew install pcre pcre2
           mkdir -p ${{runner.workspace}}/swig
           curl -L https://prdownloads.sourceforge.net/swig/swig-4.0.2.tar.gz > swig.tar.gz
@@ -43,13 +42,16 @@ jobs:
           cd ${{runner.workspace}}/swig
           ./configure --prefix=${{runner.workspace}}/swig
           make -j 12
+          echo "displaying swig install directory"
+          ls ${{runner.workspace}}/swig
+          ls ${{runner.workspace}}/swig/bin
           make install
           echo SWIG_DIR="-DSWIG_EXECUTABLE=${{runner.workspace}}/swig/bin/swig" >> "${GITHUB_ENV}"
           ls ${{runner.workspace}}/swig/bin
+          cd ${{runner.workspace}}/roadrunner
 
       - name: Download libRoadRunner dependencies
         run: |
-          cd ${{runner.workspace}}/roadrunner
           curl -L ${{ matrix.platform.libroadrunner_deps_link }} > libroadrunner-deps.zip
           unzip -q libroadrunner-deps.zip -d libroadrunner-deps
           rm libroadrunner-deps.zip
@@ -57,7 +59,6 @@ jobs:
 
       - name: Download LLVM
         run: |
-          cd ${{runner.workspace}}/roadrunner
           curl -L ${{ matrix.platform.llvm_link }} > llvm.zip
           unzip -q llvm.zip -d llvm
           rm llvm.zip
@@ -105,7 +106,6 @@ jobs:
         run: pip${{ matrix.python_version.version }} install numpy
 
       - name: Create build directory
-        cd ${{runner.workspace}}
         run: mkdir -p ${{ runner.workspace }}/build-roadrunner
 
       - name: Configure CMake for RoadRunner
