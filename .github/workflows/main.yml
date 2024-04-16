@@ -52,12 +52,12 @@ jobs:
       - name: Install ccache
         shell: bash
         run: |
-        if [ {{ matrix.platform.os_name }} == 'macos-latest' ]; then
-          brew install ccache
-        else if [ {{ matrix.platform.os_name }} == 'ubuntu-latest' ]; then
-          apt-get update
-          apt-get install -y ccache
-        fi
+          if [ {{ matrix.platform.os_name }} == 'macos-latest' ]; then
+            brew install ccache
+          else if [ {{ matrix.platform.os_name }} == 'ubuntu-latest' ]; then
+            apt-get update
+            apt-get install -y ccache
+          fi
 
       - name: Prepare ccache timestamp on non-Windows platforms
         if: matrix.platform.os_name != 'windows-latest'
