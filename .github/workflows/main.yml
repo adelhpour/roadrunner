@@ -90,19 +90,9 @@ jobs:
 
       - name: Download libRoadRunner dependencies binaries
         run: |
-          echo "aa) displaying the contents of the directory"
-          pwd
           curl -L ${{ matrix.platform.libroadrunner_deps_link }} > libroadrunner-deps.zip
           unzip -q libroadrunner-deps.zip -d libroadrunner-deps
           rm libroadrunner-deps.zip
-          echo "a) displaying the contents of the directory"
-          ls ${{ runner.workspace }}
-          echo "b) displaying the contents of the directory"
-          ls ${{ runner.workspace }}/roadrunner
-          echo "c) displaying the contents of the directory"
-          ls ${{ runner.workspace }}/roadrunner/libroadrunner-deps
-          echo "d) displaying the contents of the directory"
-          ls ${{ runner.workspace }}/roadrunner/libroadrunner-deps/libroadrunner-deps-Darwin-Release/install-azure
           echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${{ runner.workspace }}/roadrunner/libroadrunner-deps/libroadrunner-deps-Darwin-Release/install-azure/Release" >> "${GITHUB_ENV}"
 
       - name: Download LLVM binaries
@@ -128,7 +118,6 @@ jobs:
           ${LIBROADRUNNER_DEPENDENCIES_DIR} \
           ${LLVM_DIR} \
           ${SWIG_DIR} \
-          -DBUILD_PYTHON=ON \
           -DBUILD_TESTS=ON \
           -DBUILD_RR_PLUGINS=ON \
           -DBUILD_RR_CAPI=ON \
