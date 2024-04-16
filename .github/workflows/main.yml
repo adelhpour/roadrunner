@@ -40,14 +40,17 @@ jobs:
           curl -L https://prdownloads.sourceforge.net/swig/swig-4.0.2.tar.gz > swig.tar.gz
           tar -xzf swig.tar.gz -C ${{runner.workspace}}/swig --strip-components=1
           cd ${{runner.workspace}}/swig
-          ./configure --prefix=${{runner.workspace}}/swig
+          ./configure --prefix=${{runner.workspace}}/swig/install-swig
           make -j 12
-          echo "displaying swig install directory"
-          ls ${{runner.workspace}}/swig
-          ls ${{runner.workspace}}/swig/bin
           make install
+          echo "a) displaying swig install directory"
+          ls ${{runner.workspace}}/swig
+          echo "b) displaying swig install directory"
+          ls ${{runner.workspace}}/swig/install-swig
+          echo "c) displaying swig install directory"
+          ls ${{runner.workspace}}/swig/install-swig/bin
+          
           echo SWIG_DIR="-DSWIG_EXECUTABLE=${{runner.workspace}}/swig/bin/swig" >> "${GITHUB_ENV}"
-          ls ${{runner.workspace}}/swig/bin
           cd ${{runner.workspace}}/roadrunner
 
       - name: Download libRoadRunner dependencies
