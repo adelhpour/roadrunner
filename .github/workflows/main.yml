@@ -8,49 +8,18 @@ on:
 jobs:
   build_on_OSs:
     name:
-      Build on ${{ matrix.os.name }} - ${{ matrix.build_type.name }} - Python ${{ matrix.python_version.name }}
+      Build on ${{ matrix.os.name }} - ${{ matrix.build_type.name }} - Python${{ matrix.python_version.version }}
     strategy:
       fail-fast: false
       matrix:
-        build_type:
-          - name: Release
-            abbreviation: rel
-          - name: Debug
-            abbreviation: dbg
         os:
-          - name: ubuntu-latest-debug
-            os_name: ubuntu-latest
-            build_type: Debug
-            llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm13-ubuntu-gcc10-rel.tar.gz"
-          - name: ubuntu-latest-release
-            os_name: ubuntu-latest
-            build_type: Release
-            llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm13-ubuntu-gcc10-rel.tar.gz"
-          - name: macos-latest-debug
-            os_name: macos-latest
-            build_type: Debug
-            llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-macosx_11_7_x86_64.zip"
           - name: macos-latest-release
             os_name: macos-latest
             build_type: Release
             llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-macosx_11_7_x86_64.zip"
-          - name: windows-latest-debug
-            os_name: windows-latest
-            build_type: Debug
-            llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-msvc2022-x64-dbg.zip"
-          - name: windows-latest-release
-            os_name: windows-latest
-            build_type: Release
-            llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-msvc2022-x64-rel.zip"
         python_version:
-          - name: py39
-            version: 3.9
           - name: py310
             version: 3.10
-          - name: py311
-            version: 3.11
-          - name: py312
-            version: 3.12
     runs-on: ${{ matrix.os.name }}
 
     steps:
@@ -59,6 +28,11 @@ jobs:
 
       - name: Setup Python
         uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python_version.version }}
+
+      - name: Install Python dependencies
+        run: pip${{ matrix.python_version.version }} install numpy
 
       - name: Create build directory
         run: mkdir -p ${{ runner.workspace }}/build-roadrunner
