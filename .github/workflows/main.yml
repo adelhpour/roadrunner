@@ -103,11 +103,11 @@ jobs:
           cmake $GITHUB_WORKSPACE \
           -G "Ninja" \
           -DCMAKE_BUILD_TYPE=${{ matrix.platform.build_type }} \
-          -DCMAKE_OSX_ARCHITECTURES=${{ matrix.platform.arch }}
+          -DCMAKE_OSX_ARCHITECTURES=${{ matrix.platform.arch }} \
           -DCMAKE_C_COMPILER_LAUNCHER=${COMPILER_LAUNCHER} \
           -DCMAKE_CXX_COMPILER_LAUNCHER=${COMPILER_LAUNCHER} \
           ${LLVM_DIR} \
-          -DRR_DEPENDENCIES_INSTALL_PREFIX="jdlsfjsdlkjdo" \
+          ${LIBROADRUNNER_DEPENDENCIES_DIR} \
           -DBUILD_PYTHON=ON \
           -DBUILD_TESTS=ON \
           -DBUILD_RR_PLUGINS=ON \
