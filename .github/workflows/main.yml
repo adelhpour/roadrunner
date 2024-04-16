@@ -35,19 +35,19 @@ jobs:
           rm llvm.zip
           echo "${{runner.workspace}}/llvm/install" >> $GITHUB_PATH
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python_version.version }}
-
-      - name: Install Python dependencies
-        run: pip${{ matrix.python_version.version }} install numpy
-
-      - name: Install macOS dependencies
+      - name: Install dependencies
         if: matrix.platform == 'macos-latest'
         shell: bash
         run: |
           brew install swig ccache
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python_version.version_string }}
+
+      - name: Install Python dependencies
+        run: pip${{ matrix.python_version.version }} install numpy
 
       - name: Prepare ccache timestamp on non-Windows platforms
         if: matrix.platform != 'windows-latest'
