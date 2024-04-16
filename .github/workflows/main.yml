@@ -30,7 +30,7 @@ jobs:
 
       - name: Download libRoadRunner dependencies
         run: |
-          curl -L -o libroadrunner-deps.zip ${{ matrix.platform.libroadrunner_deps_link }}
+          curl -L -o libroadrunner-deps.zip ${{ matrix.platform.libroadrunner_deps_link }} > libroadrunner-deps.zip
           unzip -q libroadrunner-deps.zip
           rm libroadrunner-deps.zip
           echo "a) showing ${{runner.workspace}}/roadrunner contents"
