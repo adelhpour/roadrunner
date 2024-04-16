@@ -33,15 +33,15 @@ jobs:
           curl -L -o libroadrunner-deps.zip ${{ matrix.platform.libroadrunner_deps_link }}
           unzip -q libroadrunner-deps.zip
           rm libroadrunner-deps.zip
-          echo "a) showing ${{runner.workspace}} contents"
-          ls ${{runner.workspace}}
-          echo "b) showing ${{runner.workspace}}/libroadrunner-deps contents"
-          ls ${{runner.workspace}}/libroadrunner-deps
-          echo "c) showing ${{runner.workspace}}/libroadrunner-deps/install-azure contents"
-          ls ${{runner.workspace}}/libroadrunner-deps/install-azure
-          echo "d) showing ${{runner.workspace}}/libroadrunner-deps/install-azure/Release contents"
-          ls ${{runner.workspace}}/libroadrunner-deps/install-azure/Release
-          echo "${{runner.workspace}}/libroadrunner-deps/install-azure/Release" >> $GITHUB_PATH
+          echo "a) showing ${{runner.workspace}}/roadrunner contents"
+          ls ${{runner.workspace}}/roadrunner
+          echo "b) showing ${{runner.workspace}}/roadrunner/libroadrunner-deps contents"
+          ls ${{runner.workspace}}/roadrunner/libroadrunner-deps
+          echo "c) showing ${{runner.workspace}}/roadrunner/libroadrunner-deps/install-azure contents"
+          ls ${{runner.workspace}}/roadrunner/libroadrunner-deps/install-azure
+          echo "d) showing ${{runner.workspace}}/roadrunner/libroadrunner-deps/install-azure/Release contents"
+          ls ${{runner.workspace}}/roadrunner/libroadrunner-deps/install-azure/Release
+          echo "${{runner.workspace}}/roadrunner/libroadrunner-deps/install-azure/Release" >> $GITHUB_PATH
 
       - name: Download LLVM
         run: |
