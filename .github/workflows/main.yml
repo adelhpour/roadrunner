@@ -33,6 +33,7 @@ jobs:
 
       - name: Install swig
         if: matrix.platform.os_name == 'macos-latest'
+        # installing the latest version of swig leads to a build error. So we need to build a specific version from source
         shell: bash
         run: |
           brew install pcre pcre2
@@ -43,14 +44,7 @@ jobs:
           ./configure --prefix=${{runner.workspace}}/swig/install-swig
           make -j 12
           make install
-          echo "a) displaying swig install directory"
-          ls ${{runner.workspace}}/swig
-          echo "b) displaying swig install directory"
-          ls ${{runner.workspace}}/swig/install-swig
-          echo "c) displaying swig install directory"
-          ls ${{runner.workspace}}/swig/install-swig/bin
-          
-          echo SWIG_DIR="-DSWIG_EXECUTABLE=${{runner.workspace}}/swig/bin/swig" >> "${GITHUB_ENV}"
+          echo SWIG_DIR="-DSWIG_EXECUTABLE=${{runner.workspace}}/swig/install-swig/bin/swig" >> "${GITHUB_ENV}"
           cd ${{runner.workspace}}/roadrunner
 
       - name: Download libRoadRunner dependencies
