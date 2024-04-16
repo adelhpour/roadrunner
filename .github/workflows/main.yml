@@ -19,31 +19,31 @@ jobs:
             build_type: Release
             llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-macosx_11_7_x86_64.zip"
             libroadrunner_deps_link: "https://dev.azure.com/TheRoadrunnerProject/10f68fb1-1fa1-4069-92b5-24c5b7fee3e5/_apis/build/builds/2368/artifacts?artifactName=libroadrunner-deps-Darwin-Release-x86_64&api-version=7.1&%24format=zip"
-          #- name: macos-latest-debug
-          #  os_name: macos-latest
-          #  arch: x86_64
-          #  build_type: Debug
-          #  llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-macosx_11_7_x86_64.zip"
-          #  libroadrunner_deps_link: "https://dev.azure.com/TheRoadrunnerProject/10f68fb1-1fa1-4069-92b5-24c5b7fee3e5/_apis/build/builds/2368/artifacts?artifactName=libroadrunner-deps-Darwin-Debug-x86_64&api-version=7.1&%24format=zip"
-          #- name: ubuntu-latest-release
-          #  os_name: ubuntu-latest
-          #  build_type: Release
-          #  llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm13-ubuntu-gcc10-rel.tar.gz"
-          #  libroadrunner_deps_link: "https://artproduks1.artifacts.visualstudio.com/Aa0252f86-2cf2-4dee-a2a7-c18ef21823c3/10f68fb1-1fa1-4069-92b5-24c5b7fee3e5/_apis/artifact/cGlwZWxpbmVhcnRpZmFjdDovL1RoZVJvYWRydW5uZXJQcm9qZWN0L3Byb2plY3RJZC8xMGY2OGZiMS0xZmExLTQwNjktOTJiNS0yNGM1YjdmZWUzZTUvYnVpbGRJZC8yMzY4L2FydGlmYWN0TmFtZS9saWJyb2FkcnVubmVyLWRlcHMtTGludXgtUmVsZWFzZQ2/content?format=zip"
-          #- name: ubuntu-latest-debug
-          #  os_name: ubuntu-latest
-          #  build_type: Debug
-          #  llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm13-ubuntu-gcc10-rel.tar.gz"
-          #  libroadrunner_deps_link: "https://artproduks1.artifacts.visualstudio.com/Aa0252f86-2cf2-4dee-a2a7-c18ef21823c3/10f68fb1-1fa1-4069-92b5-24c5b7fee3e5/_apis/artifact/cGlwZWxpbmVhcnRpZmFjdDovL1RoZVJvYWRydW5uZXJQcm9qZWN0L3Byb2plY3RJZC8xMGY2OGZiMS0xZmExLTQwNjktOTJiNS0yNGM1YjdmZWUzZTUvYnVpbGRJZC8yMzY4L2FydGlmYWN0TmFtZS9saWJyb2FkcnVubmVyLWRlcHMtTGludXgtRGVidWc1/content?format=zip"
+          - name: macos-latest-debug
+            os_name: macos-latest
+            arch: x86_64
+            build_type: Debug
+            llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-macosx_11_7_x86_64.zip"
+            libroadrunner_deps_link: "https://dev.azure.com/TheRoadrunnerProject/10f68fb1-1fa1-4069-92b5-24c5b7fee3e5/_apis/build/builds/2368/artifacts?artifactName=libroadrunner-deps-Darwin-Debug-x86_64&api-version=7.1&%24format=zip"
+          - name: ubuntu-latest-release
+            os_name: ubuntu-latest
+            build_type: Release
+            llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm13-ubuntu-gcc10-rel.tar.gz"
+            libroadrunner_deps_link: "https://artproduks1.artifacts.visualstudio.com/Aa0252f86-2cf2-4dee-a2a7-c18ef21823c3/10f68fb1-1fa1-4069-92b5-24c5b7fee3e5/_apis/artifact/cGlwZWxpbmVhcnRpZmFjdDovL1RoZVJvYWRydW5uZXJQcm9qZWN0L3Byb2plY3RJZC8xMGY2OGZiMS0xZmExLTQwNjktOTJiNS0yNGM1YjdmZWUzZTUvYnVpbGRJZC8yMzY4L2FydGlmYWN0TmFtZS9saWJyb2FkcnVubmVyLWRlcHMtTGludXgtUmVsZWFzZQ2/content?format=zip"
+          - name: ubuntu-latest-debug
+            os_name: ubuntu-latest
+            build_type: Debug
+            llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm13-ubuntu-gcc10-rel.tar.gz"
+            libroadrunner_deps_link: "https://artproduks1.artifacts.visualstudio.com/Aa0252f86-2cf2-4dee-a2a7-c18ef21823c3/10f68fb1-1fa1-4069-92b5-24c5b7fee3e5/_apis/artifact/cGlwZWxpbmVhcnRpZmFjdDovL1RoZVJvYWRydW5uZXJQcm9qZWN0L3Byb2plY3RJZC8xMGY2OGZiMS0xZmExLTQwNjktOTJiNS0yNGM1YjdmZWUzZTUvYnVpbGRJZC8yMzY4L2FydGlmYWN0TmFtZS9saWJyb2FkcnVubmVyLWRlcHMtTGludXgtRGVidWc1/content?format=zip"
         python_version:
-          #- name: py39
-          #  version: "3.9"
-          #- name: py310
-          #  version: "3.10"
+          - name: py39
+            version: "3.9"
+          - name: py310
+            version: "3.10"
           - name: py311
             version: "3.11"
-          #- name: py312
-          #  version: "3.12"
+          - name: py312
+            version: "3.12"
     runs-on: ${{ matrix.platform.os_name }}
 
     steps:
@@ -153,6 +153,8 @@ jobs:
           -DBUILD_TESTS=ON \
           -DBUILD_RR_CAPI=ON \
           -DCMAKE_INSTALL_PREFIX="${{ runner.workspace }}/install-roadrunner"
+
+        #-DBUILD_RR_PLUGINS=ON
 
       - name: Build and Install RoadRunner
         working-directory: ${{ runner.workspace }}/build-roadrunner
