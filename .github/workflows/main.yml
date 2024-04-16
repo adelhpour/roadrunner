@@ -28,23 +28,27 @@ jobs:
       - name: Checkout RoadRunner
         uses: actions/checkout@v3
 
+      - name: Download libRoadRunner dependencies
+        run: |
+          curl -L -o libroadrunner-deps.zip ${{ matrix.platform.libroadrunner_deps_link }}
+          unzip -q libroadrunner-deps.zip
+          rm libroadrunner-deps.zip
+          echo "showing ${{runner.workspace}} contents"
+          ls ${{runner.workspace}}
+          echo "showing ${{runner.workspace}}/libroadrunner-deps contents"
+          ls ${{runner.workspace}}/libroadrunner-deps
+          echo "showing ${{runner.workspace}}/libroadrunner-deps/install-azure contents"
+          ls ${{runner.workspace}}/libroadrunner-deps/install-azure
+          echo "showing ${{runner.workspace}}/libroadrunner-deps/install-azure/Release contents"
+          ls ${{runner.workspace}}/libroadrunner-deps/install-azure/Release
+          echo "${{runner.workspace}}/libroadrunner-deps/install-azure/Release" >> $GITHUB_PATH
+
       - name: Download LLVM
         run: |
           curl -L -o llvm.zip ${{ matrix.platform.llvm_link }}
           unzip -q llvm.zip
           rm llvm.zip
           echo "${{runner.workspace}}/llvm/install" >> $GITHUB_PATH
-
-      - name: Download libRoadRunner dependencies
-        run: |
-          curl -L -o libroadrunner-deps.zip ${{ matrix.platform.libroadrunner_deps_link }}
-          unzip -q libroadrunner-deps.zip
-          rm libroadrunner-deps.zip
-          ls ${{runner.workspace}}
-          ls ${{runner.workspace}}/libroadrunner-deps
-          ls ${{runner.workspace}}/libroadrunner-deps/install-azure
-          ls ${{runner.workspace}}/libroadrunner-deps/install-azure/Release
-          echo "${{runner.workspace}}/libroadrunner-deps/install-azure/Release" >> $GITHUB_PATH
 
       - name: Install swig
         if: matrix.platform == 'macos-latest'
