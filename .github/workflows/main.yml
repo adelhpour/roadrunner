@@ -43,6 +43,9 @@ jobs:
           cd ${{runner.workspace}}/swig
           ./configure --prefix=${{runner.workspace}}/swig/install
           make -j 12
+          echo "displaying swig install directory"
+          ls ${{runner.workspace}}/swig
+          ls ${{runner.workspace}}/swig/install
           make install
           echo SWIG_DIR="-DSWIG_EXECUTABLE=${{runner.workspace}}/swig/install/bin/swig" >> "${GITHUB_ENV}"
           ls ${{runner.workspace}}/swig/install/bin
