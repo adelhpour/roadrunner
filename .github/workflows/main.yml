@@ -40,6 +40,9 @@ jobs:
           curl -L -o libroadrunner-deps.zip ${{ matrix.platform.libroadrunner_deps_link }}
           unzip -q libroadrunner-deps.zip
           rm libroadrunner-deps.zip
+          ls ${{runner.workspace}}
+          ls ${{runner.workspace}}/libroadrunner-deps
+          ls ${{runner.workspace}}/libroadrunner-deps/install-azure
           ls ${{runner.workspace}}/libroadrunner-deps/install-azure/Release
           echo "${{runner.workspace}}/libroadrunner-deps/install-azure/Release" >> $GITHUB_PATH
 
