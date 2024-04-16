@@ -8,7 +8,7 @@ on:
 jobs:
   build_on_OSs:
     name:
-      Build on ${{ matrix.os.name }} - ${{ matrix.build_type.name }} - Python${{ matrix.python_version.version }}
+      Build on ${{ matrix.os.name }} - ${{ matrix.build_type.name }} - Python${{ matrix.python_version.version_string }}
     strategy:
       fail-fast: false
       matrix:
@@ -20,6 +20,7 @@ jobs:
         python_version:
           - name: py310
             version: 3.10
+            version_string: "3.10"
     runs-on: ${{ matrix.os.name }}
 
     steps:
