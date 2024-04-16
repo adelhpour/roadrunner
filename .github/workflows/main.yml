@@ -20,8 +20,8 @@ jobs:
             llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-macosx_11_7_x86_64.zip"
             libroadrunner_deps_link: "https://github.com/sys-bio/libroadrunner-deps/releases/download/v2.1/libroadrunner-deps-Darwin-Release.zip"
         python_version:
-          - name: py310
-            version: "3.10"
+          - name: py311
+            version: "3.11"
     runs-on: ${{ matrix.platform.os_name }}
 
     steps:
@@ -34,31 +34,23 @@ jobs:
           unzip -q libroadrunner-deps.zip
           mv libroadrunner-deps-Darwin-Release libroadrunner-deps
           rm libroadrunner-deps.zip
-          echo "a) showing ${{runner.workspace}}/roadrunner contents"
-          ls ${{runner.workspace}}/roadrunner
-          echo "b) showing ${{runner.workspace}}/roadrunner/libroadrunner-deps contents"
-          ls ${{runner.workspace}}/roadrunner/libroadrunner-deps
-          echo "c) showing ${{runner.workspace}}/roadrunner/libroadrunner-deps/install-azure contents"
-          ls ${{runner.workspace}}/roadrunner/libroadrunner-deps/install-azure
-          echo "d) showing ${{runner.workspace}}/roadrunner/libroadrunner-deps/install-azure/Release contents"
-          ls ${{runner.workspace}}/roadrunner/libroadrunner-deps/install-azure/Release
-          echo "${{runner.workspace}}/roadrunner/libroadrunner-deps/install-azure/Release" >> $GITHUB_PATH
+          echo LIBROADRUNNER_DEPENDENCIES_OPTIONS="-DRR_DEPENDENCIES_INSTALL_PREFIX=${{runner.workspace}}/roadrunner/libroadrunner-deps/install-azure/Release" >> "${GITHUB_ENV}"
 
       - name: Download LLVM
         run: |
           curl -L -o llvm.zip ${{ matrix.platform.llvm_link }}
           unzip -q llvm.zip
           rm llvm.zip
-          echo "${{runner.workspace}}/llvm/install" >> $GITHUB_PATH
+          echo LLVM_OPTIONS="-DLLVM_INSTALL_PREFIX=${{runner.workspace}}/llvm/install" >> "${GITHUB_ENV}"
 
       - name: Install swig
-        if: matrix.platform == 'macos-latest'
+        if: matrix.platform.os_name == 'macos-latest'
         shell: bash
         run: |
           brew install swig
 
       - name: Install ccache
-        if: matrix.platform == 'macos-latest'
+        if: matrix.platform.os_name == 'macos-latest'
         shell: bash
         run: |
           brew install ccache
@@ -119,6 +111,8 @@ jobs:
           -DBUILD_RR_PLUGINS=ON \
           -DBUILD_RR_CAPI=ON \
           -DCMAKE_INSTALL_PREFIX="${{runner.workspace}}/install-roadrunner"
+          ${LIBROADRUNNER_DEPENDENCIES_OPTIONS} \
+          ${LLVM_OPTIONS}
 
       - name: Build and Install RoadRunner
         working-directory: ${{runner.workspace}}/build-roadrunner
