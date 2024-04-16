@@ -8,7 +8,7 @@ on:
 jobs:
   build_on_OSs:
     name:
-      Build on ${{ matrix.platform.name }} - Python${{ matrix.python_version.version }}
+      Build on ${{ matrix.platform.name }}-python${{ matrix.python_version.version }}
     strategy:
       fail-fast: false
       matrix:
@@ -31,7 +31,7 @@ jobs:
       - name: Download libRoadRunner dependencies
         run: |
           curl -L ${{ matrix.platform.libroadrunner_deps_link }} > libroadrunner-deps.zip
-          unzip libroadrunner-deps.zip
+          unzip -q libroadrunner-deps.zip
           mv libroadrunner-deps-Darwin-Release libroadrunner-deps
           rm libroadrunner-deps.zip
           echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${{runner.workspace}}/roadrunner/libroadrunner-deps/install-azure/Release" >> "${GITHUB_ENV}"
@@ -39,16 +39,9 @@ jobs:
       - name: Download LLVM
         run: |
           curl -L ${{ matrix.platform.llvm_link }} > llvm.zip
-          unzip llvm.zip -d llvm
-          echo "displaying ${{runner.workspace}}"
-          ls ${{runner.workspace}}
-          echo "displaying ${{runner.workspace}}/roadrunner"
-          ls ${{runner.workspace}}/roadrunner
-          echo "displaying ${{runner.workspace}}/roadrunner/llvm"
-          ls ${{runner.workspace}}/roadrunner/llvm
-          echo "displaying ${{runner.workspace}}/roadrunner/llvm/install"
-          ls ${{runner.workspace}}/roadrunner/llvm/install
-          echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${{runner.workspace}}/roadrunner/llvm/install" >> "${GITHUB_ENV}"
+          unzip -q llvm.zip -d llvm
+          rm llvm.zip
+          echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${{runner.workspace}}/roadrunner/llvm" >> "${GITHUB_ENV}"
 
       - name: Install swig
         if: matrix.platform.os_name == 'macos-latest'
