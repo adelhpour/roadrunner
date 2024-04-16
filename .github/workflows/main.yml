@@ -55,8 +55,8 @@ jobs:
           if [ "${{ matrix.platform.os_name }}" == 'macos-latest' ]; then
             brew install ccache
           elif [ "${{ matrix.platform.os_name }}" == 'ubuntu-latest' ]; then
-            apt-get update
-            apt-get install -y ccache
+            sudo apt-get update
+            sudo apt-get install -y ccache
           fi
 
       - name: Prepare ccache timestamp on non-Windows platforms
