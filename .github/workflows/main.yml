@@ -8,7 +8,7 @@ on:
 jobs:
   build_on_OSs:
     name:
-      Build on ${{ matrix.os.name }}
+      Build on ${{ matrix.os.name }} - ${{ matrix.build_type.name }} - Python ${{ matrix.python_version.name }}
     strategy:
       fail-fast: false
       matrix:
