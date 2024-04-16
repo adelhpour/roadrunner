@@ -13,11 +13,12 @@ jobs:
       fail-fast: false
       matrix:
         platform:
-          - name: macos-latest-release
-            os_name: macos-latest
+          - name: macos-10.15-release
+            os_name: macos-10.15
             arch: x86_64
             build_type: Release
             llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-macosx_11_7_x86_64.zip"
+            libroadrunner_deps_link: "https://github.com/sys-bio/libroadrunner-deps/releases/download/v2.1/libroadrunner-deps-Darwin-Release.zip"
         python_version:
           - name: py310
             version: "3.10"
@@ -34,11 +35,25 @@ jobs:
           rm llvm.zip
           echo "${{runner.workspace}}/llvm/install" >> $GITHUB_PATH
 
-      - name: Install dependencies
-        if: matrix.platform == 'macos-latest'
+      - name: Download libRoadRunner dependencies
+        run: |
+          curl -L -o libroadrunner-deps.zip ${{ matrix.platform.libroadrunner_deps_link }}
+          unzip -q libroadrunner-deps.zip
+          rm libroadrunner-deps.zip
+          ls ${{runner.workspace}}/libroadrunner-deps/install-azure/Release
+          echo "${{runner.workspace}}/libroadrunner-deps/install-azure/Release" >> $GITHUB_PATH
+
+      - name: Install swig
+        if: matrix.platform == 'macos-10.15'
         shell: bash
         run: |
-          brew install swig ccache
+          brew install swig
+
+      - name: Install ccache
+        if: matrix.platform == 'macos-10.15'
+        shell: bash
+        run: |
+          brew install ccache
 
       - name: Setup Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
