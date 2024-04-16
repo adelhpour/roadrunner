@@ -28,11 +28,25 @@ jobs:
       - name: Checkout RoadRunner
         uses: actions/checkout@v3
 
+      - name: Install swig
+        if: matrix.platform.os_name == 'macos-latest'
+        shell: bash
+        run: |
+          brew install pcre pcre2
+          mkdir -p ${{runner.workspace}}/swig
+          curl -L https://prdownloads.sourceforge.net/swig/swig-4.0.2.tar.gz > swig.tar.gz
+          tar -xzf swig.tar.gz -C ${{runner.workspace}}/swig --strip-components=1
+          cd ${{runner.workspace}}/swig
+          ./configure --prefix=${{runner.workspace}}/swig/install
+          make -j 12
+          make install
+          echo SWIG_DIR="-DSWIG_EXECUTABLE=${{runner.workspace}}/swig/install/bin/swig" >> "${GITHUB_ENV}"
+          ls ${{runner.workspace}}/swig/install/bin
+
       - name: Download libRoadRunner dependencies
         run: |
           curl -L ${{ matrix.platform.libroadrunner_deps_link }} > libroadrunner-deps.zip
-          unzip -q libroadrunner-deps.zip
-          mv libroadrunner-deps-Darwin-Release libroadrunner-deps
+          unzip -q libroadrunner-deps.zip -d libroadrunner-deps
           rm libroadrunner-deps.zip
           echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${{runner.workspace}}/roadrunner/libroadrunner-deps/install-azure/Release" >> "${GITHUB_ENV}"
 
@@ -42,12 +56,6 @@ jobs:
           unzip -q llvm.zip -d llvm
           rm llvm.zip
           echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${{runner.workspace}}/roadrunner/llvm" >> "${GITHUB_ENV}"
-
-      - name: Install swig
-        if: matrix.platform.os_name == 'macos-latest'
-        shell: bash
-        run: |
-          brew install swig
 
       - name: Install ccache
         if: matrix.platform.os_name == 'macos-latest'
@@ -108,6 +116,7 @@ jobs:
           -DCMAKE_CXX_COMPILER_LAUNCHER=${COMPILER_LAUNCHER} \
           ${LIBROADRUNNER_DEPENDENCIES_DIR} \
           ${LLVM_DIR} \
+          ${SWIG_DIR} \
           -DBUILD_PYTHON=ON \
           -DBUILD_TESTS=ON \
           -DBUILD_RR_PLUGINS=ON \
