@@ -124,7 +124,11 @@ jobs:
       - name: Download LLVM binaries
         run: |
           curl -L ${{ matrix.platform.llvm_link }} > llvm.zip
-          unzip -q llvm.zip -d llvm
+          if [ "${{ matrix.platform.os_name }}" == 'macos-latest' ]; then
+            unzip -q llvm.zip -d llvm
+          else
+            tar -xzf llvm.zip -C llvm --strip-components=1
+          fi
           rm llvm.zip
           echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${{runner.workspace }}/roadrunner/llvm" >> "${GITHUB_ENV}"
 
