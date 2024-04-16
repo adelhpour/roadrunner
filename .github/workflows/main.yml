@@ -28,12 +28,16 @@ jobs:
       - name: Checkout RoadRunner
         uses: actions/checkout@v3
 
+      - name: Setup Ninja
+        uses: seanmiddleditch/gha-setup-ninja@master
+
       - name: Install swig
         if: matrix.platform.os_name == 'macos-latest'
         shell: bash
         run: |
           brew install pcre pcre2
           mkdir -p ${{runner.workspace}}/swig
+          mkdir -p ${{runner.workspace}}/swig/install
           curl -L https://prdownloads.sourceforge.net/swig/swig-4.0.2.tar.gz > swig.tar.gz
           tar -xzf swig.tar.gz -C ${{runner.workspace}}/swig --strip-components=1
           cd ${{runner.workspace}}/swig
@@ -63,17 +67,6 @@ jobs:
         run: |
           brew install ccache
 
-      - name: Setup Ninja
-        uses: seanmiddleditch/gha-setup-ninja@master
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python_version.version }}
-
-      - name: Install Python dependencies
-        run: pip${{ matrix.python_version.version }} install numpy
-
       - name: Prepare ccache timestamp on non-Windows platforms
         if: matrix.platform != 'windows-latest'
         id: ccache_cache_timestamp
@@ -100,6 +93,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
             ${{ runner.os }}-
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python_version.version }}
+
+      - name: Install Python dependencies
+        run: pip${{ matrix.python_version.version }} install numpy
 
       - name: Create build directory
         run: mkdir -p ${{ runner.workspace }}/build-roadrunner
