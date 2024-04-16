@@ -41,7 +41,15 @@ jobs:
           curl -L -o llvm.zip ${{ matrix.platform.llvm_link }}
           unzip -q llvm.zip
           rm llvm.zip
-          echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${{runner.workspace}}/llvm/install" >> "${GITHUB_ENV}"
+          echo "displaying ${{runner.workspace}}"
+          ls ${{runner.workspace}}
+          echo "displaying ${{runner.workspace}}/roadrunner"
+          ls ${{runner.workspace}}/roadrunner
+          echo "displaying ${{runner.workspace}}/roadrunner/llvm"
+          ls ${{runner.workspace}}/roadrunner/llvm
+          echo "displaying ${{runner.workspace}}/roadrunner/llvm/install"
+          ls ${{runner.workspace}}/roadrunner/llvm/install
+          echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${{runner.workspace}}/roadrunner/llvm/install" >> "${GITHUB_ENV}"
 
       - name: Install swig
         if: matrix.platform.os_name == 'macos-latest'
@@ -106,8 +114,8 @@ jobs:
           -DCMAKE_OSX_ARCHITECTURES=${{ matrix.platform.arch }} \
           -DCMAKE_C_COMPILER_LAUNCHER=${COMPILER_LAUNCHER} \
           -DCMAKE_CXX_COMPILER_LAUNCHER=${COMPILER_LAUNCHER} \
-          ${LLVM_DIR} \
           ${LIBROADRUNNER_DEPENDENCIES_DIR} \
+          ${LLVM_DIR} \
           -DBUILD_PYTHON=ON \
           -DBUILD_TESTS=ON \
           -DBUILD_RR_PLUGINS=ON \
