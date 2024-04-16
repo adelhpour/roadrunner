@@ -37,29 +37,15 @@ jobs:
         shell: bash
         run: |
           brew install pcre pcre2
-          mkdir -p ${{runner.workspace}}/swig
+          mkdir -p ${{ runner.workspace }}/swig
           curl -L https://prdownloads.sourceforge.net/swig/swig-4.0.2.tar.gz > swig.tar.gz
-          tar -xzf swig.tar.gz -C ${{runner.workspace}}/swig --strip-components=1
+          tar -xzf swig.tar.gz -C ${{ runner.workspace }}/swig --strip-components=1
           cd ${{runner.workspace}}/swig
-          ./configure --prefix=${{runner.workspace}}/swig/install-swig
+          ./configure --prefix=${{ runner.workspace }}/swig/install-swig
           make -j 12
           make install
-          echo SWIG_DIR="-DSWIG_EXECUTABLE=${{runner.workspace}}/swig/install-swig/bin/swig" >> "${GITHUB_ENV}"
-          cd ${{runner.workspace}}/roadrunner
-
-      - name: Download libRoadRunner dependencies
-        run: |
-          curl -L ${{ matrix.platform.libroadrunner_deps_link }} > libroadrunner-deps.zip
-          unzip -q libroadrunner-deps.zip -d libroadrunner-deps
-          rm libroadrunner-deps.zip
-          echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${{runner.workspace}}/roadrunner/libroadrunner-deps/install-azure/Release" >> "${GITHUB_ENV}"
-
-      - name: Download LLVM
-        run: |
-          curl -L ${{ matrix.platform.llvm_link }} > llvm.zip
-          unzip -q llvm.zip -d llvm
-          rm llvm.zip
-          echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${{runner.workspace}}/roadrunner/llvm" >> "${GITHUB_ENV}"
+          echo SWIG_DIR="-DSWIG_EXECUTABLE=${{ runner.workspace }}/swig/install-swig/bin/swig" >> "${GITHUB_ENV}"
+          cd ${{ runner.workspace }}/roadrunner
 
       - name: Install ccache
         if: matrix.platform.os_name == 'macos-latest'
@@ -79,14 +65,14 @@ jobs:
         if: matrix.platform != 'windows-latest'
         shell: bash
         run: |
-          echo "CCACHE_DIR=${{runner.workspace}}/.ccache" >> "${GITHUB_ENV}"
+          echo "CCACHE_DIR=${{ runner.workspace }}/.ccache" >> "${GITHUB_ENV}"
           echo "COMPILER_LAUNCHER=ccache" >> "${GITHUB_ENV}"
 
       - name: Cache ccache files on non-Windows
         if: matrix.platform != 'windows-latest'
         uses: actions/cache@v3
         with:
-          path: ${{runner.workspace}}/.ccache
+          path: ${{ runner.workspace }}/.ccache
           key:
             ${{ runner.os }}-${{ steps.ccache_cache_timestamp.outputs.timestamp
             }}
@@ -102,12 +88,26 @@ jobs:
       - name: Install Python dependencies
         run: pip${{ matrix.python_version.version }} install numpy
 
+      - name: Download libRoadRunner dependencies binaries
+        run: |
+          curl -L ${{ matrix.platform.libroadrunner_deps_link }} > libroadrunner-deps.zip
+          unzip -q libroadrunner-deps.zip -d ${{ runner.workspace }}/roadrunner/libroadrunner-deps
+          rm libroadrunner-deps.zip
+          echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${{ runner.workspace }}/roadrunner/libroadrunner-deps/install-azure/Release" >> "${GITHUB_ENV}"
+
+      - name: Download LLVM binaries
+        run: |
+          curl -L ${{ matrix.platform.llvm_link }} > llvm.zip
+          unzip -q llvm.zip -d ${{ runner.workspace }}/roadrunner/llvm
+          rm llvm.zip
+          echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${{ runner.workspace }}/roadrunner/llvm" >> "${GITHUB_ENV}"
+
       - name: Create build directory
         run: mkdir -p ${{ runner.workspace }}/build-roadrunner
 
       - name: Configure CMake for RoadRunner
         shell: bash
-        working-directory: ${{runner.workspace}}/build-roadrunner
+        working-directory: ${{ runner.workspace }}/build-roadrunner
         run: |
           cmake $GITHUB_WORKSPACE \
           -G "Ninja" \
@@ -122,10 +122,10 @@ jobs:
           -DBUILD_TESTS=ON \
           -DBUILD_RR_PLUGINS=ON \
           -DBUILD_RR_CAPI=ON \
-          -DCMAKE_INSTALL_PREFIX="${{runner.workspace}}/install-roadrunner"
+          -DCMAKE_INSTALL_PREFIX="${{ runner.workspace }}/install-roadrunner"
 
       - name: Build and Install RoadRunner
-        working-directory: ${{runner.workspace}}/build-roadrunner
+        working-directory: ${{ runner.workspace }}/build-roadrunner
         shell: bash
         run: |
           cmake --build . --target install --config ${{ matrix.platform.build_type }}
