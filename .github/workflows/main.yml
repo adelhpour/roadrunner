@@ -106,9 +106,8 @@ jobs:
           -DCMAKE_OSX_ARCHITECTURES=${{ matrix.platform.arch }}
           -DCMAKE_C_COMPILER_LAUNCHER=${COMPILER_LAUNCHER} \
           -DCMAKE_CXX_COMPILER_LAUNCHER=${COMPILER_LAUNCHER} \
-          ${LIBROADRUNNER_DEPENDENCIES_DIR} \
           ${LLVM_DIR} \
-          -DRR_DEPENDENCIES_INSTALL_PREFIX=${{runner.workspace}}/roadrunner/libroadrunner-deps/install-azure/Release \
+          -DRR_DEPENDENCIES_INSTALL_PREFIX="jdlsfjsdlkjdo" \
           -DBUILD_PYTHON=ON \
           -DBUILD_TESTS=ON \
           -DBUILD_RR_PLUGINS=ON \
