@@ -8,7 +8,7 @@ on:
 jobs:
   build_on_OSs:
     name:
-      Build on ${{ matrix.platform.name }} - Python${{ matrix.python_version.version_string }}
+      Build on ${{ matrix.platform.name }} - Python${{ matrix.python_version.version }}
     strategy:
       fail-fast: false
       matrix:
@@ -20,8 +20,7 @@ jobs:
             llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-macosx_11_7_x86_64.zip"
         python_version:
           - name: py310
-            version: 3.10
-            version_string: "3.10"
+            version: "3.10"
     runs-on: ${{ matrix.platform.os_name }}
 
     steps:
@@ -41,10 +40,13 @@ jobs:
         run: |
           brew install swig ccache
 
+      - name: Setup Ninja
+        uses: seanmiddleditch/gha-setup-ninja@master
+
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python_version.version_string }}
+          python-version: ${{ matrix.python_version.version }}
 
       - name: Install Python dependencies
         run: pip${{ matrix.python_version.version }} install numpy
@@ -75,9 +77,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
             ${{ runner.os }}-
-
-      - name: Setup Ninja
-        uses: seanmiddleditch/gha-setup-ninja@master
 
       - name: Create build directory
         run: mkdir -p ${{ runner.workspace }}/build-roadrunner
