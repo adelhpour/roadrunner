@@ -8,24 +8,32 @@ on:
 jobs:
   build_on_OSs:
     name:
-      Build on ${{ matrix.os.name }} - ${{ matrix.build_type.name }} - Python${{ matrix.python_version.version_string }}
+      Build on ${{ matrix.platform.name }} - ${{ matrix.platform.build_type }} - Python${{ matrix.python_version.version_string }}
     strategy:
       fail-fast: false
       matrix:
-        os:
+        platform:
           - name: macos-latest-release
             os_name: macos-latest
+            arch: x86_64
             build_type: Release
             llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-macosx_11_7_x86_64.zip"
         python_version:
           - name: py310
             version: 3.10
             version_string: "3.10"
-    runs-on: ${{ matrix.os.name }}
+    runs-on: ${{ matrix.platform.name }}
 
     steps:
       - name: Checkout RoadRunner
         uses: actions/checkout@v3
+
+      - name: Download LLVM
+        run: |
+          curl -L -o llvm.zip ${{ matrix.platform.llvm_link }}
+          unzip -q llvm.zip
+          rm llvm.zip
+          echo "${{runner.workspace}}/llvm/install" >> $GITHUB_PATH
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -35,8 +43,63 @@ jobs:
       - name: Install Python dependencies
         run: pip${{ matrix.python_version.version }} install numpy
 
-      - name: Create build directory
-        run: mkdir -p ${{ runner.workspace }}/build-roadrunner
+      - name: Install macOS dependencies
+        if: matrix.platform == 'macos-latest'
+        shell: bash
+        run: |
+          brew install swig ccache
+
+      - name: Prepare ccache timestamp on non-Windows platforms
+        if: matrix.platform != 'windows-latest'
+        id: ccache_cache_timestamp
+        shell: cmake -P {0}
+        run: |
+          string(TIMESTAMP current_date "%Y-%m-%d-%H;%M;%S" UTC)
+          message("::set-output name=timestamp::${current_date}")
+
+      - name: Set ccache cache directory on non-Windows
+        if: matrix.platform != 'windows-latest'
+        shell: bash
+        run: |
+          echo "CCACHE_DIR=${{runner.workspace}}/.ccache" >> "${GITHUB_ENV}"
+          echo "COMPILER_LAUNCHER=ccache" >> "${GITHUB_ENV}"
+
+      - name: Cache ccache files on non-Windows
+        if: matrix.platform != 'windows-latest'
+        uses: actions/cache@v3
+        with:
+          path: ${{runner.workspace}}/.ccache
+          key:
+            ${{ runner.os }}-${{ steps.ccache_cache_timestamp.outputs.timestamp
+            }}
+          restore-keys: |
+            ${{ runner.os }}-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
+            ${{ runner.os }}-
 
       - name: Setup Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
+
+      - name: Create build directory
+        run: mkdir -p ${{ runner.workspace }}/build-roadrunner
+
+      - name: Configure CMake for RoadRunner
+        shell: bash
+        working-directory: ${{runner.workspace}}/build-roadrunner
+        run: |
+          cmake $GITHUB_WORKSPACE \
+          -G "Ninja" \
+          -DCMAKE_BUILD_TYPE=${{ matrix.platform.build_type }} \
+          -DCMAKE_OSX_ARCHITECTURES=${{ matrix.platform.arch }}
+          -DCMAKE_C_COMPILER_LAUNCHER=${COMPILER_LAUNCHER} \
+          -DCMAKE_CXX_COMPILER_LAUNCHER=${COMPILER_LAUNCHER} \
+          -DBUILD_PYTHON=ON \
+          -DBUILD_TESTS=ON \
+          -DBUILD_RR_PLUGINS=ON \
+          -DBUILD_RR_CAPI=ON \
+          -DCMAKE_INSTALL_PREFIX="${{runner.workspace}}/install-roadrunner"
+
+      - name: Build and Install RoadRunner
+        working-directory: ${{runner.workspace}}/build-roadrunner
+        shell: bash
+        run: |
+          cmake --build . --target install --config ${{ matrix.platform.build_type }}
