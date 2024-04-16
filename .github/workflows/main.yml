@@ -72,20 +72,6 @@ jobs:
       - name: Install Python dependencies
         run: pip${{ matrix.python_version.version }} install numpy
 
-      - name: Download libRoadRunner dependencies binaries
-        run: |
-          curl -L ${{ matrix.platform.libroadrunner_deps_link }} > libroadrunner-deps.zip
-          unzip -q libroadrunner-deps.zip -d libroadrunner-deps
-          rm libroadrunner-deps.zip
-          echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${{ runner.workspace }}/roadrunner/libroadrunner-deps/install-azure/Release" >> "${GITHUB_ENV}"
-
-      - name: Download LLVM binaries
-        run: |
-          curl -L ${{ matrix.platform.llvm_link }} > llvm.zip
-          unzip -q llvm.zip -d llvm
-          rm llvm.zip
-          echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${{runner.workspace }}/roadrunner/llvm" >> "${GITHUB_ENV}"
-
       - name: Install swig
         if: matrix.platform.os_name == 'macos-latest'
         # installing the latest version of swig leads to a build error. So we need to build a specific version from source
@@ -101,6 +87,30 @@ jobs:
           make install
           echo SWIG_DIR="-DSWIG_EXECUTABLE=${{ runner.workspace }}/swig/install-swig/bin/swig" >> "${GITHUB_ENV}"
           cd ${{ runner.workspace }}/roadrunner
+
+      - name: Download libRoadRunner dependencies binaries
+        run: |
+          echo "aa) displaying the contents of the directory"
+          pwd
+          curl -L ${{ matrix.platform.libroadrunner_deps_link }} > libroadrunner-deps.zip
+          unzip -q libroadrunner-deps.zip -d libroadrunner-deps
+          rm libroadrunner-deps.zip
+          echo "a) displaying the contents of the directory"
+          ls ${{ runner.workspace }}
+          echo "b) displaying the contents of the directory"
+          ls ${{ runner.workspace }}/roadrunner
+          echo "c) displaying the contents of the directory"
+          ls ${{ runner.workspace }}/roadrunner/libroadrunner-deps
+          echo "d) displaying the contents of the directory"
+          ls ${{ runner.workspace }}/roadrunner/libroadrunner-deps/install-azure
+          echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${{ runner.workspace }}/roadrunner/libroadrunner-deps/install-azure/Release" >> "${GITHUB_ENV}"
+
+      - name: Download LLVM binaries
+        run: |
+          curl -L ${{ matrix.platform.llvm_link }} > llvm.zip
+          unzip -q llvm.zip -d llvm
+          rm llvm.zip
+          echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${{runner.workspace }}/roadrunner/llvm" >> "${GITHUB_ENV}"
 
       - name: Create build directory
         run: mkdir -p ${{ runner.workspace }}/build-roadrunner
