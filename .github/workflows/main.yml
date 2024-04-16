@@ -32,6 +32,7 @@ jobs:
         run: |
           curl -L -o libroadrunner-deps.zip ${{ matrix.platform.libroadrunner_deps_link }} > libroadrunner-deps.zip
           unzip -q libroadrunner-deps.zip
+          mv libroadrunner-deps-Darwin-Release libroadrunner-deps
           rm libroadrunner-deps.zip
           echo "a) showing ${{runner.workspace}}/roadrunner contents"
           ls ${{runner.workspace}}/roadrunner
