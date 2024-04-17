@@ -212,6 +212,10 @@ jobs:
             curl -L "${{ matrix.platform.llvm_link }}" > llvm.zip
             unzip -q llvm.zip -d llvm
             rm llvm.zip
+            echo "a) displaying llvm directory"
+            ls
+            echo "b) displaying llvm directory"
+            ls llvm
             echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=$GITHUB_WORKSPACE/llvm" >> "${GITHUB_ENV}"
           fi
 
