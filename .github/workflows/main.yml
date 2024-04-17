@@ -115,6 +115,12 @@ jobs:
       - name: Install ccache
         shell: bash
         run: |
+          echo "GITHUB_WORKSPACE is : ${GITHUB_WORKSPACE}"
+          echo "runner.workspace is : ${runner.workspace}"
+          echo "runner.os is : ${runner.os}"
+          echo "{RUNNER_WORKSPACE} is: ${RUNNER_WORKSPACE}"
+          echo "RUNNER_WORKSPACE is : $RUNNER_WORKSPACE"
+          
           if [ "${{ matrix.platform.os_type }}" == 'macos' ]; then
             brew install ccache
           elif [ "${{ matrix.platform.os_type }}" == 'ubuntu' ]; then
@@ -199,9 +205,7 @@ jobs:
             make
             make install
             cd ..
-            echo SWIG_DIR="-DSWIG_EXECUTABLE=${GITHUB_WORKSPACE}/swig/bin/swig" >> $GITHUB_ENV
-            echo PATH="${GITHUB_WORKSPACE}/swig/bin:$PATH" >> $GITHUB_ENV
-            swig -version
+            echo SWIG_DIR="-DSWIG_EXECUTABLE=${GITHUB_WORKSPACE}/swig/bin/swig" >> $GITHUB_PATH
           fi
 
       - name: Download libRoadRunner dependencies binaries
@@ -263,23 +267,6 @@ jobs:
 
       - name: Create build directory
         run: mkdir -p ${{ runner.workspace }}/build-roadrunner
-
-      - name: Disable tests and plugins on mac (temporary fix for mac build failure)
-        shell: bash
-        run: |
-          if [ "${{ matrix.platform.os_type }}" == 'macos' ]; then
-            echo "BUILD_TESTS_STATUS=-DBUILD_TESTS=OFF" >> "${GITHUB_ENV}"
-            echo "BUILD_PLUGINS_STATUS=-DBUILD_RR_PLUGINS=OFF" >> "${GITHUB_ENV}"
-            echo "BUILD_PYTHON_STATUS=-DBUILD_PYTHON=ON" >> "${GITHUB_ENV}"
-          elif [ "${{ matrix.platform.os_type }}" == 'windows' ] && [ "${{ matrix.platform.build_type }}" == 'Debug' ]; then
-            echo "BUILD_TESTS_STATUS=-DBUILD_TESTS=OFF" >> "${GITHUB_ENV}"
-            echo "BUILD_PLUGINS_STATUS=-DBUILD_RR_PLUGINS=ON" >> "${GITHUB_ENV}"
-            echo "BUILD_PYTHON_STATUS=-DBUILD_PYTHON=OFF" >> "${GITHUB_ENV}"
-          else
-            echo "BUILD_TESTS_STATUS=-DBUILD_TESTS=ON" >> "${GITHUB_ENV}"
-            echo "BUILD_PLUGINS_STATUS=-DBUILD_RR_PLUGINS=ON" >> "${GITHUB_ENV}"
-            echo "BUILD_PYTHON_STATUS=-DBUILD_PYTHON=ON" >> "${GITHUB_ENV}"
-          fi
 
       - name: Configure CMake for RoadRunner
         shell: bash
