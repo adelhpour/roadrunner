@@ -163,11 +163,13 @@ jobs:
             ${{ runner.os }}-
 
       - name: Setup Python
+        if: matrix.platform.build_python == 'ON'
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python_version.version }}
 
       - name: Install Python dependencies
+        if: matrix.platform.build_python == 'ON'
         run: pip${{ matrix.python_version.version }} install numpy
 
       - name: Install swig
@@ -190,6 +192,19 @@ jobs:
             unzip -q swig.zip -d swig
             rm swig.zip
             echo SWIG_DIR="-DSWIG_EXECUTABLE=${{ runner.workspace }}/swig/swigwin-4.0.2/" >> $GITHUB_PATH
+          elif [ "${{ matrix.platform.os_type }}" == 'manylinux' ]; then
+            yum install -y pcre-devel
+            curl -L https://sourceforge.net/projects/swig/files/swig/swig-4.0.2/swig-4.0.2.tar.gz/download > swig.tar.gz
+            tar -zxvf swig.tar.gz
+            mkdir -p swig
+            cd swig-4.0.2/
+            ./configure --disable-dependency-tracking --prefix=../swig
+            make
+            make install
+            cd ..
+            echo SWIG_DIR="-DSWIG_EXECUTABLE=${GITHUB_WORKSPACE}/swig/bin/swig" >> $GITHUB_ENV
+            echo PATH="${GITHUB_WORKSPACE}/swig/bin:$PATH" >> $GITHUB_ENV
+            swig -version
           fi
 
       - name: Download libRoadRunner dependencies binaries
