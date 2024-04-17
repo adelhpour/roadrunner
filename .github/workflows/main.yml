@@ -163,6 +163,7 @@ jobs:
           fi
 
       - name: Download libRoadRunner dependencies binaries
+        shell: bash
         run: |
           curl -L "${{ matrix.platform.libroadrunner_deps_link }}" > libroadrunner-deps.zip
           unzip -q libroadrunner-deps.zip
@@ -182,6 +183,14 @@ jobs:
             else
               mv libroadrunner-deps-Linux-Debug libroadrunner-deps
               echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${{ runner.workspace }}/roadrunner/libroadrunner-deps" >> "${GITHUB_ENV}"
+            fi
+          elif [ "${{ matrix.platform.os_type }}" == 'windows' ]; then
+            if [ "${{ matrix.platform.build_type }}" == 'Release' ]; then
+              mv libroadrunner-deps-Windows_NT-Release libroadrunner-deps
+              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${{ runner.workspace }}/roadrunner/libroadrunner-deps/install-azure/Release" >> "${GITHUB_ENV}"
+            else
+              mv libroadrunner-deps-Windows_NT-Debug libroadrunner-deps
+              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${{ runner.workspace }}/roadrunner/libroadrunner-deps/install-azure/Debug" >> "${GITHUB_ENV}"
             fi
           fi
 
