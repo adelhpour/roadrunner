@@ -216,6 +216,8 @@ jobs:
             ls
             echo "b) displaying llvm directory"
             ls llvm
+            echo "c) displaying llvm directory"
+            ls $GITHUB_WORKSPACE/llvm
             echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=$GITHUB_WORKSPACE/llvm" >> "${GITHUB_ENV}"
           fi
 
