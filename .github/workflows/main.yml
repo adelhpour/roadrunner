@@ -166,7 +166,9 @@ jobs:
         shell: bash
         run: |
           curl -L "${{ matrix.platform.libroadrunner_deps_link }}" > libroadrunner-deps.zip
-          unzip libroadrunner-deps.zip
+          unzip -q libroadrunner-deps.zip
+          echo "a0) Unzipping libRoadRunner dependencies"
+          echo "$GITHUB_WORKSPACE"
           ls
           echo "a) Unzipping libRoadRunner dependencies"
           ls -l ${{ runner.workspace }}/roadrunner
