@@ -245,15 +245,8 @@ jobs:
           cmake $GITHUB_WORKSPACE \
           -G "Ninja" \
           -DCMAKE_BUILD_TYPE=${{ matrix.platform.build_type }} \
-          -DCMAKE_OSX_ARCHITECTURES=${{ matrix.platform.arch }} \
-          -DCMAKE_C_COMPILER_LAUNCHER=${COMPILER_LAUNCHER} \
-          -DCMAKE_CXX_COMPILER_LAUNCHER=${COMPILER_LAUNCHER} \
-          -DBUILD_PYTHON=ON \
           ${LIBROADRUNNER_DEPENDENCIES_DIR} \
           ${LLVM_DIR} \
-          ${SWIG_DIR} \
-          ${BUILD_TESTS_STATUS} \
-          ${BUILD_PLUGINS_STATUS} \
           -DCMAKE_INSTALL_PREFIX="${{ runner.workspace }}/install-roadrunner"
 
       - name: Build and Install RoadRunner
