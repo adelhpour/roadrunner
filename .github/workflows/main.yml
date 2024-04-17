@@ -227,9 +227,8 @@ jobs:
         with:
           arch: amd64
 
-      - name: Setup cmake
-        if: matrix.platform.os_type == 'windows'
-        uses: jwlawson/actions-setup-cmake@v2
+      - name: Set up CMake
+          uses: cmake/setup-cmake@v1
 
       - name: Create build directory
         run: mkdir -p ${{ runner.workspace }}/build-roadrunner
