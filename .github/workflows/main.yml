@@ -149,6 +149,10 @@ jobs:
             tar -xzf llvm.tar.gz
             rm llvm.tar.gz
           fi
+          echo "a) displaying llvm directory"
+          ls ${{runner.workspace }}/roadrunner
+            echo "b) displaying llvm directory"
+          ls ${{runner.workspace}}/roadrunner/llvm
           echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${{runner.workspace }}/roadrunner/llvm" >> "${GITHUB_ENV}"
 
       - name: Create build directory
