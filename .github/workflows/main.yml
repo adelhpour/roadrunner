@@ -140,10 +140,10 @@ jobs:
       - name: Install Python dependencies
         run: pip${{ matrix.python_version.version }} install numpy
 
-      - name: Install swig on macOS
-        # installing the latest version of swig leads to a build error. So we need to build a specific version from source
+      - name: Install swig on
         shell: bash
         run: |
+          # installing the latest version of swig leads to a build error. So we need to build a specific version from source for macos
           if [ "${{ matrix.platform.os_type }}" == 'macos' ]; then
             brew install pcre pcre2
             mkdir -p ${{ runner.workspace }}/swig
