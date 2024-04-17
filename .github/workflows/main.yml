@@ -68,7 +68,7 @@ jobs:
           #  version: "3.12"
     runs-on: ${{ matrix.platform.os_name }}
     container:
-      image: ${{ matrix.platform.container_image }}
+      image: quay.io/pypa/manylinux2014_x86_64
 
     steps:
       - name: Checkout RoadRunner
