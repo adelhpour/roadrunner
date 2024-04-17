@@ -64,7 +64,7 @@ jobs:
           fi
 
       - name: Prepare ccache timestamp on non-Windows platforms
-        if: ${{ matrix.platform.os_name }} != 'windows-latest'
+        if: matrix.platform.os_name != 'windows-latest'
         id: ccache_cache_timestamp
         shell: cmake -P {0}
         run: |
@@ -72,14 +72,14 @@ jobs:
           message("::set-output name=timestamp::${current_date}")
 
       - name: Set ccache cache directory on non-Windows
-        if: ${{ matrix.platform.os_name }} != 'windows-latest'
+        if: matrix.platform.os_name != 'windows-latest'
         shell: bash
         run: |
           echo "CCACHE_DIR=${{ runner.workspace }}/.ccache" >> "${GITHUB_ENV}"
           echo "COMPILER_LAUNCHER=ccache" >> "${GITHUB_ENV}"
 
       - name: Cache ccache files on non-Windows
-        if: ${{ matrix.platform.os_name }} != 'windows-latest'
+        if: matrix.platform.os_name != 'windows-latest'
         uses: actions/cache@v3
         with:
           path: ${{ runner.workspace }}/.ccache
@@ -100,7 +100,7 @@ jobs:
 
       - name: Install swig on macOS
         # installing the latest version of swig leads to a build error. So we need to build a specific version from source
-        if: ${{ matrix.platform.os_name }} == 'macos-latest'
+        if: matrix.platform.os_name == 'macos-latest'
         shell: bash
         run: |
           brew install pcre pcre2
