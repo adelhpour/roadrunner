@@ -145,7 +145,7 @@ jobs:
             rm llvm.zip
           else
             curl -L "${{ matrix.platform.llvm_link }}" > llvm.tar.gz
-            tar -xzf llvm.zip -C llvm --strip-components=1
+            tar -xzf llvm.tar.gz -C llvm --strip-components=1
             rm llvm.tar.gz
           fi
           echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${{runner.workspace }}/roadrunner/llvm" >> "${GITHUB_ENV}"
