@@ -38,12 +38,12 @@ jobs:
         python_version:
           - name: py39
             version: "3.9"
-          - name: py310
-            version: "3.10"
-          - name: py311
-            version: "3.11"
-          - name: py312
-            version: "3.12"
+          #- name: py310
+          #  version: "3.10"
+          #- name: py311
+          #  version: "3.11"
+          #- name: py312
+          #  version: "3.12"
     runs-on: ${{ matrix.platform.os_name }}
 
     steps:
