@@ -166,7 +166,14 @@ jobs:
         shell: bash
         run: |
           curl -L "${{ matrix.platform.libroadrunner_deps_link }}" > libroadrunner-deps.zip
-          unzip -q libroadrunner-deps.zip
+          echo "a) Unzipping libRoadRunner dependencies"
+          ls -l ${{ runner.workspace }}/roadrunner
+          unzip -q libroadrunner-deps.zip -d libroadrunner-deps
+          echo "b) Unzipping libRoadRunner dependencies"
+          ls -l ${{ runner.workspace }}/roadrunner
+          echo "c) Unzipping libRoadRunner dependencies"
+          ls -l ${{ runner.workspace }}/roadrunner/libroadrunner-deps
+          
           rm libroadrunner-deps.zip
           if [ "${{ matrix.platform.os_type }}" == 'macos' ]; then
             if [ "${{ matrix.platform.build_type }}" == 'Release' ]; then
@@ -211,6 +218,17 @@ jobs:
       - name: Create build directory
         run: mkdir -p ${{ runner.workspace }}/build-roadrunner
 
+      - name: Disable tests and plugins on mac (temporary fix for mac build failure)
+        shell: bash
+        run: |
+          if [ "${{ matrix.platform.os_type }}" == 'macos' ]; then
+            echo "BUILD_TESTS_STATUS=-DBUILD_TESTS=OFF" >> "${GITHUB_ENV}"
+            echo "BUILD_PLUGINS_STATUS=-DBUILD_RR_PLUGINS=OFF" >> "${GITHUB_ENV}"
+          else
+            echo "BUILD_TESTS_STATUS=-DBUILD_TESTS=ON" >> "${GITHUB_ENV}"
+            echo "BUILD_PLUGINS_STATUS=-DBUILD_RR_PLUGINS=ON" >> "${GITHUB_ENV}"
+          fi
+
       - name: Configure CMake for RoadRunner
         shell: bash
         working-directory: ${{ runner.workspace }}/build-roadrunner
@@ -224,12 +242,9 @@ jobs:
           ${LIBROADRUNNER_DEPENDENCIES_DIR} \
           ${LLVM_DIR} \
           ${SWIG_DIR} \
-          -DBUILD_RR_CAPI=ON \
-          -DBUILD_PYTHON=ON \
+          ${BUILD_TESTS_STATUS} \
+          ${BUILD_PLUGINS_STATUS} \
           -DCMAKE_INSTALL_PREFIX="${{ runner.workspace }}/install-roadrunner"
-
-        # -DBUILD_TESTS=ON \
-        #-DBUILD_RR_PLUGINS=ON
 
       - name: Build and Install RoadRunner
         working-directory: ${{ runner.workspace }}/build-roadrunner
