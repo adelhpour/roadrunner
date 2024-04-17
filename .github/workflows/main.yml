@@ -130,9 +130,6 @@ jobs:
             cmake --build . --target install
             cd ..
             echo "${GITHUB_WORKSPACE}/ccache-install/bin" >> $GITHUB_PATH
-            ls $GITHUB_WORKSPACE
-            ls $GITHUB_WORKSPACE/ccache-install
-            ls $GITHUB_WORKSPACE/ccache-install/bin
           fi
 
       - name: Prepare ccache timestamp on non-Windows platforms
@@ -198,7 +195,7 @@ jobs:
             tar -zxvf swig.tar.gz
             mkdir -p swig
             cd swig-4.0.2/
-            ./configure --disable-dependency-tracking --prefix=../swig
+            ./configure --disable-dependency-tracking --prefix=${GITHUB_WORKSPACE}/../swig
             make
             make install
             cd ..
