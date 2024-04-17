@@ -114,6 +114,7 @@ jobs:
 
       - name: Install ccache
         shell: bash
+        working-directory: ${RUNNER_WORKSPACE}
         run: |
           echo "GITHUB_WORKSPACE is : ${GITHUB_WORKSPACE}"
           echo "runner.workspace is : ${{ runner.workspace }}"
