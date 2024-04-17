@@ -218,7 +218,7 @@ jobs:
             ls llvm
             echo "c) displaying llvm directory"
             ls $GITHUB_WORKSPACE/llvm
-            echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=$GITHUB_WORKSPACE/llvm" >> "${GITHUB_ENV}"
+            echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=$GITHUB_WORKSPACE/llvm/llvm-13.x-msvc2022-x64-rel" >> "${GITHUB_ENV}"
           fi
 
       - name: Create build directory
