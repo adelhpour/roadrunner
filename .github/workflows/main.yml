@@ -216,13 +216,11 @@ jobs:
             curl -L "${{ matrix.platform.llvm_link }}" > llvm.zip
             unzip -q llvm.zip -d llvm
             rm llvm.zip
-            echo "a) displaying llvm directory"
-            ls
-            echo "b) displaying llvm directory"
-            ls llvm
-            echo "c) displaying llvm directory"
-            ls $GITHUB_WORKSPACE/llvm
-            echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=$GITHUB_WORKSPACE/llvm/llvm-13.x-msvc2022-x64-rel" >> "${GITHUB_ENV}"
+            if [ "${{ matrix.platform.build_type }}" == 'Release' ]; then
+              echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=$GITHUB_WORKSPACE/llvm/llvm-13.x-msvc2022-x64-rel" >> "${GITHUB_ENV}"
+            else
+              echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=$GITHUB_WORKSPACE/llvm/llvm-13.x-msvc2022-x64-dbg" >> "${GITHUB_ENV}"
+            fi
           fi
 
       - name: Create build directory
