@@ -238,12 +238,15 @@ jobs:
           if [ "${{ matrix.platform.os_type }}" == 'macos' ]; then
             echo "BUILD_TESTS_STATUS=-DBUILD_TESTS=OFF" >> "${GITHUB_ENV}"
             echo "BUILD_PLUGINS_STATUS=-DBUILD_RR_PLUGINS=OFF" >> "${GITHUB_ENV}"
+            echo "BUILD_PYTHON_STATUS=-DBUILD_PYTHON=ON" >> "${GITHUB_ENV}"
           elif [ "${{ matrix.platform.os_type }}" == 'windows' ] && [ "${{ matrix.platform.build_type }}" == 'Debug' ]; then
             echo "BUILD_TESTS_STATUS=-DBUILD_TESTS=OFF" >> "${GITHUB_ENV}"
             echo "BUILD_PLUGINS_STATUS=-DBUILD_RR_PLUGINS=ON" >> "${GITHUB_ENV}"
+            echo "BUILD_PYTHON_STATUS=-DBUILD_PYTHON=OFF" >> "${GITHUB_ENV}"
           else
             echo "BUILD_TESTS_STATUS=-DBUILD_TESTS=ON" >> "${GITHUB_ENV}"
             echo "BUILD_PLUGINS_STATUS=-DBUILD_RR_PLUGINS=ON" >> "${GITHUB_ENV}"
+            echo "BUILD_PYTHON_STATUS=-DBUILD_PYTHON=ON" >> "${GITHUB_ENV}"
           fi
 
       - name: Configure CMake for RoadRunner
@@ -259,6 +262,7 @@ jobs:
           ${LIBROADRUNNER_DEPENDENCIES_DIR} \
           ${LLVM_DIR} \
           ${SWIG_DIR} \
+          ${BUILD_PYTHON_STATUS} \
           ${BUILD_TESTS_STATUS} \
           ${BUILD_PLUGINS_STATUS} \
           -DCMAKE_INSTALL_PREFIX="${{ runner.workspace }}/install-roadrunner"
