@@ -102,8 +102,8 @@ jobs:
             mkdir ccache-build
             mkdir ccache-install
             cd ccache-build
-            cmake -DCMAKE_INSTALL_PREFIX=../ccache-install -DCMAKE_BUILD_TYPE=$BUILD_TYPE ../ccache-4.9.1
-            cmake --build . --target install --config $BUILD_TYPE
+            cmake -DCMAKE_INSTALL_PREFIX=../ccache-install -DCMAKE_BUILD_TYPE=${{ matrix.platform.build_type }} ../ccache-4.9.1
+            cmake --build . --target install --config ${{ matrix.platform.build_type }}
             echo "$GITHUB_WORKSPACE/ccache-install/bin" >> $GITHUB_PATH
             cd ${{ runner.workspace }}/roadrunner
           fi
