@@ -130,6 +130,10 @@ jobs:
           elif [ "${{ matrix.platform.os_name }}" == 'ubuntu-latest' ]; then
             if [ "${{ matrix.platform.build_type }}" == 'Release' ]; then
               mv libroadrunner-deps-Linux-Release libroadrunner-deps
+              ls -l ${{ runner.workspace }}/roadrunner
+              ls -l ${{ runner.workspace }}/roadrunner/libroadrunner-deps
+              ls -l ${{ runner.workspace }}/roadrunner/libroadrunner-deps/install-azure
+              ls -l ${{ runner.workspace }}/roadrunner/libroadrunner-deps/install-azure/Release
               echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${{ runner.workspace }}/roadrunner/libroadrunner-deps/install-azure/Release" >> "${GITHUB_ENV}"
             else
               mv libroadrunner-deps-Linux-Debug libroadrunner-deps
@@ -146,7 +150,6 @@ jobs:
             rm llvm.zip
           else
             curl -L "${{ matrix.platform.llvm_link }}" > llvm.tar.gz
-            ls -l
             tar -xzf llvm.tar.gz
             rm llvm.tar.gz
           fi
