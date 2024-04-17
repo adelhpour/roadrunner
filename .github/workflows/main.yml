@@ -104,8 +104,12 @@ jobs:
             cd ccache-build
             cmake -DCMAKE_INSTALL_PREFIX=../ccache-install -DCMAKE_BUILD_TYPE=Release ../ccache-4.9.1
             cmake --build . --target install
-            echo "$GITHUB_WORKSPACE/ccache-install/bin" >> $GITHUB_PATH
-            cd "${RUNNER_WORKSPACE}/roadrunner"
+            echo "displaying ccache directory"
+            pwd
+            echo "displaying ccache-install directory"
+            ls 
+            echo "${{ runner.workspace }}/roadrunner/ccache-install/bin" >> $GITHUB_PATH
+            cd ${{ runner.workspace }}/roadrunner
           fi
 
       - name: Prepare ccache timestamp on non-Windows platforms
@@ -120,14 +124,14 @@ jobs:
         if: matrix.platform.os_type != 'windows'
         shell: bash
         run: |
-          echo "CCACHE_DIR=${RUNNER_WORKSPACE}/.ccache" >> "${GITHUB_ENV}"
+          echo "CCACHE_DIR=${{ runner.workspace }}/.ccache" >> "${GITHUB_ENV}"
           echo "COMPILER_LAUNCHER=ccache" >> "${GITHUB_ENV}"
 
       - name: Cache ccache files on non-Windows
         if: matrix.platform.os_type != 'windows'
         uses: actions/cache@v3
         with:
-          path: ${RUNNER_WORKSPACE}/.ccache
+          path: ${{ runner.workspace }}/.ccache
           key:
             ${{ runner.os }}-${{ steps.ccache_cache_timestamp.outputs.timestamp
             }}
@@ -149,20 +153,20 @@ jobs:
           # running against the latest version of swig fails, os we build version 4.0.2
           if [ "${{ matrix.platform.os_type }}" == 'macos' ]; then
             brew install pcre pcre2
-            mkdir -p ${RUNNER_WORKSPACE}/swig
+            mkdir -p ${{ runner.workspace }}/swig
             curl -L https://prdownloads.sourceforge.net/swig/swig-4.0.2.tar.gz > swig.tar.gz
-            tar -xzf swig.tar.gz -C ${RUNNER_WORKSPACE}/swig --strip-components=1
+            tar -xzf swig.tar.gz -C ${{ runner.workspace }}/swig --strip-components=1
             cd ${{runner.workspace}}/swig
-            ./configure --prefix=${RUNNER_WORKSPACE}/swig/install-swig
+            ./configure --prefix=${{ runner.workspace }}/swig/install-swig
             make -j 12
             make install
-            echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/bin/swig" >> "${GITHUB_ENV}"
-            cd ${RUNNER_WORKSPACE}/roadrunner
+            echo SWIG_DIR="-DSWIG_EXECUTABLE=${{ runner.workspace }}/swig/install-swig/bin/swig" >> "${GITHUB_ENV}"
+            cd ${{ runner.workspace }}/roadrunner
           elif [ "${{ matrix.platform.os_type }}" == 'windows' ]; then
             curl -L https://sourceforge.net/projects/swig/files/swigwin/swigwin-4.0.2/swigwin-4.0.2.zip/download > swig.zip
             unzip -q swig.zip -d swig
             rm swig.zip
-            echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/swigwin-4.0.2/" >> $GITHUB_PATH
+            echo SWIG_DIR="-DSWIG_EXECUTABLE=${{ runner.workspace }}/swig/swigwin-4.0.2/" >> $GITHUB_PATH
           fi
 
       - name: Download libRoadRunner dependencies binaries
@@ -174,18 +178,18 @@ jobs:
           if [ "${{ matrix.platform.os_type }}" == 'macos' ]; then
             if [ "${{ matrix.platform.build_type }}" == 'Release' ]; then
               mv libroadrunner-deps-Darwin-Release-x86_64 libroadrunner-deps
-              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${RUNNER_WORKSPACE}/roadrunner/libroadrunner-deps/install-azure/Release" >> "${GITHUB_ENV}"
+              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${{ runner.workspace }}/roadrunner/libroadrunner-deps/install-azure/Release" >> "${GITHUB_ENV}"
             else
               mv libroadrunner-deps-Darwin-Debug-x86_64 libroadrunner-deps
-              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${RUNNER_WORKSPACE}/roadrunner/libroadrunner-deps/install-azure/Debug" >> "${GITHUB_ENV}"
+              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${{ runner.workspace }}/roadrunner/libroadrunner-deps/install-azure/Debug" >> "${GITHUB_ENV}"
             fi
           elif [ "${{ matrix.platform.os_type }}" == 'ubuntu' ]; then
             if [ "${{ matrix.platform.build_type }}" == 'Release' ]; then
               mv libroadrunner-deps-Linux-Release libroadrunner-deps
-              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${RUNNER_WORKSPACE}/roadrunner/libroadrunner-deps" >> "${GITHUB_ENV}"
+              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${{ runner.workspace }}/roadrunner/libroadrunner-deps" >> "${GITHUB_ENV}"
             else
               mv libroadrunner-deps-Linux-Debug libroadrunner-deps
-              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${RUNNER_WORKSPACE}/roadrunner/libroadrunner-deps" >> "${GITHUB_ENV}"
+              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${{ runner.workspace }}/roadrunner/libroadrunner-deps" >> "${GITHUB_ENV}"
             fi
           elif [ "${{ matrix.platform.os_type }}" == 'windows' ]; then
             if [ "${{ matrix.platform.build_type }}" == 'Release' ]; then
@@ -223,7 +227,7 @@ jobs:
           fi
 
       - name: Create build directory
-        run: mkdir -p $${RUNNER_WORKSPACE}/build-roadrunner
+        run: mkdir -p ${{ runner.workspace }}/build-roadrunner
 
       - name: Disable tests and plugins on mac (temporary fix for mac build failure)
         shell: bash
@@ -255,7 +259,7 @@ jobs:
           ${SWIG_DIR} \
           ${BUILD_TESTS_STATUS} \
           ${BUILD_PLUGINS_STATUS} \
-          -DCMAKE_INSTALL_PREFIX="${RUNNER_WORKSPACE}/install-roadrunner"
+          -DCMAKE_INSTALL_PREFIX="${{ runner.workspace }}/install-roadrunner"
 
       - name: Build and Install RoadRunner
         working-directory: ${{ runner.workspace }}/build-roadrunner
