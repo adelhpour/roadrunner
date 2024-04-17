@@ -231,7 +231,7 @@ jobs:
           if [ "${{ matrix.platform.os_type }}" == 'macos' ]; then
             echo "BUILD_TESTS_STATUS=-DBUILD_TESTS=OFF" >> "${GITHUB_ENV}"
             echo "BUILD_PLUGINS_STATUS=-DBUILD_RR_PLUGINS=OFF" >> "${GITHUB_ENV}"
-          else if [ "${{ matrix.platform.os_type }}" == 'windows' ] && [ "${{ matrix.platform.build_type }}" == 'Debug' ]; then
+          elif [ "${{ matrix.platform.os_type }}" == 'windows' ] && [ "${{ matrix.platform.build_type }}" == 'Debug' ]; then
             echo "BUILD_TESTS_STATUS=-DBUILD_TESTS=OFF" >> "${GITHUB_ENV}"
             echo "BUILD_PLUGINS_STATUS=-DBUILD_RR_PLUGINS=ON" >> "${GITHUB_ENV}"
           else
