@@ -228,6 +228,7 @@ jobs:
           arch: amd64
 
       - name: Setup cmake
+          if: matrix.platform.os_type == 'windows'
           uses: jwlawson/actions-setup-cmake@v2
 
       - name: Create build directory
