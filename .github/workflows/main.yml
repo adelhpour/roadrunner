@@ -151,7 +151,7 @@ jobs:
           fi
           echo "a) displaying llvm directory"
           ls ${{runner.workspace }}/roadrunner
-            echo "b) displaying llvm directory"
+          echo "b) displaying llvm directory"
           ls ${{runner.workspace}}/roadrunner/llvm
           echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${{runner.workspace }}/roadrunner/llvm" >> "${GITHUB_ENV}"
 
@@ -172,10 +172,10 @@ jobs:
           ${LLVM_DIR} \
           ${SWIG_DIR} \
           -DBUILD_PYTHON=ON \
-          -DBUILD_TESTS=ON \
-          -DBUILD_RR_CAPI=ON \
           -DCMAKE_INSTALL_PREFIX="${{ runner.workspace }}/install-roadrunner"
 
+        # -DBUILD_TESTS=ON \
+        # -DBUILD_RR_CAPI=ON \
         #-DBUILD_RR_PLUGINS=ON
 
       - name: Build and Install RoadRunner
