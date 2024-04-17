@@ -115,11 +115,7 @@ jobs:
       - name: Install ccache
         shell: bash
         run: |
-          echo "GITHUB_WORKSPACE is : ${GITHUB_WORKSPACE}"
-          echo "runner.workspace is : ${{ runner.workspace }}"
-          echo "{RUNNER_WORKSPACE} is: ${RUNNER_WORKSPACE}"
-          echo "RUNNER_WORKSPACE is : $RUNNER_WORKSPACE"
-          
+          pwd
           if [ "${{ matrix.platform.os_type }}" == 'macos' ]; then
             brew install ccache
           elif [ "${{ matrix.platform.os_type }}" == 'ubuntu' ]; then
