@@ -82,6 +82,10 @@ jobs:
       - name: Checkout RoadRunner
         uses: actions/checkout@v3
 
+      - name: Add msbuild to PATH (Windows)
+        if: matrix.platform == 'windows-latest'
+        uses: ilammy/msvc-dev-cmd@v1.6.0
+
       - name: Setup Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
 
@@ -226,9 +230,6 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1.6.0
         with:
           arch: amd64
-
-      - name: Set up CMake
-        uses: cmake/setup-cmake@v1
 
       - name: Create build directory
         run: mkdir -p ${{ runner.workspace }}/build-roadrunner
