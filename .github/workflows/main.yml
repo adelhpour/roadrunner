@@ -98,9 +98,9 @@ jobs:
       - name: Install Python dependencies
         run: pip${{ matrix.python_version.version }} install numpy
 
-      - name: Install swig
-        if: ${{ matrix.platform.os_name }} == 'macos-latest'
+      - name: Install swig on macOS
         # installing the latest version of swig leads to a build error. So we need to build a specific version from source
+        if: ${{ matrix.platform.os_name }} == 'macos-latest'
         shell: bash
         run: |
           brew install pcre pcre2
