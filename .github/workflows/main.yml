@@ -30,8 +30,8 @@ jobs:
             llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-macosx_11_7_x86_64.zip"
             libroadrunner_deps_link: "https://dev.azure.com/TheRoadrunnerProject/10f68fb1-1fa1-4069-92b5-24c5b7fee3e5/_apis/build/builds/2368/artifacts?artifactName=libroadrunner-deps-Darwin-Debug-x86_64&api-version=7.1&%24format=zip"
           - name: ubuntu-latest-release
-            os: ubuntu
-            os_type: ubuntu-latest
+            os_type: ubuntu
+            os_name: ubuntu-latest
             container_image: quay.io/pypa/manylinux2014_x86_64
             build_type: Release
             llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm13-ubuntu-gcc10-rel.tar.gz"
@@ -68,7 +68,7 @@ jobs:
           #  version: "3.12"
     runs-on: ${{ matrix.platform.os_name }}
     container:
-      image: quay.io/pypa/manylinux2014_x86_64
+      image: ${{ matrix.platform.container_image }}
 
     steps:
       - name: Checkout RoadRunner
