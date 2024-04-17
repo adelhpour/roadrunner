@@ -146,7 +146,7 @@ jobs:
             rm llvm.zip
           else
             curl -L "${{ matrix.platform.llvm_link }}" > llvm.tar.gz
-            tar -xzf llvm.tar.gz
+            tar -xzf llvm.tar.gz -C llvm --strip-components=1
             rm llvm.tar.gz
           fi
           echo "a) displaying llvm directory"
