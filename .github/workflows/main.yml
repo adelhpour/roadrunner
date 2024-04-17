@@ -167,7 +167,7 @@ jobs:
           ${LIBROADRUNNER_DEPENDENCIES_DIR} \
           ${LLVM_DIR} \
           ${SWIG_DIR} \
-          -DBUILD_TESTS=ON \
+          -DBUILD_RR_CAPI=ON \
           -DBUILD_PYTHON=ON \
           -DCMAKE_INSTALL_PREFIX="${{ runner.workspace }}/install-roadrunner"
 
