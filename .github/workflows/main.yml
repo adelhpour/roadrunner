@@ -128,15 +128,11 @@ jobs:
             cd ccache-build
             cmake -DCMAKE_INSTALL_PREFIX=../ccache-install -DCMAKE_BUILD_TYPE=Release ../ccache-4.9.1
             cmake --build . --target install
-            echo "a) displaying ccache directory"
-            pwd
-            echo "b) displaying ccache directory"
-            ls 
-            echo "c) displaying ccache directory is: ${{ runner.workspace }}"
-            ls ${{ runner.workspace }}
-            
-            echo "${{ runner.workspace }}/roadrunner/ccache-install/bin" >> $GITHUB_PATH
-            cd ${{ runner.workspace }}/roadrunner
+            cd ..
+            echo "${GITHUB_WORKSPACE}/ccache-install/bin" >> $GITHUB_PATH
+            ls $GITHUB_WORKSPACE
+            ls $GITHUB_WORKSPACE/ccache-install
+            ls $GITHUB_WORKSPACE/ccache-install/bin
           fi
 
       - name: Prepare ccache timestamp on non-Windows platforms
