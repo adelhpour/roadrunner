@@ -104,10 +104,13 @@ jobs:
             cd ccache-build
             cmake -DCMAKE_INSTALL_PREFIX=../ccache-install -DCMAKE_BUILD_TYPE=Release ../ccache-4.9.1
             cmake --build . --target install
-            echo "displaying ccache directory"
+            echo "a) displaying ccache directory"
             pwd
-            echo "displaying ccache-install directory"
+            echo "b) displaying ccache directory"
             ls 
+            echo "c) displaying ccache directory is: ${{ runner.workspace }}"
+            ls ${{ runner.workspace }}
+            
             echo "${{ runner.workspace }}/roadrunner/ccache-install/bin" >> $GITHUB_PATH
             cd ${{ runner.workspace }}/roadrunner
           fi
