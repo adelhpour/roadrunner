@@ -117,7 +117,6 @@ jobs:
         run: |
           echo "GITHUB_WORKSPACE is : ${GITHUB_WORKSPACE}"
           echo "runner.workspace is : ${{ runner.workspace }}"
-          echo "runner.os is : ${runner.os}"
           echo "{RUNNER_WORKSPACE} is: ${RUNNER_WORKSPACE}"
           echo "RUNNER_WORKSPACE is : $RUNNER_WORKSPACE"
           
