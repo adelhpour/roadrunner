@@ -139,6 +139,7 @@ jobs:
 
       - name: Download LLVM binaries
         run: |
+          mkdir llvm
           if [ "${{ matrix.platform.os_name }}" == 'macos-latest' ]; then
             curl -L "${{ matrix.platform.llvm_link }}" > llvm.zip
             unzip -q llvm.zip -d llvm
@@ -146,7 +147,8 @@ jobs:
           else
             curl -L "${{ matrix.platform.llvm_link }}" > llvm.tar.gz
             ls -l
-            tar -xzf llvm.tar.gz -C llvm --strip-components=1
+            tar -xf swig-4.0.2.tar.gz
+            tar -xzf llvm.tar.gz
             rm llvm.tar.gz
           fi
           echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${{runner.workspace }}/roadrunner/llvm" >> "${GITHUB_ENV}"
