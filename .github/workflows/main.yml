@@ -82,7 +82,7 @@ jobs:
       - name: Checkout RoadRunner
         uses: actions/checkout@v3
 
-      - name: Add msbuild to PATH (Windows)
+      - name: Set MSVC as the default compiler on Windows
         if: matrix.platform.os_type == 'windows'
         uses: ilammy/msvc-dev-cmd@v1.6.0
 
@@ -147,7 +147,7 @@ jobs:
       - name: Install swig
         shell: bash
         run: |
-          # installing the latest version of swig leads to a build error. So we need to build a specific version from source for macos
+          # running against the latest version of swig fails, os we build version 4.0.2
           if [ "${{ matrix.platform.os_type }}" == 'macos' ]; then
             brew install pcre pcre2
             mkdir -p ${{ runner.workspace }}/swig
@@ -219,7 +219,7 @@ jobs:
             if [ "${{ matrix.platform.build_type }}" == 'Release' ]; then
               echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=$GITHUB_WORKSPACE/llvm/llvm-13.x-msvc2022-x64-rel" >> "${GITHUB_ENV}"
             else
-              echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=$GITHUB_WORKSPACE/llvm/llvm-13.x-msvc2022-x64-dbg" >> "${GITHUB_ENV}"
+              echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=$GITHUB_WORKSPACE/llvm" >> "${GITHUB_ENV}"
             fi
           fi
 
