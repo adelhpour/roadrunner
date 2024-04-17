@@ -83,7 +83,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Add msbuild to PATH (Windows)
-        if: matrix.platform == 'windows-latest'
+        if: matrix.platform == 'windows'
         uses: ilammy/msvc-dev-cmd@v1.6.0
 
       - name: Setup Ninja
@@ -224,12 +224,6 @@ jobs:
             ls $GITHUB_WORKSPACE/llvm
             echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=$GITHUB_WORKSPACE/llvm/llvm-13.x-msvc2022-x64-rel" >> "${GITHUB_ENV}"
           fi
-
-      - name: Add msbuild to PATH on Windows
-        if: matrix.platform.os_type == 'windows'
-        uses: ilammy/msvc-dev-cmd@v1.6.0
-        with:
-          arch: amd64
 
       - name: Create build directory
         run: mkdir -p ${{ runner.workspace }}/build-roadrunner
