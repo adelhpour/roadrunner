@@ -149,10 +149,6 @@ jobs:
             tar -xzf llvm.tar.gz -C llvm --strip-components=1
             rm llvm.tar.gz
           fi
-          echo "a) displaying llvm directory"
-          ls ${{runner.workspace }}/roadrunner
-          echo "b) displaying llvm directory"
-          ls ${{runner.workspace}}/roadrunner/llvm
           echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${{runner.workspace }}/roadrunner/llvm" >> "${GITHUB_ENV}"
 
       - name: Create build directory
@@ -164,8 +160,8 @@ jobs:
         run: |
           cmake $GITHUB_WORKSPACE \
           -G "Ninja" \
-          -DCMAKE_BUILD_TYPE="${{ matrix.platform.build_type }}" \
-          -DCMAKE_OSX_ARCHITECTURES="${{ matrix.platform.arch }}" \
+          -DCMAKE_BUILD_TYPE=${{ matrix.platform.build_type }} \
+          -DCMAKE_OSX_ARCHITECTURES=${{ matrix.platform.arch }} \
           -DCMAKE_C_COMPILER_LAUNCHER=${COMPILER_LAUNCHER} \
           -DCMAKE_CXX_COMPILER_LAUNCHER=${COMPILER_LAUNCHER} \
           ${LIBROADRUNNER_DEPENDENCIES_DIR} \
@@ -182,4 +178,4 @@ jobs:
         working-directory: ${{ runner.workspace }}/build-roadrunner
         shell: bash
         run: |
-          cmake --build . --target install --config "${{ matrix.platform.build_type }}"
+          cmake --build . --target install --config ${{ matrix.platform.build_type }}
