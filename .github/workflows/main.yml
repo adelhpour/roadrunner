@@ -195,6 +195,7 @@ jobs:
           fi
 
       - name: Download LLVM binaries
+        shell: bash
         run: |
           mkdir llvm
           if [ "${{ matrix.platform.os_type }}" == 'macos' ] || [ "${{ matrix.platform.os_type }}" == 'windows' ]; then
