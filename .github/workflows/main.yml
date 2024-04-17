@@ -232,12 +232,9 @@ jobs:
           if [ "${{ matrix.platform.os_type }}" == 'macos' ]; then
             echo "BUILD_TESTS_STATUS=-DBUILD_TESTS=OFF" >> "${GITHUB_ENV}"
             echo "BUILD_PLUGINS_STATUS=-DBUILD_RR_PLUGINS=OFF" >> "${GITHUB_ENV}"
-          elif [ "${{ matrix.platform.os_type }}" == 'ubuntu' ]; then
+          else
             echo "BUILD_TESTS_STATUS=-DBUILD_TESTS=ON" >> "${GITHUB_ENV}"
             echo "BUILD_PLUGINS_STATUS=-DBUILD_RR_PLUGINS=ON" >> "${GITHUB_ENV}"
-          elif [ "${{ matrix.platform.os_type }}" == 'windows' ]; then
-            echo "BUILD_TESTS_STATUS=-DBUILD_TESTS=OFF" >> "${GITHUB_ENV}"
-            echo "BUILD_PLUGINS_STATUS=-DBUILD_RR_PLUGINS=OFF" >> "${GITHUB_ENV}"
           fi
 
       - name: Configure CMake for RoadRunner
