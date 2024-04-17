@@ -228,7 +228,7 @@ jobs:
           arch: amd64
 
       - name: Set up CMake
-          uses: cmake/setup-cmake@v1
+        uses: cmake/setup-cmake@v1
 
       - name: Create build directory
         run: mkdir -p ${{ runner.workspace }}/build-roadrunner
