@@ -136,17 +136,18 @@ jobs:
               echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${{ runner.workspace }}/roadrunner/libroadrunner-deps/install-azure/Debug" >> "${GITHUB_ENV}"
             fi
           fi
-          
 
       - name: Download LLVM binaries
         run: |
-          curl -L "${{ matrix.platform.llvm_link }}" > llvm.zip
           if [ "${{ matrix.platform.os_name }}" == 'macos-latest' ]; then
+            curl -L "${{ matrix.platform.llvm_link }}" > llvm.zip
             unzip -q llvm.zip -d llvm
+            rm llvm.zip
           else
+            curl -L "${{ matrix.platform.llvm_link }}" > llvm.tar.gz
             tar -xzf llvm.zip -C llvm --strip-components=1
+            rm llvm.tar.gz
           fi
-          rm llvm.zip
           echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${{runner.workspace }}/roadrunner/llvm" >> "${GITHUB_ENV}"
 
       - name: Create build directory
