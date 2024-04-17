@@ -147,7 +147,6 @@ jobs:
           else
             curl -L "${{ matrix.platform.llvm_link }}" > llvm.tar.gz
             ls -l
-            tar -xf swig-4.0.2.tar.gz
             tar -xzf llvm.tar.gz
             rm llvm.tar.gz
           fi
