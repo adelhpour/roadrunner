@@ -157,7 +157,7 @@ jobs:
             cd ${{ runner.workspace }}/roadrunner
           elif [ "${{ matrix.platform.os_type }}" == 'windows' ]; then
             curl -L https://sourceforge.net/projects/swig/files/swigwin/swigwin-4.0.2/swigwin-4.0.2.zip/download > swig.zip
-            unzip -o swig.zip -d swig
+            unzip -q swig.zip -d swig
             rm swig.zip
             echo SWIG_DIR="-DSWIG_EXECUTABLE=${{ runner.workspace }}/swig/swigwin-4.0.2/" >> $GITHUB_PATH
           fi
@@ -167,17 +167,6 @@ jobs:
         run: |
           curl -L "${{ matrix.platform.libroadrunner_deps_link }}" > libroadrunner-deps.zip
           unzip -q libroadrunner-deps.zip
-          echo "a0) Unzipping libRoadRunner dependencies"
-          echo "$GITHUB_WORKSPACE"
-          ls
-          echo "a) Unzipping libRoadRunner dependencies"
-          ls -l ${{ runner.workspace }}/roadrunner
-          unzip -q libroadrunner-deps.zip
-          echo "b) Unzipping libRoadRunner dependencies"
-          ls -l ${{ runner.workspace }}/roadrunner
-          echo "c) Unzipping libRoadRunner dependencies"
-          ls -l ${{ runner.workspace }}/roadrunner/libroadrunner-deps
-          
           rm libroadrunner-deps.zip
           if [ "${{ matrix.platform.os_type }}" == 'macos' ]; then
             if [ "${{ matrix.platform.build_type }}" == 'Release' ]; then
@@ -198,10 +187,10 @@ jobs:
           elif [ "${{ matrix.platform.os_type }}" == 'windows' ]; then
             if [ "${{ matrix.platform.build_type }}" == 'Release' ]; then
               mv libroadrunner-deps-Windows_NT-Release libroadrunner-deps
-              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${{ runner.workspace }}/roadrunner/libroadrunner-deps/install-azure/Release" >> "${GITHUB_ENV}"
+              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=$GITHUB_WORKSPACE/libroadrunner-deps/install-azure/Release" >> "${GITHUB_ENV}"
             else
               mv libroadrunner-deps-Windows_NT-Debug libroadrunner-deps
-              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${{ runner.workspace }}/roadrunner/libroadrunner-deps/install-azure/Debug" >> "${GITHUB_ENV}"
+              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=$GITHUB_WORKSPACE/libroadrunner-deps/install-azure/Debug" >> "${GITHUB_ENV}"
             fi
           fi
 
