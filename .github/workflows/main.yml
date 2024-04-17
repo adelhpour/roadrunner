@@ -140,7 +140,7 @@ jobs:
       - name: Install Python dependencies
         run: pip${{ matrix.python_version.version }} install numpy
 
-      - name: Install swig on
+      - name: Install swig
         shell: bash
         run: |
           # installing the latest version of swig leads to a build error. So we need to build a specific version from source for macos
@@ -167,7 +167,7 @@ jobs:
         run: |
           curl -L "${{ matrix.platform.libroadrunner_deps_link }}" > libroadrunner-deps.zip
           unzip libroadrunner-deps.zip
-          ls -l ${{ runner.workspace }}
+          ls
           echo "a) Unzipping libRoadRunner dependencies"
           ls -l ${{ runner.workspace }}/roadrunner
           unzip -q libroadrunner-deps.zip
