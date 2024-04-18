@@ -113,7 +113,7 @@ jobs:
           mkdir -p python${{ matrix.python_version.version }}
           cd python${{ matrix.python_version.version }}
           curl -L https://www.python.org/ftp/python/${{ matrix.python_version.version }}.0/Python-${{ matrix.python_version.version }}.0.tgz > python.tgz
-          tar -xzf python.tgz
+          tar -zxqf python.tgz
           rm python.tgz
           cd Python-${{ matrix.python_version.version }}.0
           mkdir -p install-python
@@ -146,7 +146,7 @@ jobs:
             mkdir -p ccache
             cd ccache
             curl -L https://github.com/ccache/ccache/releases/download/v4.9.1/ccache-4.9.1.tar.gz > ccache.tar.gz
-            tar -xzf ccache.tar.gz
+            tar -zxqf ccache.tar.gz
             rm ccache.tar.gz
             mkdir -p build-ccache
             mkdir -p install-ccache
@@ -205,7 +205,7 @@ jobs:
             mkdir -p ${RUNNER_WORKSPACE}/swig
             cd swig
             curl -L https://prdownloads.sourceforge.net/swig/swig-4.0.2.tar.gz > swig.tar.gz
-            tar -xzf swig.tar.gz -C ${{ runner.workspace }}/swig --strip-components=1
+            tar -zxqf swig.tar.gz -C ${{ runner.workspace }}/swig --strip-components=1
             rm swig.tar.gz
             mkdir -p build-swig
             mkdir -p install-swig
@@ -225,7 +225,7 @@ jobs:
             mkdir -p swig
             cd swig
             curl -L https://sourceforge.net/projects/swig/files/swig/swig-4.0.2/swig-4.0.2.tar.gz/download > swig.tar.gz
-            tar -xzf swig.tar.gz
+            tar -zxqf swig.tar.gz
             rm swig.tar.gz
             mkdir -p install-swig
             cd swig-4.0.2/
@@ -292,7 +292,7 @@ jobs:
             echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}/llvm-binaries/llvm" >> "${GITHUB_ENV}"
           elif [ "${{ matrix.platform.os_type }}" == 'ubuntu' ]; then
             curl -L "${{ matrix.platform.llvm_link }}" > llvm.tar.gz
-            tar -xzf llvm.tar.gz -C llvm --strip-components=1
+            tar -zxqf llvm.tar.gz -C llvm --strip-components=1
             rm llvm.tar.gz
             echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}/llvm-binaries/llvm" >> "${GITHUB_ENV}"
           elif [ "${{ matrix.platform.os_type }}" == 'windows' ]; then
@@ -306,7 +306,7 @@ jobs:
             fi
           elif [ "${{ matrix.platform.os_type }}" == 'manylinux' ]; then
             curl -L "${{ matrix.platform.llvm_link }}" > llvm.x.tar
-            tar -xzf llvm.x.tar -C llvm --strip-components=1
+            tar -zxqf llvm.x.tar -C llvm --strip-components=1
             rm llvm.x.tar
             echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}/llvm-binaries/llvm" >> "${GITHUB_ENV}"
           fi
