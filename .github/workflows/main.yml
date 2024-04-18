@@ -127,12 +127,12 @@ jobs:
             curl -L https://github.com/ccache/ccache/releases/download/v4.9.1/ccache-4.9.1.tar.gz > ccache.tar.gz
             tar -zxvf ccache.tar.gz
             rm ccache.tar.gz
-            mkdir -p build
-            mkdir -p install
+            mkdir -p build-ccache
+            mkdir -p install-ccache
             cd build
-            cmake -DCMAKE_INSTALL_PREFIX="$RUNNER_WORKSPACE/ccache/install" -DCMAKE_BUILD_TYPE=Release ../ccache-4.9.1
+            cmake -DCMAKE_INSTALL_PREFIX="$RUNNER_WORKSPACE/ccache/install-ccache" -DCMAKE_BUILD_TYPE=Release ../ccache-4.9.1
             cmake --build . --target install
-            echo "$RUNNER_WORKSPACE/ccache/install/bin" >> $GITHUB_PATH
+            echo "$RUNNER_WORKSPACE/ccache/install-ccache/bin" >> $GITHUB_PATH
           fi
 
       - name: Prepare ccache timestamp on non-Windows platforms
@@ -185,19 +185,19 @@ jobs:
             curl -L https://prdownloads.sourceforge.net/swig/swig-4.0.2.tar.gz > swig.tar.gz
             tar -xzf swig.tar.gz -C ${{ runner.workspace }}/swig --strip-components=1
             rm swig.tar.gz
-            mkdir -p build
-            mkdir -p install
-            ./configure --prefix=${RUNNER_WORKSPACE}/swig/install
+            mkdir -p build-swig
+            mkdir -p install-swig
+            ./configure --prefix=${RUNNER_WORKSPACE}/swig/install-swig
             make
             make install
-            echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install/bin/swig" >> "${GITHUB_ENV}"
+            echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/bin/swig" >> "${GITHUB_ENV}"
           elif [ "${{ matrix.platform.os_type }}" == 'windows' ]; then
             mkdir -p swig
             cd swig
             curl -L https://sourceforge.net/projects/swig/files/swigwin/swigwin-4.0.2/swigwin-4.0.2.zip/download > swig.zip
-            unzip -q swig.zip -d install
+            unzip -q swig.zip -d install-swig
             rm swig.zip
-            echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install/swigwin-4.0.2/" >> $GITHUB_PATH
+            echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/swigwin-4.0.2/" >> $GITHUB_PATH
           elif [ "${{ matrix.platform.os_type }}" == 'manylinux' ]; then
             yum install -y pcre-devel
             mkdir -p swig
@@ -205,12 +205,12 @@ jobs:
             curl -L https://sourceforge.net/projects/swig/files/swig/swig-4.0.2/swig-4.0.2.tar.gz/download > swig.tar.gz
             tar -zxvf swig.tar.gz
             rm swig.tar.gz
-            mkdir -p install
+            mkdir -p install-swig
             cd swig-4.0.2/
-            ./configure --disable-dependency-tracking --prefix=${RUNNER_WORKSPACE}/swig/install
+            ./configure --disable-dependency-tracking --prefix=${RUNNER_WORKSPACE}/swig/install-swig
             make
             make install
-            echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install/bin/swig" >> $GITHUB_PATH
+            echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/bin/swig" >> $GITHUB_PATH
           fi
 
       - name: Download libRoadRunner dependencies binaries
@@ -241,10 +241,10 @@ jobs:
           elif [ "${{ matrix.platform.os_type }}" == 'windows' ]; then
             if [ "${{ matrix.platform.build_type }}" == 'Release' ]; then
               mv libroadrunner-deps-Windows_NT-Release libroadrunner-deps
-              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${RUNNER_WORKSPACE}/libroadrunner-deps-binaries/libroadrunner-deps/install-azure/Release" >> "${GITHUB_ENV}"
+              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${RUNNER_WORKSPACE}\libroadrunner-deps-binaries\libroadrunner-deps\install-azure\Release" >> "${GITHUB_ENV}"
             else
               mv libroadrunner-deps-Windows_NT-Debug libroadrunner-deps
-              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${RUNNER_WORKSPACE}/libroadrunner-deps-binaries/libroadrunner-deps/install-azure/Debug" >> "${GITHUB_ENV}"
+              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${RUNNER_WORKSPACE}\libroadrunner-deps-binaries\libroadrunner-deps\install-azure\Debug" >> "${GITHUB_ENV}"
             fi
           fi
 
@@ -270,9 +270,9 @@ jobs:
             unzip -q llvm.zip -d llvm
             rm llvm.zip
             if [ "${{ matrix.platform.build_type }}" == 'Release' ]; then
-              echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}/llvm-binaries/llvm/llvm-13.x-msvc2022-x64-rel" >> "${GITHUB_ENV}"
+              echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}\llvm-binaries\llvm\llvm-13.x-msvc2022-x64-rel" >> "${GITHUB_ENV}"
             else
-              echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}/llvm-binaries/llvm" >> "${GITHUB_ENV}"
+              echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}\llvm-binaries\llvm" >> "${GITHUB_ENV}"
             fi
           fi
 
