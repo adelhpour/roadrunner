@@ -114,8 +114,8 @@ jobs:
 
       - name: Install ccache
         shell: bash
-        working-directory: ${{ RUNNER_WORKSPACE }}
         run: |
+          cd ${RUNNER_WORKSPACE}
           echo "GITHUB_WORKSPACE is : ${GITHUB_WORKSPACE}"
           echo "runner.workspace is : ${{ runner.workspace }}"
           echo "{RUNNER_WORKSPACE} is: ${RUNNER_WORKSPACE}"
@@ -134,8 +134,7 @@ jobs:
             cd ccache-build
             cmake -DCMAKE_INSTALL_PREFIX=../ccache-install -DCMAKE_BUILD_TYPE=Release ../ccache-4.9.1
             cmake --build . --target install
-            cd ..
-            echo "${GITHUB_WORKSPACE}/ccache-install/bin" >> $GITHUB_PATH
+            echo "${RUNNER_WORKSPACE}/ccache-install/bin" >> $GITHUB_PATH
           fi
 
       - name: Prepare ccache timestamp on non-Windows platforms
