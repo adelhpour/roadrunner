@@ -287,7 +287,8 @@ jobs:
       - name: Configure CMake for RoadRunner
         shell: bash
         run: |
-          cd ${RUNNER_WORKSPACE}/build-roadrunner
+          cd ${RUNNER_WORKSPACE}
+          cd build-roadrunner
           cmake $GITHUB_WORKSPACE \
           -G "Ninja" \
           -DCMAKE_BUILD_TYPE=${{ matrix.platform.build_type }} \
