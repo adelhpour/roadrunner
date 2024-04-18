@@ -91,12 +91,12 @@ jobs:
         python_version:
           - name: py39
             version: "3.9"
-          #- name: py310
-          #  version: "3.10"
-          #- name: py311
-          #  version: "3.11"
-          #- name: py312
-          #  version: "3.12"
+          - name: py310
+            version: "3.10"
+          - name: py311
+            version: "3.11"
+          - name: py312
+            version: "3.12"
     runs-on: ${{ matrix.platform.os_name }}
     container:
       image: ${{ matrix.platform.container_image || '' }}
@@ -104,22 +104,6 @@ jobs:
     steps:
       - name: Checkout RoadRunner
         uses: actions/checkout@v3
-
-      - name: Setup Python for manylinux platforms
-        if: matrix.platform.build_python == 'ON' && matrix.platform.os_type == 'manylinux'
-        run: |
-          cd ${RUNNER_WORKSPACE}
-          yum install gcc openssl-devel bzip2-devel libffi-devel -y
-          mkdir -p python${{ matrix.python_version.version }}
-          cd python${{ matrix.python_version.version }}
-          curl -L https://www.python.org/ftp/python/${{ matrix.python_version.version }}.0/Python-${{ matrix.python_version.version }}.0.tgz > python.tgz
-          tar -zxf python.tgz
-          rm python.tgz
-          cd Python-${{ matrix.python_version.version }}.0
-          mkdir -p install-python
-          ./configure --enable-optimizations --prefix=${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python
-          make altinstall
-          python${{ matrix.python_version.version }} --version
 
       - name: Set MSVC as the default compiler on Windows
         if: matrix.platform.os_type == 'windows'
@@ -189,6 +173,23 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python_version.version }}
+
+      - name: Setup Python for manylinux platforms
+        if: matrix.platform.build_python == 'ON' && matrix.platform.os_type == 'manylinux'
+        shell: bash
+        run: |
+          cd ${RUNNER_WORKSPACE}
+          yum install gcc openssl-devel bzip2-devel libffi-devel -y
+          mkdir -p python${{ matrix.python_version.version }}
+          cd python${{ matrix.python_version.version }}
+          curl -L https://www.python.org/ftp/python/${{ matrix.python_version.version }}.0/Python-${{ matrix.python_version.version }}.0.tgz > python.tgz
+          tar -zxf python.tgz
+          rm python.tgz
+          cd Python-${{ matrix.python_version.version }}.0
+          mkdir -p install-python
+          ./configure --enable-optimizations --prefix=${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python
+          make altinstall
+          echo "PATH=${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python/bin:$PATH" >> $GITHUB_PATH
 
       - name: Install Python dependencies
         if: matrix.platform.build_python == 'ON'
