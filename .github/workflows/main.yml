@@ -115,7 +115,7 @@ jobs:
       - name: Install ccache
         shell: bash
         run: |
-          cd "$RUNNER_WORKSPACE"
+          cd ${RUNNER_WORKSPACE}
           if [ "${{ matrix.platform.os_type }}" == 'macos' ]; then
             brew install ccache
           elif [ "${{ matrix.platform.os_type }}" == 'ubuntu' ]; then
@@ -140,7 +140,6 @@ jobs:
         id: ccache_cache_timestamp
         shell: cmake -P {0}
         run: |
-          cd ${RUNNER_WORKSPACE}
           string(TIMESTAMP current_date "%Y-%m-%d-%H;%M;%S" UTC)
           message("::set-output name=timestamp::${current_date}")
 
