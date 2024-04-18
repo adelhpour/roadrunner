@@ -190,7 +190,6 @@ jobs:
           ./configure --enable-optimizations --prefix=${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python
           make altinstall
           echo "PATH=${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python/bin:$PATH" >> $GITHUB_PATH
-          echo "PYTHON_EXECUTABLE=${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python/bin/python${{ matrix.python_version.version }}" >> "${GITHUB_ENV}"      
 
       - name: Install Python dependencies
         if: matrix.platform.build_python == 'ON'
@@ -200,6 +199,7 @@ jobs:
             python${{ matrix.python_version.version }} -m pip install numpy
           else
             python -m pip install numpy
+            echo "PYTHON_EXECUTABLE=${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python/bin/python${{ matrix.python_version.version }}" >> "${GITHUB_ENV}"
           fi
 
       - name: Install swig
