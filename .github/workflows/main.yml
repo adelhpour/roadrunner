@@ -105,7 +105,13 @@ jobs:
       - name: Checkout RoadRunner
         uses: actions/checkout@v3
 
-      - name: Setup Python for manylinux platforms
+      - name: Setup Python dependencies
+        if: matrix.platform.os_type == 'manylinux'
+        shell: bash
+        run: |
+          yum install -y glibc-devel
+
+      - name: Setup Python
         if: matrix.platform.build_python == 'ON'
         uses: actions/setup-python@v2
         with:
