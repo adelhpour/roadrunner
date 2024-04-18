@@ -86,7 +86,7 @@ jobs:
             build_tests: OFF
             build_plugins: OFF
             build_python: OFF
-            llvm_link: "/install-llvm-13.x"
+            llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-manylinux2014.tgz"
             libroadrunner_deps_link: "https://artproduks1.artifacts.visualstudio.com/Aa0252f86-2cf2-4dee-a2a7-c18ef21823c3/10f68fb1-1fa1-4069-92b5-24c5b7fee3e5/_apis/artifact/cGlwZWxpbmVhcnRpZmFjdDovL1RoZVJvYWRydW5uZXJQcm9qZWN0L3Byb2plY3RJZC8xMGY2OGZiMS0xZmExLTQwNjktOTJiNS0yNGM1YjdmZWUzZTUvYnVpbGRJZC8yMzY4L2FydGlmYWN0TmFtZS9saWJyb2FkcnVubmVyLWRlcHMtbWFueWxpbnV4MjAxNC1EZWJ1Zw2/content?format=zip"
         python_version:
           - name: py39
@@ -251,6 +251,14 @@ jobs:
               mv libroadrunner-deps-Windows_NT-Debug libroadrunner-deps
               echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${RUNNER_WORKSPACE}\libroadrunner-deps-binaries\libroadrunner-deps\install-azure\Debug" >> "${GITHUB_ENV}"
             fi
+          elif [ "${{ matrix.platform.os_type }}" == 'manylinux' ]; then
+            if [ "${{ matrix.platform.build_type }}" == 'Release' ]; then
+              mv libroadrunner-deps-manylinux2014-Release libroadrunner-deps
+              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${RUNNER_WORKSPACE}/libroadrunner-deps-binaries/libroadrunner-deps" >> "${GITHUB_ENV}"
+            else
+              mv libroadrunner-deps-manylinux2014-Debug libroadrunner-deps
+              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${RUNNER_WORKSPACE}/libroadrunner-deps-binaries/libroadrunner-deps" >> "${GITHUB_ENV}"
+            fi
           fi
 
       - name: Download LLVM binaries
@@ -279,6 +287,11 @@ jobs:
             else
               echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}\llvm-binaries\llvm" >> "${GITHUB_ENV}"
             fi
+          elif [ "${{ matrix.platform.os_type }}" == 'manylinux' ]; then
+            curl -L "${{ matrix.platform.llvm_link }}" > llvm.x.tar
+            tar -xzf llvm.x.tar -C llvm --strip-components=1
+            rm llvm.x.tar
+            echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}/llvm-binaries/llvm" >> "${GITHUB_ENV}"
           fi
 
       - name: Create build directory
