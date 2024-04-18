@@ -288,7 +288,7 @@ jobs:
               echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}\llvm-binaries\llvm" >> "${GITHUB_ENV}"
             fi
           elif [ "${{ matrix.platform.os_type }}" == 'manylinux' ]; then
-            curl -L "${{ matrix.platform.llvm_link }}" > llvm.x.tar
+            curl -L "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-manylinux2014.tgz" > llvm.x.tar
             tar -xzf llvm.x.tar -C llvm --strip-components=1
             rm llvm.x.tar
             echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}/llvm-binaries/llvm" >> "${GITHUB_ENV}"
