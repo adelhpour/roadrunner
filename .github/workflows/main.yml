@@ -168,13 +168,18 @@ jobs:
             ${{ runner.os }}-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
             ${{ runner.os }}-
 
-      - name: Setup Python
+      - name: Setup Python for non manylinux platforms
+        if : matrix.platform.os_type != 'manylinux'
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python_version.version }}
 
-      - name: check python version
-        run: python${{ matrix.python_version.version }} --version
+      - name: Setup Python for manylinux platforms
+        if : matrix.platform.os_type == 'manylinux'
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python_version.version }}
+          architecture: x64
 
       - name: Install Python dependencies
         if: matrix.platform.build_python == 'ON'
