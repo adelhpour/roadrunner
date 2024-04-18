@@ -196,7 +196,7 @@ jobs:
         if: matrix.platform.build_python == 'ON'
         shell: bash
         run: |
-          if [ "${{ matrix.platform.os_type }}" != 'macos' ]; then
+          if [ "${{ matrix.platform.os_type }}" != 'windows' ]; then
             python${{ matrix.python_version.version }} -m pip install numpy
           else
             python -m pip install numpy
