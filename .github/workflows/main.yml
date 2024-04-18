@@ -129,7 +129,7 @@ jobs:
             rm ccache.tar.gz
             mkdir -p build-ccache
             mkdir -p install-ccache
-            cd build
+            cd build-ccache
             cmake -DCMAKE_INSTALL_PREFIX="$RUNNER_WORKSPACE/ccache/install-ccache" -DCMAKE_BUILD_TYPE=Release ../ccache-4.9.1
             cmake --build . --target install
             echo "$RUNNER_WORKSPACE/ccache/install-ccache/bin" >> $GITHUB_PATH
