@@ -109,7 +109,8 @@ jobs:
         if: matrix.platform.os_type == 'manylinux'
         shell: bash
         run: |
-          yum install -y glibc-devel
+          yum install -y python3
+          python3 --version
 
       - name: Setup Python
         if: matrix.platform.build_python == 'ON'
