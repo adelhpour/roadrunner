@@ -170,7 +170,7 @@ jobs:
 
       - name: Setup Python for non-manylinux platforms
         if: matrix.platform.build_python == 'ON' && matrix.platform.os_type != 'manylinux'
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python_version.version }}
 
