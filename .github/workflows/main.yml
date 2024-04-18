@@ -190,11 +190,17 @@ jobs:
           ./configure --enable-optimizations --prefix=${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python
           make altinstall
           echo "PATH=${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python/bin:$PATH" >> $GITHUB_PATH
+          echo "PYTHON_EXECUTABLE=${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python/bin/python${{ matrix.python_version.version }}" >> "${GITHUB_ENV}"      
 
       - name: Install Python dependencies
         if: matrix.platform.build_python == 'ON'
         shell: bash
-        run: python${{ matrix.python_version.version }} -m pip install numpy
+        run: |
+          if [ "${{ matrix.platform.os_type }}" != 'macos' ]; then
+            python${{ matrix.python_version.version }} -m pip install numpy
+          else
+            python -m pip install numpy
+          fi
 
       - name: Install swig
         shell: bash
@@ -330,6 +336,7 @@ jobs:
           ${LLVM_DIR} \
           ${SWIG_DIR} \
           -DBUILD_PYTHON=${{ matrix.platform.build_python }} \
+          ${PYTHON_EXECUTABLE} \
           -DBUILD_TESTS=${{ matrix.platform.build_tests }} \
           -DBUILD_RR_PLUGINS=${{ matrix.platform.build_plugins }} \
           -DCMAKE_INSTALL_PREFIX="${RUNNER_WORKSPACE}/install-roadrunner"
