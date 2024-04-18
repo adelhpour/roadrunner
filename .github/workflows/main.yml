@@ -199,7 +199,7 @@ jobs:
             python${{ matrix.python_version.version }} -m pip install numpy
           else
             python -m pip install numpy
-            echo "PYTHON_EXECUTABLE=${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python/bin/python${{ matrix.python_version.version }}" >> "${GITHUB_ENV}"
+            echo "Python_ROOT_DIR_OPTION=${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python" >> "${GITHUB_ENV}"
           fi
 
       - name: Install swig
@@ -336,7 +336,7 @@ jobs:
           ${LLVM_DIR} \
           ${SWIG_DIR} \
           -DBUILD_PYTHON=${{ matrix.platform.build_python }} \
-          ${PYTHON_EXECUTABLE} \
+          ${Python_ROOT_DIR_OPTION} \
           -DBUILD_TESTS=${{ matrix.platform.build_tests }} \
           -DBUILD_RR_PLUGINS=${{ matrix.platform.build_plugins }} \
           -DCMAKE_INSTALL_PREFIX="${RUNNER_WORKSPACE}/install-roadrunner"
