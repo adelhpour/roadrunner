@@ -116,7 +116,7 @@ jobs:
         if: matrix.platform.build_python == 'ON'
         shell: bash
         run: |
-          python{{ matrix.python_version.version }} --version
+          python${{ matrix.python_version.version }} --version
           pip${{ matrix.python_version.version }} install numpy
 
       - name: Set MSVC as the default compiler on Windows
