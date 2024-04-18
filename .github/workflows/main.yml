@@ -194,7 +194,7 @@ jobs:
       - name: Install Python dependencies
         if: matrix.platform.build_python == 'ON'
         shell: bash
-        run: pytho${{ matrix.python_version.version }} -m pip install numpy
+        run: python${{ matrix.python_version.version }} -m pip install numpy
 
       - name: Install swig
         shell: bash
