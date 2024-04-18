@@ -115,7 +115,7 @@ jobs:
       - name: Install ccache
         shell: bash
         run: |
-          cd ${RUNNER_WORKSPACE}
+          cd "${RUNNER_WORKSPACE}"
           if [ "${{ matrix.platform.os_type }}" == 'macos' ]; then
             brew install ccache
           elif [ "${{ matrix.platform.os_type }}" == 'ubuntu' ]; then
@@ -130,7 +130,7 @@ jobs:
             mkdir -p build
             mkdir -p install
             cd build
-            cmake -DCMAKE_INSTALL_PREFIX=${RUNNER_WORKSPACE}/ccache/install -DCMAKE_BUILD_TYPE=Release ../ccache-4.9.1
+            cmake -DCMAKE_INSTALL_PREFIX="${RUNNER_WORKSPACE}/ccache/install" -DCMAKE_BUILD_TYPE=Release ../ccache-4.9.1
             cmake --build . --target install
             echo "${RUNNER_WORKSPACE}/ccache/install/bin" >> $GITHUB_PATH
           fi
@@ -140,7 +140,7 @@ jobs:
         id: ccache_cache_timestamp
         shell: cmake -P {0}
         run: |
-          cd ${RUNNER_WORKSPACE}
+          cd "${RUNNER_WORKSPACE}"
           string(TIMESTAMP current_date "%Y-%m-%d-%H;%M;%S" UTC)
           message("::set-output name=timestamp::${current_date}")
 
@@ -148,7 +148,7 @@ jobs:
         if: matrix.platform.os_type != 'windows'
         shell: bash
         run: |
-          cd ${RUNNER_WORKSPACE}
+          cd "${RUNNER_WORKSPACE}"
           echo "CCACHE_DIR=${RUNNER_WORKSPACE}/.ccache" >> "${GITHUB_ENV}"
           echo "COMPILER_LAUNCHER=ccache" >> "${GITHUB_ENV}"
 
@@ -156,7 +156,7 @@ jobs:
         if: matrix.platform.os_type != 'windows'
         uses: actions/cache@v3
         with:
-          path: ${RUNNER_WORKSPACE}/.ccache
+          path: "${RUNNER_WORKSPACE}/.ccache"
           key:
             ${{ runner.os }}-${{ steps.ccache_cache_timestamp.outputs.timestamp
             }}
@@ -177,18 +177,18 @@ jobs:
       - name: Install swig
         shell: bash
         run: |
-          cd ${RUNNER_WORKSPACE}
+          cd "${RUNNER_WORKSPACE}"
           # running against the latest version of swig fails, os we build version 4.0.2
           if [ "${{ matrix.platform.os_type }}" == 'macos' ]; then
             brew install pcre pcre2
-            mkdir -p ${RUNNER_WORKSPACE}/swig
+            mkdir -p "${RUNNER_WORKSPACE}/swig"
             cd swig
             curl -L https://prdownloads.sourceforge.net/swig/swig-4.0.2.tar.gz > swig.tar.gz
             tar -xzf swig.tar.gz -C ${{ runner.workspace }}/swig --strip-components=1
             rm swig.tar.gz
             mkdir -p build
             mkdir -p install
-            ./configure --prefix=${RUNNER_WORKSPACE}/swig/install
+            ./configure --prefix="${RUNNER_WORKSPACE}/swig/install"
             make
             make install
             echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install/bin/swig" >> "${GITHUB_ENV}"
@@ -208,7 +208,7 @@ jobs:
             rm swig.tar.gz
             mkdir -p install
             cd swig-4.0.2/
-            ./configure --disable-dependency-tracking --prefix=${RUNNER_WORKSPACE}/swig/install
+            ./configure --disable-dependency-tracking --prefix="${RUNNER_WORKSPACE}/swig/install"
             make
             make install
             echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install/bin/swig" >> $GITHUB_PATH
@@ -217,7 +217,7 @@ jobs:
       - name: Download libRoadRunner dependencies binaries
         shell: bash
         run: |
-          cd ${RUNNER_WORKSPACE}
+          cd "${RUNNER_WORKSPACE}"
           mkdir -p libroadrunner-deps-binaries
           cd libroadrunner-deps-binaries
           curl -L "${{ matrix.platform.libroadrunner_deps_link }}" > libroadrunner-deps.zip
@@ -252,7 +252,7 @@ jobs:
       - name: Download LLVM binaries
         shell: bash
         run: |
-          cd ${RUNNER_WORKSPACE}
+          cd "${RUNNER_WORKSPACE}"
           mkdir -p llvm-binaries
           cd llvm-binaries
           mkdir -p llvm
@@ -278,11 +278,11 @@ jobs:
           fi
 
       - name: Create build directory
-        run: mkdir -p ${RUNNER_WORKSPACE}/build-roadrunner
+        run: mkdir -p "${RUNNER_WORKSPACE}/build-roadrunner"
 
       - name: Configure CMake for RoadRunner
         shell: bash
-        working-directory: ${RUNNER_WORKSPACE}/build-roadrunner
+        working-directory: "${RUNNER_WORKSPACE}/build-roadrunner"
         run: |
           cmake $GITHUB_WORKSPACE \
           -G "Ninja" \
@@ -301,5 +301,5 @@ jobs:
       - name: Build and Install RoadRunner
         shell: bash
         run: |
-          cd ${RUNNER_WORKSPACE}/build-roadrunner
+          cd "${RUNNER_WORKSPACE}/build-roadrunner"
           cmake --build . --target install --config ${{ matrix.platform.build_type }}
