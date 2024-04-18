@@ -295,6 +295,7 @@ jobs:
           fi
 
       - name: Create build directory
+        shell: bash
         run: |
           cd ${RUNNER_WORKSPACE}
           echo "checking ${RUNNER_WORKSPACE}"
