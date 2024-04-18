@@ -277,7 +277,7 @@ jobs:
           fi
 
       - name: Create build directory
-        run: mkdir -p ${RUNNER_WORKSPACE}/build-roadrunner
+        run: mkdir -p "${RUNNER_WORKSPACE}/build-roadrunner"
 
       - name: Configure CMake for RoadRunner
         shell: bash
