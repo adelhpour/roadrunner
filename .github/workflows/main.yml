@@ -277,12 +277,12 @@ jobs:
           fi
 
       - name: Create build directory
-        run: mkdir -p "${RUNNER_WORKSPACE}/build-roadrunner"
+        run: mkdir -p ${RUNNER_WORKSPACE}/build-roadrunner
 
       - name: Configure CMake for RoadRunner
         shell: bash
-        working-directory: ${RUNNER_WORKSPACE}/build-roadrunner
         run: |
+          cd ${RUNNER_WORKSPACE}/build-roadrunner
           cmake $GITHUB_WORKSPACE \
           -G "Ninja" \
           -DCMAKE_BUILD_TYPE=${{ matrix.platform.build_type }} \
