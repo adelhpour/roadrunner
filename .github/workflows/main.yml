@@ -116,25 +116,23 @@ jobs:
         shell: bash
         run: |
           cd ${RUNNER_WORKSPACE}
-          echo "GITHUB_WORKSPACE is : ${GITHUB_WORKSPACE}"
-          echo "runner.workspace is : ${{ runner.workspace }}"
-          echo "{RUNNER_WORKSPACE} is: ${RUNNER_WORKSPACE}"
-          echo "RUNNER_WORKSPACE is : $RUNNER_WORKSPACE"
-          pwd
           if [ "${{ matrix.platform.os_type }}" == 'macos' ]; then
             brew install ccache
           elif [ "${{ matrix.platform.os_type }}" == 'ubuntu' ]; then
             sudo apt-get update
             sudo apt-get install -y ccache
           elif [ "${{ matrix.platform.os_type }}" == 'manylinux' ]; then
+            mkdir -p ccache
+            cd ccache
             curl -L https://github.com/ccache/ccache/releases/download/v4.9.1/ccache-4.9.1.tar.gz > ccache.tar.gz
             tar -zxvf ccache.tar.gz
-            mkdir -p ccache-build
-            mkdir -p ccache-install
-            cd ccache-build
-            cmake -DCMAKE_INSTALL_PREFIX=../ccache-install -DCMAKE_BUILD_TYPE=Release ../ccache-4.9.1
+            rm ccache.tar.gz
+            mkdir -p build
+            mkdir -p install
+            cd build
+            cmake -DCMAKE_INSTALL_PREFIX=${RUNNER_WORKSPACE}/ccache/install -DCMAKE_BUILD_TYPE=Release ../ccache-4.9.1
             cmake --build . --target install
-            echo "${RUNNER_WORKSPACE}/ccache-install/bin" >> $GITHUB_PATH
+            echo "${RUNNER_WORKSPACE}/ccache/install/bin" >> $GITHUB_PATH
           fi
 
       - name: Prepare ccache timestamp on non-Windows platforms
@@ -142,6 +140,7 @@ jobs:
         id: ccache_cache_timestamp
         shell: cmake -P {0}
         run: |
+          cd ${RUNNER_WORKSPACE}
           string(TIMESTAMP current_date "%Y-%m-%d-%H;%M;%S" UTC)
           message("::set-output name=timestamp::${current_date}")
 
@@ -149,14 +148,15 @@ jobs:
         if: matrix.platform.os_type != 'windows'
         shell: bash
         run: |
-          echo "CCACHE_DIR=${{ runner.workspace }}/.ccache" >> "${GITHUB_ENV}"
+          cd ${RUNNER_WORKSPACE}
+          echo "CCACHE_DIR=${RUNNER_WORKSPACE}/.ccache" >> "${GITHUB_ENV}"
           echo "COMPILER_LAUNCHER=ccache" >> "${GITHUB_ENV}"
 
       - name: Cache ccache files on non-Windows
         if: matrix.platform.os_type != 'windows'
         uses: actions/cache@v3
         with:
-          path: ${{ runner.workspace }}/.ccache
+          path: ${RUNNER_WORKSPACE}/.ccache
           key:
             ${{ runner.os }}-${{ steps.ccache_cache_timestamp.outputs.timestamp
             }}
@@ -177,99 +177,112 @@ jobs:
       - name: Install swig
         shell: bash
         run: |
+          cd ${RUNNER_WORKSPACE}
           # running against the latest version of swig fails, os we build version 4.0.2
           if [ "${{ matrix.platform.os_type }}" == 'macos' ]; then
             brew install pcre pcre2
-            mkdir -p ${{ runner.workspace }}/swig
+            mkdir -p ${RUNNER_WORKSPACE}/swig
+            cd swig
             curl -L https://prdownloads.sourceforge.net/swig/swig-4.0.2.tar.gz > swig.tar.gz
             tar -xzf swig.tar.gz -C ${{ runner.workspace }}/swig --strip-components=1
-            cd ${{runner.workspace}}/swig
-            ./configure --prefix=${{ runner.workspace }}/swig/install-swig
-            make -j 12
-            make install
-            echo SWIG_DIR="-DSWIG_EXECUTABLE=${{ runner.workspace }}/swig/install-swig/bin/swig" >> "${GITHUB_ENV}"
-            cd ${{ runner.workspace }}/roadrunner
-          elif [ "${{ matrix.platform.os_type }}" == 'windows' ]; then
-            curl -L https://sourceforge.net/projects/swig/files/swigwin/swigwin-4.0.2/swigwin-4.0.2.zip/download > swig.zip
-            unzip -q swig.zip -d swig
-            rm swig.zip
-            echo SWIG_DIR="-DSWIG_EXECUTABLE=${{ runner.workspace }}/swig/swigwin-4.0.2/" >> $GITHUB_PATH
-          elif [ "${{ matrix.platform.os_type }}" == 'manylinux' ]; then
-            yum install -y pcre-devel
-            curl -L https://sourceforge.net/projects/swig/files/swig/swig-4.0.2/swig-4.0.2.tar.gz/download > swig.tar.gz
-            tar -zxvf swig.tar.gz
-            mkdir -p swig
-            cd swig-4.0.2/
-            ./configure --disable-dependency-tracking --prefix=${GITHUB_WORKSPACE}/../swig
+            rm swig.tar.gz
+            mkdir -p build
+            mkdir -p install
+            ./configure --prefix=${RUNNER_WORKSPACE}/swig/install
             make
             make install
-            cd ..
-            echo SWIG_DIR="-DSWIG_EXECUTABLE=${GITHUB_WORKSPACE}/swig/bin/swig" >> $GITHUB_PATH
+            echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install/bin/swig" >> "${GITHUB_ENV}"
+          elif [ "${{ matrix.platform.os_type }}" == 'windows' ]; then
+            mkdir -p swig
+            cd swig
+            curl -L https://sourceforge.net/projects/swig/files/swigwin/swigwin-4.0.2/swigwin-4.0.2.zip/download > swig.zip
+            unzip -q swig.zip -d install
+            rm swig.zip
+            echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install/swigwin-4.0.2/" >> $GITHUB_PATH
+          elif [ "${{ matrix.platform.os_type }}" == 'manylinux' ]; then
+            yum install -y pcre-devel
+            mkdir -p swig
+            cd swig
+            curl -L https://sourceforge.net/projects/swig/files/swig/swig-4.0.2/swig-4.0.2.tar.gz/download > swig.tar.gz
+            tar -zxvf swig.tar.gz
+            rm swig.tar.gz
+            mkdir -p install
+            cd swig-4.0.2/
+            ./configure --disable-dependency-tracking --prefix=${RUNNER_WORKSPACE}/swig/install
+            make
+            make install
+            echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install/bin/swig" >> $GITHUB_PATH
           fi
 
       - name: Download libRoadRunner dependencies binaries
         shell: bash
         run: |
+          cd ${RUNNER_WORKSPACE}
+          mkdir -p libroadrunner-deps-binaries
+          cd libroadrunner-deps-binaries
           curl -L "${{ matrix.platform.libroadrunner_deps_link }}" > libroadrunner-deps.zip
           unzip -q libroadrunner-deps.zip
           rm libroadrunner-deps.zip
           if [ "${{ matrix.platform.os_type }}" == 'macos' ]; then
             if [ "${{ matrix.platform.build_type }}" == 'Release' ]; then
               mv libroadrunner-deps-Darwin-Release-x86_64 libroadrunner-deps
-              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${{ runner.workspace }}/roadrunner/libroadrunner-deps/install-azure/Release" >> "${GITHUB_ENV}"
+              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${RUNNER_WORKSPACE}/libroadrunner-deps-binaries/libroadrunner-deps/install-azure/Release" >> "${GITHUB_ENV}"
             else
               mv libroadrunner-deps-Darwin-Debug-x86_64 libroadrunner-deps
-              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${{ runner.workspace }}/roadrunner/libroadrunner-deps/install-azure/Debug" >> "${GITHUB_ENV}"
+              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${RUNNER_WORKSPACE}/libroadrunner-deps-binaries/libroadrunner-deps/install-azure/Debug" >> "${GITHUB_ENV}"
             fi
           elif [ "${{ matrix.platform.os_type }}" == 'ubuntu' ]; then
             if [ "${{ matrix.platform.build_type }}" == 'Release' ]; then
               mv libroadrunner-deps-Linux-Release libroadrunner-deps
-              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${{ runner.workspace }}/roadrunner/libroadrunner-deps" >> "${GITHUB_ENV}"
+              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${RUNNER_WORKSPACE}/libroadrunner-deps-binaries/libroadrunner-deps" >> "${GITHUB_ENV}"
             else
               mv libroadrunner-deps-Linux-Debug libroadrunner-deps
-              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${{ runner.workspace }}/roadrunner/libroadrunner-deps" >> "${GITHUB_ENV}"
+              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${RUNNER_WORKSPACE}/libroadrunner-deps-binaries/libroadrunner-deps" >> "${GITHUB_ENV}"
             fi
           elif [ "${{ matrix.platform.os_type }}" == 'windows' ]; then
             if [ "${{ matrix.platform.build_type }}" == 'Release' ]; then
               mv libroadrunner-deps-Windows_NT-Release libroadrunner-deps
-              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=$GITHUB_WORKSPACE/libroadrunner-deps/install-azure/Release" >> "${GITHUB_ENV}"
+              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${RUNNER_WORKSPACE}/libroadrunner-deps-binaries/libroadrunner-deps/install-azure/Release" >> "${GITHUB_ENV}"
             else
               mv libroadrunner-deps-Windows_NT-Debug libroadrunner-deps
-              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=$GITHUB_WORKSPACE/libroadrunner-deps/install-azure/Debug" >> "${GITHUB_ENV}"
+              echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${RUNNER_WORKSPACE}/libroadrunner-deps-binaries/libroadrunner-deps/install-azure/Debug" >> "${GITHUB_ENV}"
             fi
           fi
 
       - name: Download LLVM binaries
         shell: bash
         run: |
-          mkdir llvm
+          cd ${RUNNER_WORKSPACE}
+          mkdir -p llvm-binaries
+          cd llvm-binaries
+          mkdir -p llvm
           if [ "${{ matrix.platform.os_type }}" == 'macos' ]; then
             curl -L "${{ matrix.platform.llvm_link }}" > llvm.zip
             unzip -q llvm.zip -d llvm
             rm llvm.zip
-            echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${{runner.workspace }}/roadrunner/llvm" >> "${GITHUB_ENV}"
+            echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}/llvm-binaries/llvm" >> "${GITHUB_ENV}"
           elif [ "${{ matrix.platform.os_type }}" == 'ubuntu' ]; then
             curl -L "${{ matrix.platform.llvm_link }}" > llvm.tar.gz
             tar -xzf llvm.tar.gz -C llvm --strip-components=1
             rm llvm.tar.gz
-            echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${{runner.workspace }}/roadrunner/llvm" >> "${GITHUB_ENV}"
+            echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}/llvm-binaries/llvm" >> "${GITHUB_ENV}"
           elif [ "${{ matrix.platform.os_type }}" == 'windows' ]; then
             curl -L "${{ matrix.platform.llvm_link }}" > llvm.zip
             unzip -q llvm.zip -d llvm
             rm llvm.zip
             if [ "${{ matrix.platform.build_type }}" == 'Release' ]; then
-              echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=$GITHUB_WORKSPACE/llvm/llvm-13.x-msvc2022-x64-rel" >> "${GITHUB_ENV}"
+              echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}/llvm-binaries/llvm/llvm-13.x-msvc2022-x64-rel" >> "${GITHUB_ENV}"
             else
-              echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=$GITHUB_WORKSPACE/llvm" >> "${GITHUB_ENV}"
+              echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}/llvm-binaries/llvm" >> "${GITHUB_ENV}"
             fi
           fi
 
       - name: Create build directory
-        run: mkdir -p ${{ runner.workspace }}/build-roadrunner
+        run: mkdir -p ${RUNNER_WORKSPACE}/build-roadrunner
 
       - name: Configure CMake for RoadRunner
         shell: bash
-        working-directory: ${{ runner.workspace }}/build-roadrunner
+        working-directory: ${RUNNER_WORKSPACE}/build-roadrunner
         run: |
           cmake $GITHUB_WORKSPACE \
           -G "Ninja" \
@@ -283,10 +296,10 @@ jobs:
           -DBUILD_PYTHON=${{ matrix.platform.build_python }} \
           -DBUILD_TESTS=${{ matrix.platform.build_tests }} \
           -DBUILD_RR_PLUGINS=${{ matrix.platform.build_plugins }} \
-          -DCMAKE_INSTALL_PREFIX="${{ runner.workspace }}/install-roadrunner"
+          -DCMAKE_INSTALL_PREFIX="${RUNNER_WORKSPACE}/install-roadrunner"
 
       - name: Build and Install RoadRunner
-        working-directory: ${{ runner.workspace }}/build-roadrunner
         shell: bash
         run: |
+          cd ${RUNNER_WORKSPACE}/build-roadrunner
           cmake --build . --target install --config ${{ matrix.platform.build_type }}
