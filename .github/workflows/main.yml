@@ -91,12 +91,12 @@ jobs:
         python_version:
           - name: py39
             version: "3.9"
-          #- name: py310
-          #  version: "3.10"
-          #- name: py311
-          #  version: "3.11"
-          #- name: py312
-          #  version: "3.12"
+          - name: py310
+            version: "3.10"
+          - name: py311
+            version: "3.11"
+          - name: py312
+            version: "3.12"
     runs-on: ${{ matrix.platform.os_name }}
     container:
       image: ${{ matrix.platform.container_image || '' }}
@@ -190,16 +190,16 @@ jobs:
           ./configure --enable-optimizations --prefix=${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python
           make install
           echo "${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python/bin" >> $GITHUB_PATH
+          echo "export PATH=${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python/bin:$PATH" >> $GITHUB_ENV
 
       - name: Install Python dependencies
         if: matrix.platform.build_python == 'ON'
         shell: bash
         run: |
-          if [ "${{ matrix.platform.os_type }}" != 'windows' ]; then
-            python${{ matrix.python_version.version }} -m pip install numpy
-          else
+          if [ "${{ matrix.platform.os_type }}" == 'windows' ]; then
             python -m pip install numpy
-            echo "Python_ROOT_DIR_OPTION=${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python" >> "${GITHUB_ENV}"
+          else
+            python${{ matrix.python_version.version }} -m pip install numpy
           fi
 
       - name: Install swig
@@ -289,7 +289,6 @@ jobs:
         shell: bash
         run: |
           cd ${RUNNER_WORKSPACE}
-          echo "export PATH=${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python/bin:$PATH" >> $GITHUB_ENV
           mkdir -p llvm-binaries
           cd llvm-binaries
           mkdir -p llvm
@@ -337,7 +336,6 @@ jobs:
           ${LLVM_DIR} \
           ${SWIG_DIR} \
           -DBUILD_PYTHON=${{ matrix.platform.build_python }} \
-          ${Python_ROOT_DIR_OPTION} \
           -DBUILD_TESTS=${{ matrix.platform.build_tests }} \
           -DBUILD_RR_PLUGINS=${{ matrix.platform.build_plugins }} \
           -DCMAKE_INSTALL_PREFIX="${RUNNER_WORKSPACE}/install-roadrunner"
