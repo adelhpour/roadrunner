@@ -118,7 +118,7 @@ jobs:
           cd Python-${{ matrix.python_version.version }}.0
           mkdir -p install-python
           ./configure --enable-optimizations --prefix=${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python
-          sudo make altinstall
+          make altinstall
           python${{ matrix.python_version.version }} --version
 
       - name: Set MSVC as the default compiler on Windows
