@@ -297,12 +297,20 @@ jobs:
       - name: Create build directory
         run: |
           cd ${RUNNER_WORKSPACE}
+          echo "checking ${RUNNER_WORKSPACE}"
           mkdir -p build-roadrunner
+          echo "checking pwd"
+          pwd
+          echo "checking ls"
+          ls
 
       - name: Configure CMake for RoadRunner
         shell: bash
         run: |
           cd ${RUNNER_WORKSPACE}
+          echo "checking ${RUNNER_WORKSPACE}"
+          echo "checking ls"
+          ls
           cd build-roadrunner
           cmake $GITHUB_WORKSPACE \
           -G "Ninja" \
