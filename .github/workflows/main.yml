@@ -89,14 +89,14 @@ jobs:
             llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-manylinux2014.tgz"
             libroadrunner_deps_link: "https://artproduks1.artifacts.visualstudio.com/Aa0252f86-2cf2-4dee-a2a7-c18ef21823c3/10f68fb1-1fa1-4069-92b5-24c5b7fee3e5/_apis/artifact/cGlwZWxpbmVhcnRpZmFjdDovL1RoZVJvYWRydW5uZXJQcm9qZWN0L3Byb2plY3RJZC8xMGY2OGZiMS0xZmExLTQwNjktOTJiNS0yNGM1YjdmZWUzZTUvYnVpbGRJZC8yMzY4L2FydGlmYWN0TmFtZS9saWJyb2FkcnVubmVyLWRlcHMtbWFueWxpbnV4MjAxNC1EZWJ1Zw2/content?format=zip"
         python_version:
-          - name: py39
-            version: "3.9"
-          - name: py310
-            version: "3.10"
-          - name: py311
-            version: "3.11"
-          - name: py312
-            version: "3.12"
+          #- name: py39
+          #  version: "3.9"
+          #- name: py310
+          #  version: "3.10"
+          #- name: py311
+          #  version: "3.11"
+          #- name: py312
+          #  version: "3.12"
     runs-on: ${{ matrix.platform.os_name }}
     container:
       image: ${{ matrix.platform.container_image || '' }}
@@ -194,7 +194,7 @@ jobs:
       - name: Install Python dependencies
         if: matrix.platform.build_python == 'ON'
         shell: bash
-        run: pip${{ matrix.python_version.version }} install numpy
+        run: pytho${{ matrix.python_version.version }} -m pip install numpy
 
       - name: Install swig
         shell: bash
