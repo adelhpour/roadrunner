@@ -105,26 +105,21 @@ jobs:
       - name: Checkout RoadRunner
         uses: actions/checkout@v3
 
-      - name: Setup Python dependencies
-        if: matrix.platform.os_type == 'manylinux'
-        shell: bash
+      - name: Setup Python for manylinux platforms
+        if: matrix.platform.build_python == 'ON' && matrix.platform.os_type == 'manylinux'
         run: |
-          yum install -y python3
-          python3 --version
-
-      - name: Setup Python
-        if: matrix.platform.build_python == 'ON'
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python_version.version }}
-          architecture: x64
-
-      - name: Install Python dependencies
-        if: matrix.platform.build_python == 'ON'
-        shell: bash
-        run: |
+          cd ${RUNNER_WORKSPACE}
+          yum install gcc openssl-devel bzip2-devel libffi-devel -y
+          mkdir -p python${{ matrix.python_version.version }}
+          cd python${{ matrix.python_version.version }}
+          curl -L https://www.python.org/ftp/python/${{ matrix.python_version.version }}.0/Python-${{ matrix.python_version.version }}.0.tgz > python.tgz
+          tar -xzfq python.tgz
+          rm python.tgz
+          cd Python-${{ matrix.python_version.version }}.0
+          mkdir -p install-python
+          ./configure --enable-optimizations --prefix=${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python
+          sudo make altinstall
           python${{ matrix.python_version.version }} --version
-          pip${{ matrix.python_version.version }} install numpy
 
       - name: Set MSVC as the default compiler on Windows
         if: matrix.platform.os_type == 'windows'
@@ -188,6 +183,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
             ${{ runner.os }}-
+
+      - name: Setup Python for non-manylinux platforms
+        if: matrix.platform.build_python == 'ON' && matrix.platform.os_type != 'manylinux'
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python_version.version }}
+
+      - name: Install Python dependencies
+        if: matrix.platform.build_python == 'ON'
+        shell: bash
+        run: pip${{ matrix.python_version.version }} install numpy
 
       - name: Install swig
         shell: bash
