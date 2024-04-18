@@ -296,23 +296,12 @@ jobs:
 
       - name: Create build directory
         shell: bash
-        run: |
-          cd ${RUNNER_WORKSPACE}
-          echo "checking ${RUNNER_WORKSPACE}"
-          mkdir -p build-roadrunner
-          echo "checking pwd"
-          pwd
-          echo "checking ls"
-          ls
+        run: mkdir -p ${RUNNER_WORKSPACE}/build-roadrunner
 
       - name: Configure CMake for RoadRunner
         shell: bash
         run: |
-          cd ${RUNNER_WORKSPACE}
-          echo "checking ${RUNNER_WORKSPACE}"
-          echo "checking ls"
-          ls
-          cd build-roadrunner
+          cd ${RUNNER_WORKSPACE}/build-roadrunner
           cmake $GITHUB_WORKSPACE \
           -G "Ninja" \
           -DCMAKE_BUILD_TYPE=${{ matrix.platform.build_type }} \
