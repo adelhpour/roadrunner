@@ -72,6 +72,12 @@ jobs:
             build_tests: ON
             build_plugins: ON
             build_python: OFF
+        libroadrunner_deps_owner: [ "adelhpour" ]
+        libroadrunner_deps_repo: [ "libroadrunner-deps" ]
+        libroadrunner_deps_release_version: [ "2.1.1" ]
+        llvm_owner: [ "adelhpour" ]
+        llvm_repo: [ "llvm-13.x" ]
+        llvm_release_version: [ "1.0.0" ]
         python_version:
           - name: py39
             version: "3.9"
@@ -81,12 +87,6 @@ jobs:
           #  version: "3.11"
           #- name: py312
           #  version: "3.12"
-        libroadrunner_deps_owner: ["adelhpour"]
-        libroadrunner_deps_repo: ["libroadrunner-deps"]
-        libroadrunner_deps_release_version: ["2.1.1"]
-        llvm_owner: ["adelhpour"]
-        llvm_repo: ["llvm-13.x"]
-        llvm_release_version: ["1.0.0"]
 
     runs-on: ${{ matrix.platform.os_name }}
     container:
@@ -250,6 +250,7 @@ jobs:
           cd ${RUNNER_WORKSPACE}
           mkdir -p llvm-binaries
           cd llvm-binaries
+          echo "file is https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/${{ matrix.llvm_release_version }}/llvm-${{ matrix.platform.os_name }}-release.zip"
           curl -L "https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/${{ matrix.llvm_release_version }}/llvm-${{ matrix.platform.os_name }}-release.zip" > llvm.zip
           unzip -q llvm.zip
           rm llvm.zip
