@@ -73,9 +73,9 @@ jobs:
             os_name: ubuntu-latest
             container_image: quay.io/pypa/manylinux2014_x86_64
             build_type: Release
-            build_tests: OFF
+            build_tests: ON
             build_plugins: OFF
-            build_python: ON
+            build_python: OFF
             llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-manylinux2014.tgz"
             libroadrunner_deps_link: "https://artproduks1.artifacts.visualstudio.com/Aa0252f86-2cf2-4dee-a2a7-c18ef21823c3/10f68fb1-1fa1-4069-92b5-24c5b7fee3e5/_apis/artifact/cGlwZWxpbmVhcnRpZmFjdDovL1RoZVJvYWRydW5uZXJQcm9qZWN0L3Byb2plY3RJZC8xMGY2OGZiMS0xZmExLTQwNjktOTJiNS0yNGM1YjdmZWUzZTUvYnVpbGRJZC8yMzY4L2FydGlmYWN0TmFtZS9saWJyb2FkcnVubmVyLWRlcHMtbWFueWxpbnV4MjAxNC1SZWxlYXNl0/content?format=zip"
           - name: manylinux2014-debug
@@ -83,20 +83,20 @@ jobs:
             os_name: ubuntu-latest
             container_image: quay.io/pypa/manylinux2014_x86_64
             build_type: Debug
-            build_tests: OFF
+            build_tests: ON
             build_plugins: OFF
-            build_python: ON
+            build_python: OFF
             llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-manylinux2014.tgz"
             libroadrunner_deps_link: "https://artproduks1.artifacts.visualstudio.com/Aa0252f86-2cf2-4dee-a2a7-c18ef21823c3/10f68fb1-1fa1-4069-92b5-24c5b7fee3e5/_apis/artifact/cGlwZWxpbmVhcnRpZmFjdDovL1RoZVJvYWRydW5uZXJQcm9qZWN0L3Byb2plY3RJZC8xMGY2OGZiMS0xZmExLTQwNjktOTJiNS0yNGM1YjdmZWUzZTUvYnVpbGRJZC8yMzY4L2FydGlmYWN0TmFtZS9saWJyb2FkcnVubmVyLWRlcHMtbWFueWxpbnV4MjAxNC1EZWJ1Zw2/content?format=zip"
         python_version:
           - name: py39
             version: "3.9"
-          - name: py310
-            version: "3.10"
-          - name: py311
-            version: "3.11"
-          - name: py312
-            version: "3.12"
+          #- name: py310
+          #  version: "3.10"
+          #- name: py311
+          #  version: "3.11"
+          #- name: py312
+          #  version: "3.12"
     runs-on: ${{ matrix.platform.os_name }}
     container:
       image: ${{ matrix.platform.container_image || '' }}
@@ -108,14 +108,6 @@ jobs:
       - name: Set MSVC as the default compiler on Windows
         if: matrix.platform.os_type == 'windows'
         uses: ilammy/msvc-dev-cmd@v1.6.0
-
-      - name: Get latest workflow run ID of libRoadRunner dependencies
-        shell: bash
-        run: |
-          latest_run=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/adelhpour/libroadrunner-deps/actions/workflows/main/runs?status=success | jq -r '.workflow_runs[0].id')
-          echo "::set-output name=latest_run::$latest_run"
-          artifacts_url=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/adelhpour/libroadrunner-deps/actions/runs/latest_run/artifacts | jq -r '.artifacts[0].archive_download_url')
-          echo "url is $artifacts_url"
 
       - name: Setup Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
