@@ -20,8 +20,6 @@ jobs:
             build_tests: ON
             build_plugins: ON
             build_python: ON
-            llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-macosx_11_7_x86_64.zip"
-            libroadrunner_deps_link: "https://github.com/adelhpour/libroadrunner-deps/releases/download/2.1.1/libroadrunner-deps-macos-latest-release.zip"
           - name: macos-latest-debug
             os_type: macos
             os_name: macos-latest
@@ -30,8 +28,6 @@ jobs:
             build_tests: ON
             build_plugins: ON
             build_python: ON
-            llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-macosx_11_7_x86_64.zip"
-            libroadrunner_deps_link: "https://github.com/adelhpour/libroadrunner-deps/releases/download/2.1.1/libroadrunner-deps-macos-latest-debug.zip"
           - name: ubuntu-latest-release
             os_type: ubuntu
             os_name: ubuntu-latest
@@ -39,8 +35,6 @@ jobs:
             build_tests: ON
             build_plugins: ON
             build_python: ON
-            llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm13-ubuntu-gcc10-rel.tar.gz"
-            libroadrunner_deps_link: "https://github.com/adelhpour/libroadrunner-deps/releases/download/2.1.1/libroadrunner-deps-ubuntu-latest-release.zip"
           - name: ubuntu-latest-debug
             os_type: ubuntu
             os_name: ubuntu-latest
@@ -48,8 +42,6 @@ jobs:
             build_tests: ON
             build_plugins: ON
             build_python: ON
-            llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm13-ubuntu-gcc10-rel.tar.gz"
-            libroadrunner_deps_link: "https://github.com/adelhpour/libroadrunner-deps/releases/download/2.1.1/libroadrunner-deps-ubuntu-latest-debug.zip"
           - name: windows-latest-release
             os_type: windows
             os_name: windows-latest
@@ -57,8 +49,6 @@ jobs:
             build_tests: ON
             build_plugins: ON
             build_python: ON
-            llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-msvc2022-x64-rel.zip"
-            libroadrunner_deps_link: "https://github.com/adelhpour/libroadrunner-deps/releases/download/2.1.1/libroadrunner-deps-windows-latest-release.zip"
           - name: windows-latest-debug
             os_type: windows
             os_name: windows-latest
@@ -66,8 +56,6 @@ jobs:
             build_tests: ON
             build_plugins: ON
             build_python: OFF
-            llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-msvc2022-x64-dbg.zip"
-            libroadrunner_deps_link: "https://github.com/adelhpour/libroadrunner-deps/releases/download/2.1.1/libroadrunner-deps-windows-latest-debug.zip"
           - name: manylinux2014-release
             os_type: manylinux
             os_name: ubuntu-latest
@@ -76,8 +64,6 @@ jobs:
             build_tests: ON
             build_plugins: ON
             build_python: OFF
-            llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-manylinux2014.tgz"
-            libroadrunner_deps_link: "https://github.com/adelhpour/libroadrunner-deps/releases/download/2.1.1/libroadrunner-deps-manylinux2014-release.zip"
           - name: manylinux2014-debug
             os_type: manylinux
             os_name: ubuntu-latest
@@ -86,8 +72,6 @@ jobs:
             build_tests: ON
             build_plugins: ON
             build_python: OFF
-            llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-manylinux2014.tgz"
-            libroadrunner_deps_link: "https://github.com/adelhpour/libroadrunner-deps/releases/download/2.1.1/libroadrunner-deps-manylinux2014-debug.zip"
         python_version:
           - name: py39
             version: "3.9"
@@ -99,10 +83,10 @@ jobs:
           #  version: "3.12"
         libroadrunner_deps_owner: ["adelhpour"]
         libroadrunner_deps_repo: ["libroadrunner-deps"]
-        libroadrunner_deps_version: ["2.1.1"]
+        libroadrunner_deps_release_version: ["2.1.1"]
         llvm_owner: ["adelhpour"]
         llvm_repo: ["llvm-13.x"]
-        llvm_version: ["1.0.0"]
+        llvm_release_version: ["1.0.0"]
 
     runs-on: ${{ matrix.platform.os_name }}
     container:
@@ -255,7 +239,7 @@ jobs:
           cd ${RUNNER_WORKSPACE}
           mkdir -p libroadrunner-deps-binaries
           cd libroadrunner-deps-binaries
-          curl -L "https://github.com/${{ matrix.libroadrunner_deps_owner }}/${{ matrix.libroadrunner_deps_repo }}/releases/download/${{ matrix.libroadrunner_deps_version }}/${{ matrix.libroadrunner_deps_repo }}-${{ matrix.platform.os_name }}-${{ matrix.platform.build_type }}.zip" > libroadrunner-deps-${{ matrix.platform.name }}.zip
+          curl -L "https://github.com/${{ matrix.libroadrunner_deps_owner }}/${{ matrix.libroadrunner_deps_repo }}/releases/download/${{ matrix.libroadrunner_deps_release_version }}/${{ matrix.libroadrunner_deps_repo }}-${{ matrix.platform.os_name }}-${{ matrix.platform.build_type }}.zip" > libroadrunner-deps-${{ matrix.platform.name }}.zip
           unzip -q libroadrunner-deps-${{ matrix.platform.name }}.zip
           rm libroadrunner-deps-${{ matrix.platform.name }}.zip
           echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${RUNNER_WORKSPACE}/libroadrunner-deps-binaries/libroadrunner-deps-${{ matrix.platform.name }}" >> "${GITHUB_ENV}"
@@ -266,7 +250,7 @@ jobs:
           cd ${RUNNER_WORKSPACE}
           mkdir -p llvm-binaries
           cd llvm-binaries
-          curl -L "https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/${{ matrix.llvm_version }}/llvm-${{ matrix.platform.os_name }}-release}.zip" > llvm.zip
+          curl -L "https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/${{ matrix.llvm_release_version }}/llvm-${{ matrix.platform.os_name }}-release.zip" > llvm.zip
           unzip -q llvm.zip
           rm llvm.zip
           echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}/llvm-binaries/llvm" >> "${GITHUB_ENV}"
