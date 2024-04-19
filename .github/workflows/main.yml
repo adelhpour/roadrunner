@@ -97,12 +97,12 @@ jobs:
           #  version: "3.11"
           #- name: py312
           #  version: "3.12"
-        libroadrunner_deps_owner: "adelhpour"
-        libroadrunner_deps_repo: "libroadrunner-deps"
-        libroadrunner_deps_version: "2.1.1"
-        llvm_owner: "adelhpour"
-        llvm_repo: "llvm-13.x"
-        llvm_version: "1.0.0"
+        libroadrunner_deps_owner: adelhpour
+        libroadrunner_deps_repo: libroadrunner-deps
+        libroadrunner_deps_version: 2.1.1
+        llvm_owner: adelhpour
+        llvm_repo: llvm-13.x
+        llvm_version: 1.0.0
 
     runs-on: ${{ matrix.platform.os_name }}
     container:
