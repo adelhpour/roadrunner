@@ -246,17 +246,19 @@ jobs:
         shell: bash
         run: |
           cd ${RUNNER_WORKSPACE}
+          mkdir -p libroadrunner-deps
+          cd libroadrunner-deps
           echo "a0) link is: ${{ matrix.platform.libroadrunner_deps_link }}"
           curl -L "${{ matrix.platform.libroadrunner_deps_link }}" > libroadrunner-deps-${{ matrix.platform.name }}.zip
           echo "a) displaying the contents of the directory"
           ls
-          #unzip -q libroadrunner-deps-${{ matrix.platform.name }}.zip
-          #echo "b) displaying the contents of the directory"
-          #ls
-          #rm libroadrunner-deps-${{ matrix.platform.name }}.zip
-          #echo "c) displaying the contents of the directory"
-          #ls ./libroadrunner-deps-${{ matrix.platform.name }}
-          #echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${RUNNER_WORKSPACE}/libroadrunner-deps-${{ matrix.platform.name }}" >> "${GITHUB_ENV}"
+          unzip -q libroadrunner-deps-${{ matrix.platform.name }}.zip
+          echo "b) displaying the contents of the directory"
+          ls
+          rm libroadrunner-deps-${{ matrix.platform.name }}.zip
+          echo "c) displaying the contents of the directory"
+          ls ./libroadrunner-deps-${{ matrix.platform.name }}
+          echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${RUNNER_WORKSPACE}/libroadrunner-deps/libroadrunner-deps-${{ matrix.platform.name }}" >> "${GITHUB_ENV}"
 
       - name: Download LLVM binaries
         shell: bash
