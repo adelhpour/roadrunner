@@ -74,7 +74,7 @@ jobs:
             container_image: quay.io/pypa/manylinux2014_x86_64
             build_type: Release
             build_tests: ON
-            build_plugins: OFF
+            build_plugins: ON
             build_python: OFF
             llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-manylinux2014.tgz"
             libroadrunner_deps_link: "https://artproduks1.artifacts.visualstudio.com/Aa0252f86-2cf2-4dee-a2a7-c18ef21823c3/10f68fb1-1fa1-4069-92b5-24c5b7fee3e5/_apis/artifact/cGlwZWxpbmVhcnRpZmFjdDovL1RoZVJvYWRydW5uZXJQcm9qZWN0L3Byb2plY3RJZC8xMGY2OGZiMS0xZmExLTQwNjktOTJiNS0yNGM1YjdmZWUzZTUvYnVpbGRJZC8yMzY4L2FydGlmYWN0TmFtZS9saWJyb2FkcnVubmVyLWRlcHMtbWFueWxpbnV4MjAxNC1SZWxlYXNl0/content?format=zip"
@@ -84,7 +84,7 @@ jobs:
             container_image: quay.io/pypa/manylinux2014_x86_64
             build_type: Debug
             build_tests: ON
-            build_plugins: OFF
+            build_plugins: ON
             build_python: OFF
             llvm_link: "https://github.com/sys-bio/llvm-13.x/releases/download/llvmorg-13.0.0/llvm-13.x-manylinux2014.tgz"
             libroadrunner_deps_link: "https://artproduks1.artifacts.visualstudio.com/Aa0252f86-2cf2-4dee-a2a7-c18ef21823c3/10f68fb1-1fa1-4069-92b5-24c5b7fee3e5/_apis/artifact/cGlwZWxpbmVhcnRpZmFjdDovL1RoZVJvYWRydW5uZXJQcm9qZWN0L3Byb2plY3RJZC8xMGY2OGZiMS0xZmExLTQwNjktOTJiNS0yNGM1YjdmZWUzZTUvYnVpbGRJZC8yMzY4L2FydGlmYWN0TmFtZS9saWJyb2FkcnVubmVyLWRlcHMtbWFueWxpbnV4MjAxNC1EZWJ1Zw2/content?format=zip"
