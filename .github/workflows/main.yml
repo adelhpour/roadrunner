@@ -97,6 +97,13 @@ jobs:
           #  version: "3.11"
           #- name: py312
           #  version: "3.12"
+        libroadrunner_deps_owner: "adelhpour"
+        libroadrunner_deps_repo: "libroadrunner-deps"
+        libroadrunner_deps_version: "2.1.1"
+        llvm_owner: "adelhpour"
+        llvm_repo: "llvm-13.x"
+        llvm_version: "1.0.0"
+
     runs-on: ${{ matrix.platform.os_name }}
     container:
       image: ${{ matrix.platform.container_image || '' }}
@@ -248,16 +255,9 @@ jobs:
           cd ${RUNNER_WORKSPACE}
           mkdir -p libroadrunner-deps
           cd libroadrunner-deps
-          echo "a0) link is: ${{ matrix.platform.libroadrunner_deps_link }}"
-          curl -L "${{ matrix.platform.libroadrunner_deps_link }}" > libroadrunner-deps-${{ matrix.platform.name }}.zip
-          echo "a) displaying the contents of the directory"
-          ls
+          curl -L "https://github.com/${{ matrix.libroadrunner_deps_owner }}/${{ matrix.libroadrunner_deps_repo }}/releases/download/${{ matrix.libroadrunner_deps_version }}/${{ matrix.libroadrunner_deps_repo }}-${{ matrix.platform.name }}.zip" > libroadrunner-deps-${{ matrix.platform.name }}.zip
           unzip -q libroadrunner-deps-${{ matrix.platform.name }}.zip
-          echo "b) displaying the contents of the directory"
-          ls
           rm libroadrunner-deps-${{ matrix.platform.name }}.zip
-          echo "c) displaying the contents of the directory"
-          ls ./libroadrunner-deps-${{ matrix.platform.name }}
           echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${RUNNER_WORKSPACE}/libroadrunner-deps/libroadrunner-deps-${{ matrix.platform.name }}" >> "${GITHUB_ENV}"
 
       - name: Download LLVM binaries
