@@ -109,6 +109,14 @@ jobs:
         if: matrix.platform.os_type == 'windows'
         uses: ilammy/msvc-dev-cmd@v1.6.0
 
+      - name: Get latest workflow run ID of libRoadRunner dependencies
+        shell: bash
+        run: |
+          latest_run=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/adelhpour/libroadrunner-deps/actions/workflows/main/runs?status=success | jq -r '.workflow_runs[0].id')
+          echo "::set-output name=latest_run::$latest_run"
+          artifacts_url=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/adelhpour/libroadrunner-deps/actions/runs/latest_run/artifacts | jq -r '.artifacts[0].archive_download_url')
+          echo "url is $artifacts_url"
+
       - name: Setup Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
 
