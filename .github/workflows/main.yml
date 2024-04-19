@@ -247,9 +247,9 @@ jobs:
         run: |
           cd ${RUNNER_WORKSPACE}
           echo "a0) link is: ${{ matrix.platform.libroadrunner_deps_link }}"
-          curl -L "${{ matrix.platform.libroadrunner_deps_link }}"
-          #echo "a) displaying the contents of the directory"
-          #ls
+          curl -L "${{ matrix.platform.libroadrunner_deps_link }}" > libroadrunner-deps-${{ matrix.platform.name }}.zip
+          echo "a) displaying the contents of the directory"
+          ls
           #unzip -q libroadrunner-deps-${{ matrix.platform.name }}.zip
           #echo "b) displaying the contents of the directory"
           #ls
