@@ -101,12 +101,6 @@ jobs:
     container:
       image: ${{ matrix.platform.container_image || '' }}
 
-      https://github:
-        com/adelhpour/libroadrunner-deps/releases/download/2:
-          1:
-            1/libroadrunner-deps-macos-latest-debug:
-              zip:
-
     steps:
       - name: Checkout RoadRunner
         uses: actions/checkout@v3
