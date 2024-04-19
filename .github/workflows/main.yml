@@ -253,12 +253,12 @@ jobs:
         shell: bash
         run: |
           cd ${RUNNER_WORKSPACE}
-          mkdir -p libroadrunner-deps
-          cd libroadrunner-deps
-          curl -L "https://github.com/${{ matrix.libroadrunner_deps_owner }}/${{ matrix.libroadrunner_deps_repo }}/releases/download/${{ matrix.libroadrunner_deps_version }}/${{ matrix.libroadrunner_deps_repo }}-${{ matrix.platform.name }}.zip" > libroadrunner-deps-${{ matrix.platform.name }}.zip
+          mkdir -p libroadrunner-deps-binaries
+          cd libroadrunner-deps-binaries
+          curl -L "https://github.com/${{ matrix.libroadrunner_deps_owner }}/${{ matrix.libroadrunner_deps_repo }}/releases/download/${{ matrix.libroadrunner_deps_version }}/${{ matrix.libroadrunner_deps_repo }}-${{ matrix.platform.os_name }}-${{ matrix.platform.build_type }}.zip" > libroadrunner-deps-${{ matrix.platform.name }}.zip
           unzip -q libroadrunner-deps-${{ matrix.platform.name }}.zip
           rm libroadrunner-deps-${{ matrix.platform.name }}.zip
-          echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${RUNNER_WORKSPACE}/libroadrunner-deps/libroadrunner-deps-${{ matrix.platform.name }}" >> "${GITHUB_ENV}"
+          echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${RUNNER_WORKSPACE}/libroadrunner-deps-binaries/libroadrunner-deps-${{ matrix.platform.name }}" >> "${GITHUB_ENV}"
 
       - name: Download LLVM binaries
         shell: bash
@@ -266,32 +266,10 @@ jobs:
           cd ${RUNNER_WORKSPACE}
           mkdir -p llvm-binaries
           cd llvm-binaries
-          mkdir -p llvm
-          if [ "${{ matrix.platform.os_type }}" == 'macos' ]; then
-            curl -L "${{ matrix.platform.llvm_link }}" > llvm.zip
-            unzip -q llvm.zip -d llvm
-            rm llvm.zip
-            echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}/llvm-binaries/llvm" >> "${GITHUB_ENV}"
-          elif [ "${{ matrix.platform.os_type }}" == 'ubuntu' ]; then
-            curl -L "${{ matrix.platform.llvm_link }}" > llvm.tar.gz
-            tar -zxf llvm.tar.gz -C llvm --strip-components=1
-            rm llvm.tar.gz
-            echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}/llvm-binaries/llvm" >> "${GITHUB_ENV}"
-          elif [ "${{ matrix.platform.os_type }}" == 'windows' ]; then
-            curl -L "${{ matrix.platform.llvm_link }}" > llvm.zip
-            unzip -q llvm.zip -d llvm
-            rm llvm.zip
-            if [ "${{ matrix.platform.build_type }}" == 'Release' ]; then
-              echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}\llvm-binaries\llvm\llvm-13.x-msvc2022-x64-rel" >> "${GITHUB_ENV}"
-            else
-              echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}\llvm-binaries\llvm" >> "${GITHUB_ENV}"
-            fi
-          elif [ "${{ matrix.platform.os_type }}" == 'manylinux' ]; then
-            curl -L "${{ matrix.platform.llvm_link }}" > llvm.x.tar
-            tar -zxf llvm.x.tar -C llvm --strip-components=1
-            rm llvm.x.tar
-            echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}/llvm-binaries/llvm" >> "${GITHUB_ENV}"
-          fi
+          curl -L "https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/${{ matrix.llvm_version }}/llvm-${{ matrix.platform.os_name }}-release}.zip" > llvm.zip
+          unzip -q llvm.zip
+          rm llvm.zip
+          echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}/llvm-binaries/llvm" >> "${GITHUB_ENV}"
 
       - name: Create build directory
         shell: bash
