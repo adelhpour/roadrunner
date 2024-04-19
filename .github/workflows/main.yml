@@ -239,7 +239,7 @@ jobs:
           cd ${RUNNER_WORKSPACE}
           mkdir -p libroadrunner-deps-binaries
           cd libroadrunner-deps-binaries
-          curl -L "https://github.com/${{ matrix.libroadrunner_deps_owner }}/${{ matrix.libroadrunner_deps_repo }}/releases/download/${{ matrix.libroadrunner_deps_release_version }}/${{ matrix.libroadrunner_deps_repo }}-${{ matrix.platform.os_name }}-${{ matrix.platform.build_type }}.zip" > libroadrunner-deps-${{ matrix.platform.name }}.zip
+          curl -L "https://github.com/${{ matrix.libroadrunner_deps_owner }}/${{ matrix.libroadrunner_deps_repo }}/releases/download/v${{ matrix.libroadrunner_deps_release_version }}/${{ matrix.libroadrunner_deps_repo }}-${{ matrix.platform.os_name }}-${{ matrix.platform.build_type }}.zip" > libroadrunner-deps-${{ matrix.platform.name }}.zip
           unzip -q libroadrunner-deps-${{ matrix.platform.name }}.zip
           rm libroadrunner-deps-${{ matrix.platform.name }}.zip
           echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${RUNNER_WORKSPACE}/libroadrunner-deps-binaries/libroadrunner-deps-${{ matrix.platform.name }}" >> "${GITHUB_ENV}"
@@ -250,8 +250,7 @@ jobs:
           cd ${RUNNER_WORKSPACE}
           mkdir -p llvm-binaries
           cd llvm-binaries
-          echo "file is https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/${{ matrix.llvm_release_version }}/llvm-${{ matrix.platform.os_name }}-release.zip"
-          curl -L "https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/${{ matrix.llvm_release_version }}/llvm-${{ matrix.platform.os_name }}-release.zip" > llvm.zip
+          curl -L "https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/v${{ matrix.llvm_release_version }}/llvm-${{ matrix.platform.os_name }}-release.zip" > llvm.zip
           unzip -q llvm.zip
           rm llvm.zip
           echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}/llvm-binaries/llvm" >> "${GITHUB_ENV}"
