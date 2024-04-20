@@ -250,12 +250,12 @@ jobs:
           cd ${RUNNER_WORKSPACE}
           mkdir -p llvm-binaries
           cd llvm-binaries
-          curl -L "https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/v${{ matrix.llvm_release_version }}/llvml-${{ matrix.platform.os_name }}-release.zip" > llvm.zip
+          curl -L "https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/v${{ matrix.llvm_release_version }}/llvm-${{ matrix.platform.os_name }}-release.zip" > llvm.zip
           unzip -q llvm.zip
           rm llvm.zip
           echo "displaying llvm binaries"
           ls -l
-          echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}/llvm-binaries/llvml-${{ matrix.platform.os_name }}-release" >> "${GITHUB_ENV}"
+          echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}/llvm-binaries/llvm-${{ matrix.platform.os_name }}-release" >> "${GITHUB_ENV}"
 
       - name: Create build directory
         shell: bash
