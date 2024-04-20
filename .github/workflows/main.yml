@@ -253,7 +253,7 @@ jobs:
           mkdir -p llvm-binaries
           cd llvm-binaries
           curl -L "https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/v${{ matrix.llvm_release_version }}/llvm-${{ matrix.platform.os_name }}-release.zip" > llvm-${{ matrix.platform.os_name }}-release.zip
-          unzip -q llvm-${{ matrix.platform.os_name }}-release.zip
+          unzip -q llvm-${{ matrix.platform.os_name }}-release.zip -d llvm-${{ matrix.platform.os_name }}-release
           rm llvm-${{ matrix.platform.os_name }}-release.zip
           echo "displaying llvm binaries"
           ls
