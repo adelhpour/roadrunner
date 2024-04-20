@@ -242,6 +242,8 @@ jobs:
           curl -L "https://github.com/${{ matrix.libroadrunner_deps_owner }}/${{ matrix.libroadrunner_deps_repo }}/releases/download/v${{ matrix.libroadrunner_deps_release_version }}/${{ matrix.libroadrunner_deps_repo }}-${{ matrix.platform.os_name }}-${{ matrix.platform.build_type }}.zip" > libroadrunner-deps-${{ matrix.platform.name }}.zip
           unzip -q libroadrunner-deps-${{ matrix.platform.name }}.zip
           rm libroadrunner-deps-${{ matrix.platform.name }}.zip
+          echo "displaying libroadrunner-deps binaries"
+          ls
           echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${RUNNER_WORKSPACE}/libroadrunner-deps-binaries/libroadrunner-deps-${{ matrix.platform.name }}" >> "${GITHUB_ENV}"
 
       - name: Download LLVM binaries
@@ -250,11 +252,13 @@ jobs:
           cd ${RUNNER_WORKSPACE}
           mkdir -p llvm-binaries
           cd llvm-binaries
-          curl -L "https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/v${{ matrix.llvm_release_version }}/llvm-${{ matrix.platform.os_name }}-release.zip" > llvm.zip
-          unzip -q llvm.zip
-          rm llvm.zip
+          curl -L "https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/v${{ matrix.llvm_release_version }}/llvm-${{ matrix.platform.os_name }}-release.zip" > llvm-${{ matrix.platform.os_name }}-release.zip
+          unzip -q llvm-${{ matrix.platform.os_name }}-release.zip
+          rm llvm-${{ matrix.platform.os_name }}-release.zip
           echo "displaying llvm binaries"
-          ls -l
+          ls
+          echo "b) displaying llvm binaries"
+          ls ${RUNNER_WORKSPACE}/llvm-binaries/llvm-${{ matrix.platform.os_name }}-release
           echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}/llvm-binaries/llvm-${{ matrix.platform.os_name }}-release" >> "${GITHUB_ENV}"
 
       - name: Create build directory
