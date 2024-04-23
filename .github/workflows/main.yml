@@ -253,20 +253,20 @@ jobs:
           mkdir -p llvm-binaries
           cd llvm-binaries
           llvm_platform_name=$(echo "${{ matrix.platform.name }}" | sed 's/debug/release/g')
-          echo "${llvm_platform_name}"
-          echo "https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/v${{ matrix.llvm_release_version }}/${llvm_platform_name}.zip"
-          curl -L "https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/v${{ matrix.llvm_release_version }}/${llvm_platform_name}.zip" > llvm-${llvm_platform_name}.zip
-          unzip -q llvm-${llvm_platform_name}.zip -d llvm-${llvm_platform_name}
-          rm llvm-${llvm_platform_name}.zip
+          echo "$llvm_platform_name"
+          echo "https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/v${{ matrix.llvm_release_version }}/$llvm_platform_name.zip"
+          curl -L "https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/v${{ matrix.llvm_release_version }}/$llvm_platform_name.zip" > llvm-$llvm_platform_name.zip
+          unzip -q llvm-$llvm_platform_name.zip -d llvm-$llvm_platform_name
+          rm llvm-$llvm_platform_name.zip
           echo "displaying llvm binaries"
           ls
           echo "b) displaying llvm binaries"
-          ls ${RUNNER_WORKSPACE}/llvm-binaries/llvm-${llvm_platform_name}
-          echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}/llvm-binaries/llvm-${llvm_platform_name}" >> "${GITHUB_ENV}"
+          ls ${RUNNER_WORKSPACE}/llvm-binaries/llvm-$llvm_platform_name
+          echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}/llvm-binaries/llvm-$llvm_platform_name" >> "${GITHUB_ENV}"
           
-          cd ${RUNNER_WORKSPACE}/llvm-binaries/llvm-${llvm_platform_name}/bin
+          cd ${RUNNER_WORKSPACE}/llvm-binaries/llvm-$llvm_platform_name/bin
           chmod a+x llvm-config
-          ls -l ${RUNNER_WORKSPACE}/llvm-binaries/${llvm_platform_name}/bin
+          ls -l ${RUNNER_WORKSPACE}/llvm-binaries/$llvm_platform_name/bin
 
       - name: Create build directory
         shell: bash
