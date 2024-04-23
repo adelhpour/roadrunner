@@ -263,6 +263,7 @@ jobs:
           
           cd ${RUNNER_WORKSPACE}/llvm-binaries/llvm-${{ matrix.platform.os_name }}-release/bin
           chmod a+x llvm-config
+          ls -l ${RUNNER_WORKSPACE}/llvm-binaries/llvm-${{ matrix.platform.os_name }}-release/bin
 
       - name: Create build directory
         shell: bash
