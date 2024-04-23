@@ -264,6 +264,8 @@ jobs:
           echo "b) displaying llvm binaries"
           ls ${RUNNER_WORKSPACE}/llvm-binaries/llvm-$llvm_binaries_linked_platform_name
           echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}/llvm-binaries/llvm-$llvm_binaries_linked_platform_name" >> "${GITHUB_ENV}"
+          
+          chmod a+x ${RUNNER_WORKSPACE}/llvm-binaries/llvm-$llvm_binaries_linked_platform_name/bin/llvm-config
 
       - name: Create build directory
         shell: bash
