@@ -262,7 +262,7 @@ jobs:
           echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}/llvm-binaries/llvm-${{ matrix.platform.os_name }}-release" >> "${GITHUB_ENV}"
           
           cd ${RUNNER_WORKSPACE}/llvm-binaries/llvm-${{ matrix.platform.os_name }}-release/bin
-          chmod a+x llvm-config
+          chmod 777 llvm-config
           ls -l ${RUNNER_WORKSPACE}/llvm-binaries/llvm-${{ matrix.platform.os_name }}-release/bin
 
       - name: Create build directory
