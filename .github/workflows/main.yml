@@ -240,7 +240,7 @@ jobs:
           mkdir -p libroadrunner-deps-binaries
           cd libroadrunner-deps-binaries
           curl -L "https://github.com/${{ matrix.libroadrunner_deps_owner }}/${{ matrix.libroadrunner_deps_repo }}/releases/download/v${{ matrix.libroadrunner_deps_release_version }}/${{ matrix.libroadrunner_deps_repo }}-${{ matrix.platform.os_name }}-${{ matrix.platform.build_type }}.zip" > libroadrunner-deps-${{ matrix.platform.name }}.zip
-          unzip -q libroadrunner-deps-${{ matrix.platform.name }}.zip
+          unzip -q libroadrunner-deps-${{ matrix.platform.name }}.zip -d libroadrunner-deps-${{ matrix.platform.name }}
           rm libroadrunner-deps-${{ matrix.platform.name }}.zip
           echo "displaying libroadrunner-deps binaries"
           ls
@@ -281,7 +281,7 @@ jobs:
           -DBUILD_PYTHON=${{ matrix.platform.build_python }} \
           -DBUILD_TESTS=${{ matrix.platform.build_tests }} \
           -DBUILD_RR_PLUGINS=${{ matrix.platform.build_plugins }} \
-          -DCMAKE_INSTALL_PREFIX="${RUNNER_WORKSPACE}/install-roadrunner" 
+          -DCMAKE_INSTALL_PREFIX="${RUNNER_WORKSPACE}/install-roadrunner"
 
       - name: Build and Install RoadRunner
         shell: bash
