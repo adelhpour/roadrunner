@@ -252,17 +252,17 @@ jobs:
           cd ${RUNNER_WORKSPACE}
           mkdir -p llvm-binaries
           cd llvm-binaries
-          llvm_binaries_linked_platform_name=${{ matrix.platform.name }} | sed 's/debug/release/g'"
+          llvm_binaries_linked_platform_name=${{ matrix.platform.name }} | sed 's/debug/release/g'
           echo "llvm_binaries_linked_platform_name is : $llvm_binaries_linked_platform_name"
-          echo "https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/v${{ matrix.llvm_release_version }}/${{ env.llvm_binaries_linked_platform_name }}.zip"
-          curl -L "https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/v${{ matrix.llvm_release_version }}/${{ env.llvm_binaries_linked_platform_name }}.zip" > llvm-${{ env.llvm_binaries_linked_platform_name }}.zip
-          unzip -q llvm-${{ env.llvm_binaries_linked_platform_name }}.zip -d llvm-${{ env.llvm_binaries_linked_platform_name }}
-          rm llvm-${{ env.llvm_binaries_linked_platform_name }}.zip
+          echo "https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/v${{ matrix.llvm_release_version }}/$llvm_binaries_linked_platform_name.zip"
+          curl -L "https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/v${{ matrix.llvm_release_version }}/$llvm_binaries_linked_platform_name.zip" > llvm-$llvm_binaries_linked_platform_name.zip
+          unzip -q llvm-$llvm_binaries_linked_platform_name.zip -d llvm-$llvm_binaries_linked_platform_name
+          rm llvm-$llvm_binaries_linked_platform_name.zip
           echo "displaying llvm binaries"
           ls
           echo "b) displaying llvm binaries"
-          ls ${RUNNER_WORKSPACE}/llvm-binaries/llvm-${{ env.llvm_binaries_linked_platform_name }}
-          echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}/llvm-binaries/llvm-${{ env.llvm_binaries_linked_platform_name }}" >> "${GITHUB_ENV}"
+          ls ${RUNNER_WORKSPACE}/llvm-binaries/llvm-$llvm_binaries_linked_platform_name
+          echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}/llvm-binaries/llvm-$llvm_binaries_linked_platform_name" >> "${GITHUB_ENV}"
 
       - name: Create build directory
         shell: bash
