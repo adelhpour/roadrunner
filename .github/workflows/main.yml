@@ -252,9 +252,8 @@ jobs:
           cd ${RUNNER_WORKSPACE}
           mkdir -p llvm-binaries
           cd llvm-binaries
-          llvm_binaries_linked_platform_name="Hey you"
+          llvm_binaries_linked_platform_name=${{ matrix.platform.name }} | sed 's/debug/release/g'"
           echo "llvm_binaries_linked_platform_name is : $llvm_binaries_linked_platform_name"
-          echo "llvm_binaries_linked_platform_name is : ${ llvm_binaries_linked_platform_name }"
           echo "https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/v${{ matrix.llvm_release_version }}/${{ env.llvm_binaries_linked_platform_name }}.zip"
           curl -L "https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/v${{ matrix.llvm_release_version }}/${{ env.llvm_binaries_linked_platform_name }}.zip" > llvm-${{ env.llvm_binaries_linked_platform_name }}.zip
           unzip -q llvm-${{ env.llvm_binaries_linked_platform_name }}.zip -d llvm-${{ env.llvm_binaries_linked_platform_name }}
