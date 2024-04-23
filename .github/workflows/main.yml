@@ -254,7 +254,7 @@ jobs:
           cd llvm-binaries
           llvm_platform_name=$(echo "${{ matrix.platform.name }}" | sed 's/debug/release/g')
           echo "$llvm_platform_name"
-          echo "https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/v${{ matrix.llvm_release_version }}/$llvm_platform_name.zip"
+          echo "https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/v${{ matrix.llvm_release_version }}/$llvm_platform_name.zip${llvm_platform_name}"
           curl -L "https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/v${{ matrix.llvm_release_version }}/$llvm_platform_name.zip" > llvm-$llvm_platform_name.zip
           unzip -q llvm-$llvm_platform_name.zip -d llvm-$llvm_platform_name
           rm llvm-$llvm_platform_name.zip
