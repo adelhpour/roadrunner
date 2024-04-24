@@ -250,11 +250,11 @@ jobs:
         shell: bash
         run: |
           cd ${RUNNER_WORKSPACE}
-          llvm_binaries_linked_platform_name = ${{ matrix.platform.name }}
+          llvm_binaries_linked_platform_name=${{ matrix.platform.name }}
           
           # for non-windows platforms we are linking to llvm release binaries, no matter what the build type is
           if [ "${{ matrix.platform.os_type }}" != 'windows' ]; then
-            $llvm_binaries_linked_platform_name=${llvm_binaries_linked_platform_name/debug/release}
+            llvm_binaries_linked_platform_name="${llvm_binaries_linked_platform_name/debug/release}"
           fi
           
           mkdir -p llvm-binaries
