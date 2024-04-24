@@ -54,7 +54,7 @@ jobs:
             os_name: windows-latest
             build_type: Debug
             build_tests: OFF
-            build_plugins: ON
+            build_plugins: OFF
             build_python: OFF
           - name: manylinux2014-release
             os_type: manylinux
