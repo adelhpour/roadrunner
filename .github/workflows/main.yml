@@ -162,7 +162,8 @@ jobs:
         shell: bash
         run: |
           cd ${RUNNER_WORKSPACE}
-          yum install gcc openssl-devel bzip2-devel libffi-devel -y
+          yum update -y
+          yum install gcc openssl-devel bzip2-devel libffi-devel zlib-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel -y
           mkdir -p python${{ matrix.python_version.version }}
           cd python${{ matrix.python_version.version }}
           curl -L https://www.python.org/ftp/python/${{ matrix.python_version.version }}.0/Python-${{ matrix.python_version.version }}.0.tgz > python.tgz
