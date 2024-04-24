@@ -226,7 +226,7 @@ jobs:
             ./configure --disable-dependency-tracking --prefix=${RUNNER_WORKSPACE}/swig/install-swig
             make
             make install
-            echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/bin/swig" >> $GITHUB_PATH
+            echo SWIG_DIR="-DSWIG_EXECUTABLE=/swig-4.0.2/install-swig-4.0.2/swig" >> $GITHUB_PATH
           fi
 
       - name: Download libRoadRunner dependencies binaries
