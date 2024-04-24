@@ -163,9 +163,9 @@ jobs:
         run: |
           cd ${RUNNER_WORKSPACE}
           yum update -y
+          yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm -y
           yum install gcc openssl-devel bzip2-devel libffi-devel zlib-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel -y
-          yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-          yum install -y openssl11-devel
+          yum install openssl11-devel -y
           mkdir -p python${{ matrix.python_version.version }}
           cd python${{ matrix.python_version.version }}
           curl -L https://www.python.org/ftp/python/${{ matrix.python_version.version }}.0/Python-${{ matrix.python_version.version }}.0.tgz > python.tgz
