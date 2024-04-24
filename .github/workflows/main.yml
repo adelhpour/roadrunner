@@ -71,10 +71,10 @@ jobs:
         llvm_repo: [ "llvm-13.x" ]
         llvm_release_version: [ "1.0.0" ]
         python_version:
-          - name: py39
-            version: "3.9"
-          #- name: py310
-          #  version: "3.10"
+          #- name: py39
+          #  version: "3.9"
+          - name: py310
+            version: "3.10"
           #- name: py311
           #  version: "3.11"
           #- name: py312
