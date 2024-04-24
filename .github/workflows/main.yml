@@ -182,6 +182,8 @@ jobs:
         run: |
           if [ "${{ matrix.platform.os_type }}" == 'windows' ]; then
             python -m pip install numpy
+          elif [ "${{ matrix.platform.os_type }}" == 'manylinux' ]; then
+            python${{ matrix.python_version.version }} -m pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org numpy
           else
             python${{ matrix.python_version.version }} -m pip install numpy
           fi
