@@ -164,12 +164,15 @@ jobs:
           cd ${RUNNER_WORKSPACE}
           yum update -y
           yum install gcc openssl-devel bzip2-devel libffi-devel zlib-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel -y
+          yum install -y epel   
+          yum install -y openssl11-devel
           mkdir -p python${{ matrix.python_version.version }}
           cd python${{ matrix.python_version.version }}
           curl -L https://www.python.org/ftp/python/${{ matrix.python_version.version }}.0/Python-${{ matrix.python_version.version }}.0.tgz > python.tgz
           tar -zxf python.tgz
           rm python.tgz
           cd Python-${{ matrix.python_version.version }}.0
+          sed -i 's/PKG_CONFIG openssl /PKG_CONFIG openssl11 /g' configure
           mkdir -p install-python
           ./configure --enable-optimizations --prefix=${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python
           make install
