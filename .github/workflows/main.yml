@@ -244,22 +244,15 @@ jobs:
         shell: bash
         run: |
           cd ${RUNNER_WORKSPACE}
-          llvm_binaries_linked_platform_name=${{ matrix.platform.name }}
-          
-          # for non-windows platforms we are linking to llvm release binaries, no matter what the build type is
-          if [ "${{ matrix.platform.os_type }}" != 'windows' ]; then
-            llvm_binaries_linked_platform_name="${llvm_binaries_linked_platform_name/debug/release}"
-          fi
-          
           mkdir -p llvm-binaries
           cd llvm-binaries
-          curl -L "https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/v${{ matrix.llvm_release_version }}/llvm-$llvm_binaries_linked_platform_name.zip" > llvm-$llvm_binaries_linked_platform_name.zip
-          unzip -q llvm-$llvm_binaries_linked_platform_name.zip -d llvm-$llvm_binaries_linked_platform_name
-          rm llvm-$llvm_binaries_linked_platform_name.zip
-          echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}/llvm-binaries/llvm-$llvm_binaries_linked_platform_name" >> "${GITHUB_ENV}"
+          curl -L "https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/v${{ matrix.llvm_release_version }}/llvm-${{ matrix.platform.name }}.zip" > llvm-${{ matrix.platform.name }}.zip
+          unzip -q llvm-${{ matrix.platform.name }}.zip -d llvm-${{ matrix.platform.name }}
+          rm llvm-${{ matrix.platform.name }}.zip
+          echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}/llvm-binaries/llvm-${{ matrix.platform.name }}" >> "${GITHUB_ENV}"
           
           # make llvm-config executable
-          chmod a+x ${RUNNER_WORKSPACE}/llvm-binaries/llvm-$llvm_binaries_linked_platform_name/bin/llvm-config
+          chmod a+x ${RUNNER_WORKSPACE}/llvm-binaries/llvm-${{ matrix.platform.name }}/bin/llvm-config
 
       - name: Create build directory
         shell: bash
