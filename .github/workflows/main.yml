@@ -215,17 +215,6 @@ jobs:
             rm swig.zip
             echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/swigwin-4.0.2/" >> $GITHUB_PATH
           elif [ "${{ matrix.platform.os_type }}" == 'manylinux' ]; then
-            yum install -y pcre-devel
-            mkdir -p swig
-            cd swig
-            curl -L https://sourceforge.net/projects/swig/files/swig/swig-3.0.12/swig-3.0.12.tar.gz/download > swig.tar.gz
-            tar -zxf swig.tar.gz
-            rm swig.tar.gz
-            mkdir -p install-swig
-            cd swig-3.0.12
-            ./configure --disable-dependency-tracking --prefix=${RUNNER_WORKSPACE}/swig/install-swig
-            make
-            make install
             echo SWIG_DIR="-DSWIG_EXECUTABLE=/swig-4.0.2/install-swig-4.0.2/swig" >> $GITHUB_PATH
           fi
 
