@@ -94,6 +94,7 @@ jobs:
           echo "GITHUB_PATH is $GITHUB_PATH"
           echo "export PATH=/usr/local/my_path/bin:$PATH" >> $GITHUB_PATH
           export PATH=/usr/local/my_path/bin:$PATH
+          echo "$PATH" >> $GITHUB_PATH
           echo "now the PATH is $PATH"
           echo "now GITHUB_PATH is $GITHUB_PATH"
           echo "noW the PATH is $PATH"
@@ -110,11 +111,6 @@ jobs:
       - name: Install ccache
         shell: bash
         run: |
-          echo "checking ${RUNNER_WORKSPACE}"
-          echo "checking ${GITHUB_WORKSPACE}"
-          echo "checking ${{ runner.workspace }}"
-          echo "checking $RUNNER_WORKSPACE"
-          
           cd ${RUNNER_WORKSPACE}
           if [ "${{ matrix.platform.os_type }}" == 'macos' ]; then
             brew install ccache
