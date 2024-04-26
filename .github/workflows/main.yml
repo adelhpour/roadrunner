@@ -281,8 +281,19 @@ jobs:
           cmake --build . --target install --config ${{ matrix.platform.build_type }}
 
       - name: Run RoadRunner tests
-        if : matrix.platform.build_type == 'Release'
+        if : matrix.platform.build_type == 'Release' && matrix.platform.build_tests == 'ON'
         shell: bash
         run: |
           cd ${RUNNER_WORKSPACE}/build-roadrunner
-          ctest -C ${{ matrix.platform.build_type }} --verbose --extra-verbose --progress --output-on-failure
+          ctest -C ${{ matrix.platform.build_type }} --output-on-failure --verbose --extra-verbose --progress
+
+      - name: Run RoadRunner Python tests
+        if : matrix.platform.build_type == 'Release' && matrix.platform.build_tests == 'ON' && matrix.platform.build_python == 'ON'
+        shell: bash
+        run: |
+          cd ${RUNNER_WORKSPACE}/roadrunner
+          python${{ matrix.python_version.version }} -m pip install test-requirements.txt
+          python${{ matrix.python_version.version }} -m pip install requirements.txt
+          cd ${RUNNER_WORKSPACE}/build-roadrunner
+          python${{ matrix.python_version.version }} -m pytest -v python/tests
+          ctest -C ${{ matrix.platform.build_type }} --output-on-failure --verbose --extra-verbose --tests-regex python_tests*
