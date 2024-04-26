@@ -93,6 +93,7 @@ jobs:
           echo "PATH is $PATH"
           echo "GITHUB_PATH is $GITHUB_PATH"
           echo "export PATH=/usr/local/my_path/bin:$PATH" >> $GITHUB_PATH
+          export PATH=/usr/local/my_path/bin:$PATH
           echo "now the PATH is $PATH"
           echo "now GITHUB_PATH is $GITHUB_PATH"
           echo "noW the PATH is $PATH"
