@@ -216,7 +216,7 @@ jobs:
             echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/swigwin-4.0.2/" >> $GITHUB_PATH
           #elif [ "${{ matrix.platform.os_type }}" == 'manylinux' ]; then
           #  echo SWIG_DIR="-DSWIG_EXECUTABLE=/swig-4.0.2/install-swig-4.0.2/swig" >> $GITHUB_PATH
-          #fi
+          fi
 
       - name: Download libRoadRunner dependencies binaries
         shell: bash
