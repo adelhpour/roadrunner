@@ -198,7 +198,7 @@ jobs:
             brew install pcre pcre2
             mkdir -p ${RUNNER_WORKSPACE}/swig
             cd swig
-            curl -L https://sourceforge.net/projects/swig/files/swigwin/swigwin-4.0.2/swigwin-4.0.2.zip/download > swig.tar.gz
+            curl -L https://sourceforge.net/projects/swig/files/swig/swig-4.0.2/swig-4.0.2.tar.gz/download > swig.tar.gz
             tar -zxf swig.tar.gz
             rm swig.tar.gz
             mkdir -p install-swig
@@ -221,12 +221,13 @@ jobs:
             curl -L https://sourceforge.net/projects/swig/files/swig/swig-4.0.2/swig-4.0.2.tar.gz/download > swig.tar.gz
             tar -zxf swig.tar.gz
             rm swig.tar.gz
-            mkdir -p install-swig
             cd swig-4.0.2/
-            ./configure --disable-dependency-tracking --prefix=${RUNNER_WORKSPACE}/swig/install-swig
+            echo "SWIG_DIR=/usr/local/swig/" >> "${GITHUB_ENV}"
+            ./configure --disable-dependency-tracking --prefix=SWIG_DIR
             make
             make install
-            echo "PATH=${RUNNER_WORKSPACE}/swig/install-swig/bin:$PATH" >> $GITHUB_ENV
+            echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/swigwin-4.0.2/" >> $GITHUB_PATH
+            echo "PATH=${RUNNER_WORKSPACE}/swig/install-swig/bin:$PATH" >> $GITHUB_PATH
             echo "Path is $PATH"
             swig -version
             which swig
