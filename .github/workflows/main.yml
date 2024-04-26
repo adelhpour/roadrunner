@@ -289,14 +289,14 @@ jobs:
         run: |
           cd ${RUNNER_WORKSPACE}/roadrunner
           if [ "${{ matrix.platform.os_type }}" == 'windows' ]; then
-            python -m pip install requirements.txt
-            python -m pip install test-requirements.txt
+            python -m pip install -r requirements.txt
+            python -m pip install -r test-requirements.txt
           elif [ "${{ matrix.platform.os_type }}" == 'manylinux' ]; then
-            python${{ matrix.python_version.version }} -m pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org requirements.txt
-            python${{ matrix.python_version.version }} -m pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org test-requirements.txt
+            python${{ matrix.python_version.version }} -m pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org -r requirements.txt
+            python${{ matrix.python_version.version }} -m pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org -r test-requirements.txt
           else
-            python${{ matrix.python_version.version }} -m pip install requirements.txt
-            python${{ matrix.python_version.version }} -m pip install test-requirements.txt
+            python${{ matrix.python_version.version }} -m pip install -r requirements.txt
+            python${{ matrix.python_version.version }} -m pip install -r test-requirements.txt
           fi
 
       - name: Run RoadRunner tests
