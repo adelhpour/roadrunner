@@ -88,6 +88,18 @@ jobs:
       - name: Checkout RoadRunner
         uses: actions/checkout@v3
 
+      - name: checkig the path
+        run: |
+          echo "PATH is $PATH"
+          echo "GITHUB_PATH is $GITHUB_PATH"
+          echo "PATH=usr/adel/my_path:$PATH" >> $GITHUB_PATH
+          echo "now the PATH is $PATH"
+          echo "now GITHUB_PATH is $GITHUB_PATH"
+          echo "PATH=usr/adel/my_path:$PATH" > $GITHUB_PATH
+          echo "noW the PATH is $PATH"
+          echo "noW GITHUB_PATH is $GITHUB_PATH"
+          
+
       - name: Set MSVC as the default compiler on Windows
         if: matrix.platform.os_type == 'windows'
         uses: ilammy/msvc-dev-cmd@v1.6.0
