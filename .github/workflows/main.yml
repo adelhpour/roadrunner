@@ -198,10 +198,11 @@ jobs:
             brew install pcre pcre2
             mkdir -p ${RUNNER_WORKSPACE}/swig
             cd swig
-            curl -L https://sourceforge.net/projects/swig/files/swig/swig-4.0.2/swig-4.0.2.tar.gz/download > swig.tar.gz
-            tar -zxf swig.tar.gz -C ${{ runner.workspace }}/swig --strip-components=1
+            curl -L https://sourceforge.net/projects/swig/files/swigwin/swigwin-4.0.2/swigwin-4.0.2.zip/download > swig.tar.gz
+            tar -zxf swig.tar.gz
             rm swig.tar.gz
             mkdir -p install-swig
+            cd swig-4.0.2/
             ./configure --prefix=${RUNNER_WORKSPACE}/swig/install-swig
             make
             make install
@@ -215,12 +216,13 @@ jobs:
             echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/swigwin-4.0.2/" >> $GITHUB_PATH
           elif [ "${{ matrix.platform.os_type }}" == 'manylinux' ]; then
             yum install -y pcre-devel
-            mkdir -p ${RUNNER_WORKSPACE}/swig
+            mkdir -p swig
             cd swig
             curl -L https://sourceforge.net/projects/swig/files/swig/swig-4.0.2/swig-4.0.2.tar.gz/download > swig.tar.gz
-            tar -zxf swig.tar.gz -C ${{ runner.workspace }}/swig --strip-components=1
+            tar -zxf swig.tar.gz
             rm swig.tar.gz
             mkdir -p install-swig
+            cd swig-4.0.2/
             ./configure --disable-dependency-tracking --prefix=${RUNNER_WORKSPACE}/swig/install-swig
             make
             make install
@@ -313,3 +315,17 @@ jobs:
           cd ${RUNNER_WORKSPACE}/build-roadrunner
           python${{ matrix.python_version.version }} -m pytest -v python/tests
           ctest -C ${{ matrix.platform.build_type }} --output-on-failure --verbose --extra-verbose --tests-regex python_tests*
+
+      - name: Set artifacts path and name
+        shell: bash
+        run: |
+          cd ${RUNNER_WORKSPACE}
+          echo "artifacts_name=roadrunner-${{ matrix.platform.name }}" >> "${GITHUB_ENV}"
+          # we need to use relative path as actions/upload-artifact@v1 cannot find it on containerized runners
+          echo "artifacts_path=../install-roadrunner" >> "${GITHUB_ENV}"
+
+      - name: Upload roadrunner binaries
+        uses: actions/upload-artifact@v1
+        with:
+          name: ${{env.artifacts_name}}
+          path: ${{env.artifacts_path}}
