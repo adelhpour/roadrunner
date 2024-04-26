@@ -257,6 +257,7 @@ jobs:
           -DCMAKE_OSX_ARCHITECTURES=${{ matrix.platform.arch }} \
           -DCMAKE_C_COMPILER_LAUNCHER=${COMPILER_LAUNCHER} \
           -DCMAKE_CXX_COMPILER_LAUNCHER=${COMPILER_LAUNCHER} \
+          -DCMAKE_CXX_STANDARD=98 \
           ${LIBROADRUNNER_DEPENDENCIES_DIR} \
           ${LLVM_DIR} \
           ${SWIG_DIR} \
