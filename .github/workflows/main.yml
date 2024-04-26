@@ -92,7 +92,7 @@ jobs:
         run: |
           echo "PATH is $PATH"
           echo "GITHUB_PATH is $GITHUB_PATH"
-          echo "export PATH=/usr/local/my_path/bin:$PATH" >> $GITHUB_PATH
+          echo "/usr/local/my_path/bin:$PATH" >> $GITHUB_PATH
 
       - name: checking the path 2
         run: |
