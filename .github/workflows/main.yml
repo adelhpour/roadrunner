@@ -228,11 +228,9 @@ jobs:
             make install
             echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/bin/swig" >> "${GITHUB_ENV}"
             echo "PATH=${RUNNER_WORKSPACE}/swig/install-swig/bin:$PATH" > $GITHUB_PATH
-            echo "::add-path::${RUNNER_WORKSPACE}/swig/install-swig/bin"
             echo "Path is $PATH"
             swig -version
             which swig
-             echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/bin/swig" >> "${GITHUB_ENV}"
           fi
 
       - name: Download libRoadRunner dependencies binaries
