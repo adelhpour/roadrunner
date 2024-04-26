@@ -314,7 +314,6 @@ jobs:
         shell: bash
         run: |
           cd ${RUNNER_WORKSPACE}/build-roadrunner
-          python${{ matrix.python_version.version }} -m pytest -v python/tests
           ctest -C ${{ matrix.platform.build_type }} --output-on-failure --verbose --extra-verbose --tests-regex python_tests*
 
       - name: Set artifacts path and name
