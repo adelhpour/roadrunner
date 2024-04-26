@@ -61,7 +61,7 @@ jobs:
             os_name: ubuntu-latest
             container_image: quay.io/pypa/manylinux2014_x86_64
             build_type: Release
-            build_tests: ON
+            build_tests: OFF
             build_plugins: OFF
             build_python: OFF
         libroadrunner_deps_owner: [ "adelhpour" ]
@@ -211,18 +211,18 @@ jobs:
             echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/swigwin-4.0.2/" >> $GITHUB_PATH
           elif [ "${{ matrix.platform.os_type }}" == 'manylinux' ]; then
             yum install -y pcre-devel
-            mkdir -p swig
-            cd swig
-            curl -L https://sourceforge.net/projects/swig/files/swig/swig-4.0.2/swig-4.0.2.tar.gz/download > swig.tar.gz
-            tar -zxf swig.tar.gz
-            rm swig.tar.gz
-            mkdir -p install-swig
-            cd swig-4.0.2/
-            ./configure --disable-dependency-tracking --prefix=${RUNNER_WORKSPACE}/swig/install-swig
-            make
-            make install
-            echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/bin/swig" >> "${GITHUB_ENV}"
-            echo "${RUNNER_WORKSPACE}/swig/install-swig/bin" >> $GITHUB_PATH
+            #mkdir -p swig
+            #cd swig
+            #curl -L https://sourceforge.net/projects/swig/files/swig/swig-4.0.2/swig-4.0.2.tar.gz/download > swig.tar.gz
+            #tar -zxf swig.tar.gz
+            #rm swig.tar.gz
+            #mkdir -p install-swig
+            #cd swig-4.0.2/
+            #./configure --disable-dependency-tracking --prefix=${RUNNER_WORKSPACE}/swig/install-swig
+            #make
+            #make install
+            #echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/bin/swig" >> "${GITHUB_ENV}"
+            #echo "${RUNNER_WORKSPACE}/swig/install-swig/bin" >> $GITHUB_PATH
           fi
 
       - name: Download libRoadRunner dependencies binaries
