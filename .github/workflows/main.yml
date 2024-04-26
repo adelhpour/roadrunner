@@ -92,10 +92,9 @@ jobs:
         run: |
           echo "PATH is $PATH"
           echo "GITHUB_PATH is $GITHUB_PATH"
-          echo "PATH=usr/adel/my_path:$PATH" >> $GITHUB_PATH
+          echo "export PATH=$MY_PATH:$PATH" >> $GITHUB_ENV
           echo "now the PATH is $PATH"
           echo "now GITHUB_PATH is $GITHUB_PATH"
-          echo "PATH=usr/adel/my_path:$PATH" > $GITHUB_PATH
           echo "noW the PATH is $PATH"
           echo "noW GITHUB_PATH is $GITHUB_PATH"
           
