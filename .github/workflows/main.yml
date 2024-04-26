@@ -223,7 +223,7 @@ jobs:
             rm swig.tar.gz
             cd swig-4.0.2/
             echo "SWIG_DIR=/usr/local/swig/" >> "${GITHUB_ENV}"
-            ./configure --disable-dependency-tracking --prefix=SWIG_DIR
+            ./configure --disable-dependency-tracking --prefix=$SWIG_DIR
             make
             make install
             echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/swigwin-4.0.2/" >> $GITHUB_PATH
