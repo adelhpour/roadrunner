@@ -228,6 +228,7 @@ jobs:
             make -j 2
             make install
             swig -version
+            which swig
           fi
 
       - name: Download libRoadRunner dependencies binaries
