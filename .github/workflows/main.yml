@@ -221,16 +221,17 @@ jobs:
             curl -L https://sourceforge.net/projects/swig/files/swig/swig-4.0.2/swig-4.0.2.tar.gz/download > swig.tar.gz
             tar -zxf swig.tar.gz
             rm swig.tar.gz
+            mkdir -p install-swig
             cd swig-4.0.2/
-            echo "SWIG_DIR=/usr/local/swig/" >> "${GITHUB_ENV}"
-            ./configure --disable-dependency-tracking --prefix=$SWIG_DIR
+            ./configure --disable-dependency-tracking --prefix=${RUNNER_WORKSPACE}/swig/install-swig
             make
             make install
-            echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/swigwin-4.0.2/" >> $GITHUB_PATH
+            echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/bin/swig" >> "${GITHUB_ENV}"
             echo "PATH=${RUNNER_WORKSPACE}/swig/install-swig/bin:$PATH" >> $GITHUB_PATH
             echo "Path is $PATH"
             swig -version
             which swig
+             echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/bin/swig" >> "${GITHUB_ENV}"
           fi
 
       - name: Download libRoadRunner dependencies binaries
