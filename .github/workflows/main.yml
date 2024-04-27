@@ -63,7 +63,7 @@ jobs:
             build_type: Release
             build_tests: ON
             build_plugins: OFF
-            build_python: ON
+            build_python: OFF
         libroadrunner_deps_owner: [ "adelhpour" ]
         libroadrunner_deps_repo: [ "libroadrunner-deps" ]
         libroadrunner_deps_release_version: [ "2.1.1" ]
