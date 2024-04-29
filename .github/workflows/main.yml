@@ -153,7 +153,7 @@ jobs:
           python-version: ${{ matrix.python_version.version }}
 
       - name: Setup Python for manylinux platforms
-        if: matrix.platform.os_type == 'manylinux'
+        if: matrix.platform.build_python == 'ON' && matrix.platform.os_type == 'manylinux'
         shell: bash
         run: |
           cd ${RUNNER_WORKSPACE}
@@ -220,7 +220,7 @@ jobs:
             ./configure --disable-dependency-tracking --prefix=${RUNNER_WORKSPACE}/swig/install-swig
             make
             make install
-            echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/bin/swig" >> $GITHUB_ENV
+            #echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/bin/swig" >> $GITHUB_ENV
           fi
 
       - name: Download libRoadRunner dependencies binaries
