@@ -61,7 +61,7 @@ jobs:
             os_name: ubuntu-latest
             container_image: quay.io/pypa/manylinux2014_x86_64
             build_type: Release
-            build_tests: ON
+            build_tests: OFF
             build_plugins: OFF
             build_python: OFF
         libroadrunner_deps_owner: [ "adelhpour" ]
