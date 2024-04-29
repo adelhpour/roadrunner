@@ -116,7 +116,11 @@ jobs:
           cd Python-${{ matrix.python_version.version }}.0
           sed -i 's/PKG_CONFIG openssl /PKG_CONFIG openssl11 /g' configure
           mkdir -p install-python
-          export CFLAGS="-fPIC
+          if [ -z "$CFLAGS" ]; then
+            export CFLAGS="-fPIC"
+          else
+            export CFLAGS="$CFLAGS -fPIC"
+          fi
           ./configure --prefix=${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python
           make install
           echo "${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python/include" >> $GITHUB_PATH
