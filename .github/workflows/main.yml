@@ -167,7 +167,7 @@ jobs:
           cd Python-${{ matrix.python_version.version }}.0
           sed -i 's/PKG_CONFIG openssl /PKG_CONFIG openssl11 /g' configure
           mkdir -p install-python
-          ./configure --enable-optimizations --enable-static --enable-shared --with-lto --with-libs --prefix=${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python
+          ./configure --enable-optimizations --enable-static --enable-shared --with-lto --with-libs --disable-ipv6 --prefix=${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python
           make install
           echo "${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python/include" >> $GITHUB_PATH
           echo "${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python/lib" >> $GITHUB_PATH
