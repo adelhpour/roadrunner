@@ -63,7 +63,7 @@ jobs:
             build_type: Release
             build_tests: OFF
             build_plugins: OFF
-            build_python: ON
+            build_python: OFF
         libroadrunner_deps_owner: [ "adelhpour" ]
         libroadrunner_deps_repo: [ "libroadrunner-deps" ]
         libroadrunner_deps_release_version: [ "2.1.1" ]
@@ -220,7 +220,7 @@ jobs:
             ./configure --disable-dependency-tracking --prefix=${RUNNER_WORKSPACE}/swig/install-swig
             make
             make install
-            #echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/bin/swig" >> $GITHUB_ENV
+            echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/bin/swig" >> $GITHUB_ENV
           fi
 
       - name: Download libRoadRunner dependencies binaries
