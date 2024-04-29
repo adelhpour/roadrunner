@@ -95,6 +95,45 @@ jobs:
       - name: Setup Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
 
+      - name: Setup Python for non-manylinux platforms
+        if: matrix.platform.build_python == 'ON' && matrix.platform.os_type != 'manylinux'
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python_version.version }}
+
+      - name: Setup Python for manylinux platforms
+        if: matrix.platform.build_python == 'ON' && matrix.platform.os_type == 'manylinux'
+        shell: bash
+        run: |
+          cd ${RUNNER_WORKSPACE}
+          yum update -y
+          yum install -y gcc gcc openssl-devel bzip2-devel libffi-devel epel-release openssl11-devel
+          mkdir -p python${{ matrix.python_version.version }}
+          cd python${{ matrix.python_version.version }}
+          curl -L https://www.python.org/ftp/python/${{ matrix.python_version.version }}.0/Python-${{ matrix.python_version.version }}.0.tgz > python.tgz
+          tar -zxf python.tgz
+          rm python.tgz
+          cd Python-${{ matrix.python_version.version }}.0
+          sed -i 's/PKG_CONFIG openssl /PKG_CONFIG openssl11 /g' configure
+          mkdir -p install-python
+          ./configure --enable-optimizations --enable-static --enable-shared --with-lto --with-libs --disable-ipv6 --prefix=${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python
+          make install
+          echo "${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python/include" >> $GITHUB_PATH
+          echo "${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python/lib" >> $GITHUB_PATH
+          echo "${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python/bin" >> $GITHUB_PATH
+
+      - name: Install Python dependencies
+        if: matrix.platform.build_python == 'ON'
+        shell: bash
+        run: |
+          if [ "${{ matrix.platform.os_type }}" == 'windows' ]; then
+            python -m pip install numpy
+          elif [ "${{ matrix.platform.os_type }}" == 'manylinux' ]; then
+            python${{ matrix.python_version.version }} -m pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org numpy
+          else
+            python${{ matrix.python_version.version }} -m pip install numpy
+          fi
+
       - name: Install ccache
         shell: bash
         run: |
@@ -145,45 +184,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
             ${{ runner.os }}-
-
-      - name: Setup Python for non-manylinux platforms
-        if: matrix.platform.build_python == 'ON' && matrix.platform.os_type != 'manylinux'
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python_version.version }}
-
-      - name: Setup Python for manylinux platforms
-        if: matrix.platform.build_python == 'ON' && matrix.platform.os_type == 'manylinux'
-        shell: bash
-        run: |
-          cd ${RUNNER_WORKSPACE}
-          yum update -y
-          yum install -y gcc gcc openssl-devel bzip2-devel libffi-devel epel-release openssl11-devel
-          mkdir -p python${{ matrix.python_version.version }}
-          cd python${{ matrix.python_version.version }}
-          curl -L https://www.python.org/ftp/python/${{ matrix.python_version.version }}.0/Python-${{ matrix.python_version.version }}.0.tgz > python.tgz
-          tar -zxf python.tgz
-          rm python.tgz
-          cd Python-${{ matrix.python_version.version }}.0
-          sed -i 's/PKG_CONFIG openssl /PKG_CONFIG openssl11 /g' configure
-          mkdir -p install-python
-          ./configure --enable-optimizations --enable-static --enable-shared --with-lto --with-libs --disable-ipv6 --prefix=${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python
-          make install
-          echo "${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python/include" >> $GITHUB_PATH
-          echo "${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python/lib" >> $GITHUB_PATH
-          echo "${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python/bin" >> $GITHUB_PATH
-
-      - name: Install Python dependencies
-        if: matrix.platform.build_python == 'ON'
-        shell: bash
-        run: |
-          if [ "${{ matrix.platform.os_type }}" == 'windows' ]; then
-            python -m pip install numpy
-          elif [ "${{ matrix.platform.os_type }}" == 'manylinux' ]; then
-            python${{ matrix.python_version.version }} -m pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org numpy
-          else
-            python${{ matrix.python_version.version }} -m pip install numpy
-          fi
 
       - name: Install swig
         shell: bash
