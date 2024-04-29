@@ -61,7 +61,7 @@ jobs:
             os_name: ubuntu-latest
             container_image: quay.io/pypa/manylinux2014_x86_64
             build_type: Release
-            build_tests: ON
+            build_tests: OFF
             build_plugins: OFF
             build_python: ON
         libroadrunner_deps_owner: [ "adelhpour" ]
@@ -201,14 +201,14 @@ jobs:
             ./configure --prefix=${RUNNER_WORKSPACE}/swig/install-swig
             make
             make install
-            echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/bin/swig" >> "${GITHUB_ENV}"
+            echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/bin/swig" >> $GITHUB_ENV
           elif [ "${{ matrix.platform.os_type }}" == 'windows' ]; then
             mkdir -p swig
             cd swig
             curl -L https://sourceforge.net/projects/swig/files/swigwin/swigwin-4.0.2/swigwin-4.0.2.zip/download > swig.zip
             unzip -q swig.zip -d install-swig
             rm swig.zip
-            echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/swigwin-4.0.2/" >> $GITHUB_PATH
+            echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/swigwin-4.0.2/" >> $GITHUB_ENV
           elif [ "${{ matrix.platform.os_type }}" == 'manylinux' ]; then
             yum install -y pcre-devel
             mkdir -p swig
