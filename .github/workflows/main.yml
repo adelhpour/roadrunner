@@ -93,7 +93,7 @@ jobs:
         shell: bash
         run: |
           curl -L https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-          Miniconda3 ./Miniconda3-latest-Linux-x86_64.sh
+          bash Miniconda3-latest-Linux-x86_64.sh
           /Miniconda3/bin/conda create
           /Miniconda3/bin/conda init
           python3 --version
