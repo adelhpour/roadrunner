@@ -94,9 +94,9 @@ jobs:
         run: |
           curl -L https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
           bash Miniconda3-latest-Linux-x86_64.sh
-          /Miniconda3/bin/conda create
-          /Miniconda3/bin/conda init
-          python3 --version
+          # /Miniconda3/bin/conda create
+          # /Miniconda3/bin/conda init
+          #python3 --version
 
       - name: Set MSVC as the default compiler on Windows
         if: matrix.platform.os_type == 'windows'
