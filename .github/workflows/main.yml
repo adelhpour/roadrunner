@@ -169,6 +169,8 @@ jobs:
           mkdir -p install-python
           ./configure --enable-optimizations --enable-static --enable-shared --prefix=${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python
           make install
+          echo "${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python/include" >> $GITHUB_PATH
+          echo "${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python/lib" >> $GITHUB_PATH
           echo "${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python/bin" >> $GITHUB_PATH
 
       - name: Install Python dependencies
