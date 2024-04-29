@@ -221,8 +221,8 @@ jobs:
             ./configure --disable-dependency-tracking --prefix=${RUNNER_WORKSPACE}/swig/install-swig
             make
             make install
-            echo "${RUNNER_WORKSPACE}/swig/install-swig/bin" >> $GITHUB_PATH
-            #echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/bin/swig" >> $GITHUB_PATH
+            #echo "${RUNNER_WORKSPACE}/swig/install-swig/bin" >> $GITHUB_PATH
+            echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/bin/swig" >> $GITHUB_ENV
             #echo "export PATH=${RUNNER_WORKSPACE}/swig/install-swig/bin:$PATH" >> $GITHUB_ENV
             #echo "export PATH=${RUNNER_WORKSPACE}/swig/install-swig/bin:\$PATH" >> $GITHUB_ENV
           fi
