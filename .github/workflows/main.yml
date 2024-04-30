@@ -61,8 +61,8 @@ jobs:
             os_name: ubuntu-latest
             container_image: quay.io/pypa/manylinux2014_x86_64
             build_type: Release
-            build_tests: OFF
-            build_plugins: ON
+            build_tests: ON
+            build_plugins: OFF
             build_python: ON
         libroadrunner_deps_owner: [ "adelhpour" ]
         libroadrunner_deps_repo: [ "libroadrunner-deps" ]
@@ -158,7 +158,7 @@ jobs:
         run: |
           cd ${RUNNER_WORKSPACE}
           yum update -y
-          yum install -y gcc gcc openssl-devel bzip2-devel libffi-devel epel-release openssl11-devel
+          yum install -y gcc openssl-devel bzip2-devel libffi-devel epel-release openssl11-devel
           mkdir -p python${{ matrix.python_version.version }}
           cd python${{ matrix.python_version.version }}
           curl -L https://www.python.org/ftp/python/${{ matrix.python_version.version }}.0/Python-${{ matrix.python_version.version }}.0.tgz > python.tgz
@@ -172,7 +172,7 @@ jobs:
           else
             export CFLAGS="$CFLAGS -fPIC"
           fi
-          ./configure --prefix=${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python
+          ./configure --enable-optimizations --prefix=${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python
           make install
           echo "${RUNNER_WORKSPACE}/python${{ matrix.python_version.version }}/install-python/bin" >> "${GITHUB_PATH}"
 
@@ -256,12 +256,12 @@ jobs:
 
       - name: Create build directory
         shell: bash
-        run: mkdir -p ${RUNNER_WORKSPACE}/build-roadrunner
+        run: mkdir -p ${RUNNER_WORKSPACE}/roadrunner/build-roadrunner
 
       - name: Configure CMake for RoadRunner
         shell: bash
         run: |
-          cd ${RUNNER_WORKSPACE}/build-roadrunner
+          cd ${RUNNER_WORKSPACE}/roadrunner/build-roadrunner
           cmake $GITHUB_WORKSPACE \
           -G "Ninja" \
           -DCMAKE_BUILD_TYPE=${{ matrix.platform.build_type }} \
@@ -274,12 +274,12 @@ jobs:
           -DBUILD_PYTHON=${{ matrix.platform.build_python }} \
           -DBUILD_TESTS=${{ matrix.platform.build_tests }} \
           -DBUILD_RR_PLUGINS=${{ matrix.platform.build_plugins }} \
-          -DCMAKE_INSTALL_PREFIX="${RUNNER_WORKSPACE}/install-roadrunner"
+          -DCMAKE_INSTALL_PREFIX="${RUNNER_WORKSPACE}/roadrunner/install-roadrunner"
 
       - name: Build and Install RoadRunner
         shell: bash
         run: |
-          cd ${RUNNER_WORKSPACE}/build-roadrunner
+          cd ${RUNNER_WORKSPACE}/roadrunner/build-roadrunner
           cmake --build . --target install --config ${{ matrix.platform.build_type }}
 
       - name: Install test dependencies
@@ -302,14 +302,14 @@ jobs:
         if : matrix.platform.build_type == 'Release' && matrix.platform.build_tests == 'ON'
         shell: bash
         run: |
-          cd ${RUNNER_WORKSPACE}/build-roadrunner
+          cd ${RUNNER_WORKSPACE}/roadrunner/build-roadrunner
           ctest -C ${{ matrix.platform.build_type }} --output-on-failure --verbose --extra-verbose --progress
 
       - name: Run RoadRunner Python tests
         if : matrix.platform.build_type == 'Release' && matrix.platform.build_tests == 'ON' && matrix.platform.build_python == 'ON'
         shell: bash
         run: |
-          cd ${RUNNER_WORKSPACE}/build-roadrunner
+          cd ${RUNNER_WORKSPACE}/roadrunner/build-roadrunner
           ctest -C ${{ matrix.platform.build_type }} --output-on-failure --verbose --extra-verbose --tests-regex python_tests*
 
       - name: Set artifacts path and name
