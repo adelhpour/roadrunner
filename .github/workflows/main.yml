@@ -334,7 +334,7 @@ jobs:
           name: ${{env.artifacts_name}}
           path: ${{env.artifacts_path}}
 
-      - name: Create Python wheel
+      - name: Create Python wheel artifacts
         if: matrix.platform.build_type == 'Release' && matrix.platform.build_python == 'ON'
         shell: bash
         run: |
@@ -359,7 +359,7 @@ jobs:
           # we need to use relative path as actions/upload-artifact@v1 cannot find it on containerized runners
           echo "python_wheel_artifacts_path=../install-roadrunner/dist" >> "${GITHUB_ENV}"
 
-      - name: Upload Python wheel
+      - name: Upload Python wheel artifacts
         if: matrix.platform.build_type == 'Release' && matrix.platform.build_python == 'ON'
         uses: actions/upload-artifact@v1
         with:
