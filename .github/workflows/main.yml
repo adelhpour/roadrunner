@@ -64,12 +64,12 @@ jobs:
             build_tests: ON
             build_plugins: ON
             build_python: ON
-        libroadrunner_deps_owner: [ "adelhpour" ]
+        libroadrunner_deps_owner: [ "sys-bio" ]
         libroadrunner_deps_repo: [ "libroadrunner-deps" ]
         libroadrunner_deps_release_version: [ "2.1.1" ]
-        llvm_owner: [ "adelhpour" ]
+        llvm_owner: [ "sys-bio" ]
         llvm_repo: [ "llvm-13.x" ]
-        llvm_release_version: [ "1.0.0" ]
+        llvm_release_version: [ "llvm-13.x" ]
         python_version:
           #- name: py39
           #  version: "3.9"
@@ -335,18 +335,20 @@ jobs:
           path: ${{env.artifacts_path}}
 
       - name: Create Python wheel
-        if: matrix.platform.build_python == 'ON'
+        if: matrix.platform.build_type == 'Release' && matrix.platform.build_python == 'ON'
         shell: bash
         run: |
           cd ${RUNNER_WORKSPACE}/install-roadrunner
           if [ "${{ matrix.platform.os_type }}" == 'windows' ]; then
             python -m pip install wheel
+            python setup.py bdist_wheel
           elif [ "${{ matrix.platform.os_type }}" == 'manylinux' ]; then
             python${{ matrix.python_version.version }} -m pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org wheel
+            python${{ matrix.python_version.version }} setup.py bdist_wheel
           else
             python${{ matrix.python_version.version }} -m pip install wheel
+            python${{ matrix.python_version.version }} setup.py bdist_wheel
           fi
-          python${{ matrix.python_version.version }} setup.py bdist_wheel
 
       - name: Set Python wheel artifacts path and name
         if: matrix.platform.build_type == 'Release' && matrix.platform.build_python == 'ON'
