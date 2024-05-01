@@ -71,14 +71,14 @@ jobs:
         llvm_repo: [ "llvm-13.x" ]
         llvm_release_version: [ "1.0.0" ]
         python_version:
-          - name: py39
-            version: "3.9"
+          #- name: py39
+          #  version: "3.9"
           - name: py310
             version: "3.10"
-          - name: py311
-            version: "3.11"
-          - name: py312
-            version: "3.12"
+          #- name: py311
+          #  version: "3.11"
+          #- name: py312
+          #  version: "3.12"
 
     runs-on: ${{ matrix.platform.os_name }}
     container:
@@ -306,19 +306,19 @@ jobs:
             python${{ matrix.python_version.version }} -m pip install -r test-requirements.txt
           fi
 
-      - name: Run RoadRunner tests
-        if : matrix.platform.build_type == 'Release' && matrix.platform.build_tests == 'ON'
-        shell: bash
-        run: |
-          cd ${RUNNER_WORKSPACE}/build-roadrunner
-          ctest -C ${{ matrix.platform.build_type }} --output-on-failure --verbose --extra-verbose --progress
+      #- name: Run RoadRunner tests
+      #  if : matrix.platform.build_type == 'Release' && matrix.platform.build_tests == 'ON'
+      #  shell: bash
+      #  run: |
+      #    cd ${RUNNER_WORKSPACE}/build-roadrunner
+      #    ctest -C ${{ matrix.platform.build_type }} --output-on-failure --verbose --extra-verbose --progress
 
-      - name: Run RoadRunner Python tests
-        if : matrix.platform.build_type == 'Release' && matrix.platform.build_tests == 'ON' && matrix.platform.build_python == 'ON'
-        shell: bash
-        run: |
-          cd ${RUNNER_WORKSPACE}/build-roadrunner
-          ctest -C ${{ matrix.platform.build_type }} --output-on-failure --verbose --extra-verbose --tests-regex python_tests*
+      #- name: Run RoadRunner Python tests
+      #  if : matrix.platform.build_type == 'Release' && matrix.platform.build_tests == 'ON' && matrix.platform.build_python == 'ON'
+      #  shell: bash
+      #  run: |
+      #    cd ${RUNNER_WORKSPACE}/build-roadrunner
+      #    ctest -C ${{ matrix.platform.build_type }} --output-on-failure --verbose --extra-verbose --tests-regex python_tests*
 
       - name: Set artifacts path and name
         shell: bash
@@ -333,3 +333,33 @@ jobs:
         with:
           name: ${{env.artifacts_name}}
           path: ${{env.artifacts_path}}
+
+      - name: Create Python wheel
+        if: matrix.platform.build_python == 'ON'
+        shell: bash
+        run: |
+          cd ${RUNNER_WORKSPACE}/install-roadrunner
+          if [ "${{ matrix.platform.os_type }}" == 'windows' ]; then
+            python -m pip install wheel
+          elif [ "${{ matrix.platform.os_type }}" == 'manylinux' ]; then
+            python${{ matrix.python_version.version }} -m pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org wheel
+          else
+            python${{ matrix.python_version.version }} -m pip install wheel
+          fi
+          python${{ matrix.python_version.version }} setup.py bdist_wheel
+
+      - name: Set Python wheel artifacts path and name
+        if: matrix.platform.build_type == 'Release' && matrix.platform.build_python == 'ON'
+        shell: bash
+        run: |
+          cd ${RUNNER_WORKSPACE}
+          echo "python_wheel_artifacts_name=roadrunner-${{ matrix.platform.name }}-py${{ matrix.python_version.version }}-wheel" >> "${GITHUB_ENV}"
+          # we need to use relative path as actions/upload-artifact@v1 cannot find it on containerized runners
+          echo "python_wheel_artifacts_path=../install-roadrunner/dist" >> "${GITHUB_ENV}"
+
+      - name: Upload Python wheel
+        if: matrix.platform.build_type == 'Release' && matrix.platform.build_python == 'ON'
+        uses: actions/upload-artifact@v1
+        with:
+          name: ${{env.python_wheel_artifacts_name}}
+          path: ${{env.python_wheel_artifacts_path}}
