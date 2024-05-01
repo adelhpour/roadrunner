@@ -102,6 +102,7 @@ jobs:
           echo "/opt/rh/devtoolset-11/root/usr/bin" >> $GITHUB_PATH
           pwd
           ls /__w
+          echo $PATH
           
 
       - name: Setup Ninja
