@@ -102,7 +102,7 @@ jobs:
           echo "/opt/rh/devtoolset-11/root/usr/bin" >> $GITHUB_PATH
           pwd
           ls /__w
-          #export PATH=/opt/rh/devtoolset-11/root/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+          export PATH=/opt/rh/devtoolset-11/root/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
       - name: Setup Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
