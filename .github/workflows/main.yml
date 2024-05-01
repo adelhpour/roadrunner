@@ -71,14 +71,14 @@ jobs:
         llvm_repo: [ "llvm-13.x" ]
         llvm_release_version: [ "1.0.0" ]
         python_version:
-          #- name: py39
-          #  version: "3.9"
+          - name: py39
+            version: "3.9"
           - name: py310
             version: "3.10"
-          #- name: py311
-          #  version: "3.11"
-          #- name: py312
-          #  version: "3.12"
+          - name: py311
+            version: "3.11"
+          - name: py312
+            version: "3.12"
 
     runs-on: ${{ matrix.platform.os_name }}
     container:
@@ -114,7 +114,6 @@ jobs:
             sudo apt-get update
             sudo apt-get install -y ccache
           elif [ "${{ matrix.platform.os_type }}" == 'manylinux' ]; then
-            echo $PATH
             mkdir -p ccache
             cd ccache
             curl -L https://github.com/ccache/ccache/releases/download/v4.9.1/ccache-4.9.1.tar.gz > ccache.tar.gz
@@ -156,13 +155,13 @@ jobs:
             ${{ runner.os }}-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
             ${{ runner.os }}-
 
-      - name: Setup Python for non-manylinux platforms
+      - name: Setup Python for non-Manylinux platforms
         if: matrix.platform.build_python == 'ON' && matrix.platform.os_type != 'manylinux'
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python_version.version }}
 
-      - name: Setup Python for manylinux platforms
+      - name: Setup Python for Manylinux platforms
         if: matrix.platform.build_python == 'ON' && matrix.platform.os_type == 'manylinux'
         shell: bash
         run: |
@@ -198,7 +197,7 @@ jobs:
             python${{ matrix.python_version.version }} -m pip install numpy
           fi
 
-      - name: Install swig
+      - name: Install Swig
         shell: bash
         run: |
           cd ${RUNNER_WORKSPACE}
@@ -215,14 +214,14 @@ jobs:
             ./configure --prefix=${RUNNER_WORKSPACE}/swig/install-swig
             make
             make install
-            echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/bin/swig" >> "${GITHUB_ENV}"
+            echo SWIG_EXECUTABLE="${RUNNER_WORKSPACE}/swig/install-swig/bin/swig" >> "${GITHUB_ENV}"
           elif [ "${{ matrix.platform.os_type }}" == 'windows' ]; then
             mkdir -p swig
             cd swig
             curl -L https://sourceforge.net/projects/swig/files/swigwin/swigwin-4.0.2/swigwin-4.0.2.zip/download > swig.zip
             unzip -q swig.zip -d install-swig
             rm swig.zip
-            echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/swigwin-4.0.2/" >> "${GITHUB_PATH}"
+            echo "${RUNNER_WORKSPACE}/swig/install-swig/swigwin-4.0.2/" >> "${GITHUB_PATH}"
           elif [ "${{ matrix.platform.os_type }}" == 'manylinux' ]; then
             yum install -y pcre-devel
             mkdir -p swig
@@ -235,10 +234,10 @@ jobs:
             ./configure --disable-dependency-tracking --prefix=${RUNNER_WORKSPACE}/swig/install-swig
             make
             make install
-            echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/bin/swig" >> "${GITHUB_ENV}"
+            echo SWIG_EXECUTABLE="${RUNNER_WORKSPACE}/swig/install-swig/bin/swig" >> "${GITHUB_ENV}"
           fi
 
-      - name: Download libRoadRunner dependencies binaries
+      - name: Download LibRoadRunner Dependencies binaries
         shell: bash
         run: |
           cd ${RUNNER_WORKSPACE}
@@ -247,7 +246,7 @@ jobs:
           curl -L "https://github.com/${{ matrix.libroadrunner_deps_owner }}/${{ matrix.libroadrunner_deps_repo }}/releases/download/v${{ matrix.libroadrunner_deps_release_version }}/${{ matrix.libroadrunner_deps_repo }}-${{ matrix.platform.name }}.zip" > libroadrunner-deps-${{ matrix.platform.name }}.zip
           unzip -q libroadrunner-deps-${{ matrix.platform.name }}.zip -d libroadrunner-deps-${{ matrix.platform.name }}
           rm libroadrunner-deps-${{ matrix.platform.name }}.zip
-          echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${RUNNER_WORKSPACE}/libroadrunner-deps-binaries/libroadrunner-deps-${{ matrix.platform.name }}" >> "${GITHUB_ENV}"
+          echo RR_DEPENDENCIES_INSTALL_PREFIX="${RUNNER_WORKSPACE}/libroadrunner-deps-binaries/libroadrunner-deps-${{ matrix.platform.name }}" >> "${GITHUB_ENV}"
 
       - name: Download LLVM binaries
         shell: bash
@@ -258,8 +257,8 @@ jobs:
           curl -L "https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/v${{ matrix.llvm_release_version }}/llvm-${{ matrix.platform.name }}.zip" > llvm-${{ matrix.platform.name }}.zip
           unzip -q llvm-${{ matrix.platform.name }}.zip -d llvm-${{ matrix.platform.name }}
           rm llvm-${{ matrix.platform.name }}.zip
-          echo LLVM_DIR="-DLLVM_INSTALL_PREFIX=${RUNNER_WORKSPACE}/llvm-binaries/llvm-${{ matrix.platform.name }}" >> "${GITHUB_ENV}"
-          
+          echo LLVM_INSTALL_PREFIX="${RUNNER_WORKSPACE}/llvm-binaries/llvm-${{ matrix.platform.name }}" >> "${GITHUB_ENV}"
+
           # make llvm-config executable
           chmod a+x ${RUNNER_WORKSPACE}/llvm-binaries/llvm-${{ matrix.platform.name }}/bin/llvm-config
 
@@ -273,19 +272,19 @@ jobs:
           cd ${RUNNER_WORKSPACE}/build-roadrunner
           cmake $GITHUB_WORKSPACE \
           -G "Ninja" \
-          -DCMAKE_BUILD_TYPE=${{ matrix.platform.build_type }} \
-          -DCMAKE_OSX_ARCHITECTURES=${{ matrix.platform.arch }} \
           -DCMAKE_C_COMPILER_LAUNCHER=${COMPILER_LAUNCHER} \
           -DCMAKE_CXX_COMPILER_LAUNCHER=${COMPILER_LAUNCHER} \
-          ${LIBROADRUNNER_DEPENDENCIES_DIR} \
-          ${LLVM_DIR} \
-          ${SWIG_DIR} \
-          -DBUILD_PYTHON=${{ matrix.platform.build_python }} \
+          -DCMAKE_BUILD_TYPE=${{ matrix.platform.build_type }} \
+          -DCMAKE_OSX_ARCHITECTURES=${{ matrix.platform.arch }} \
+          -DCMAKE_INSTALL_PREFIX="${RUNNER_WORKSPACE}/install-roadrunner" \
+          -DRR_DEPENDENCIES_INSTALL_PREFIX=${RR_DEPENDENCIES_INSTALL_PREFIX} \
+          -DLLVM_INSTALL_PREFIX=${LLVM_INSTALL_PREFIX} \
           -DBUILD_TESTS=${{ matrix.platform.build_tests }} \
           -DBUILD_RR_PLUGINS=${{ matrix.platform.build_plugins }} \
-          -DCMAKE_INSTALL_PREFIX="${RUNNER_WORKSPACE}/install-roadrunner"
+          -DBUILD_PYTHON=${{ matrix.platform.build_python }} \
+          -DSWIG_EXECUTABLE=${SWIG_EXECUTABLE}
 
-      - name: Build and Install RoadRunner
+      - name: Build and install RoadRunner
         shell: bash
         run: |
           cd ${RUNNER_WORKSPACE}/build-roadrunner
