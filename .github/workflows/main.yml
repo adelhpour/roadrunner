@@ -100,6 +100,7 @@ jobs:
           yum install -y devtoolset-11
           scl enable devtoolset-11 bash
           echo "/opt/rh/devtoolset-11/root/usr/bin" >> $GITHUB_PATH
+          echo "PATH=/opt/rh/devtoolset-11/root/usr/bin/gcc:$PATH" >> $GITHUB_ENV
 
       - name: Setup Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
