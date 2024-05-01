@@ -62,7 +62,7 @@ jobs:
             container_image: quay.io/pypa/manylinux2014_x86_64
             build_type: Release
             build_tests: ON
-            build_plugins: OFF
+            build_plugins: ON
             build_python: ON
         libroadrunner_deps_owner: [ "adelhpour" ]
         libroadrunner_deps_repo: [ "libroadrunner-deps" ]
@@ -100,9 +100,6 @@ jobs:
           yum install -y devtoolset-11
           scl enable devtoolset-11 bash
           echo "/opt/rh/devtoolset-11/root/usr/bin" >> $GITHUB_PATH
-          ls /opt/rh
-          rm -rf /opt/rh/devtoolset-10
-          ls /opt/rh
 
       - name: Setup Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
