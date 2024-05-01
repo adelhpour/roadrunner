@@ -214,14 +214,14 @@ jobs:
             ./configure --prefix=${RUNNER_WORKSPACE}/swig/install-swig
             make
             make install
-            echo SWIG_EXECUTABLE="${RUNNER_WORKSPACE}/swig/install-swig/bin/swig" >> "${GITHUB_ENV}"
+            echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/bin/swig" >> "${GITHUB_ENV}"
           elif [ "${{ matrix.platform.os_type }}" == 'windows' ]; then
             mkdir -p swig
             cd swig
             curl -L https://sourceforge.net/projects/swig/files/swigwin/swigwin-4.0.2/swigwin-4.0.2.zip/download > swig.zip
             unzip -q swig.zip -d install-swig
             rm swig.zip
-            echo "${RUNNER_WORKSPACE}/swig/install-swig/swigwin-4.0.2/" >> "${GITHUB_PATH}"
+            echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/swigwin-4.0.2/" >> "${GITHUB_PATH}"
           elif [ "${{ matrix.platform.os_type }}" == 'manylinux' ]; then
             yum install -y pcre-devel
             mkdir -p swig
@@ -234,7 +234,7 @@ jobs:
             ./configure --disable-dependency-tracking --prefix=${RUNNER_WORKSPACE}/swig/install-swig
             make
             make install
-            echo SWIG_EXECUTABLE="${RUNNER_WORKSPACE}/swig/install-swig/bin/swig" >> "${GITHUB_ENV}"
+            echo SWIG_DIR="-DSWIG_EXECUTABLE=${RUNNER_WORKSPACE}/swig/install-swig/bin/swig" >> "${GITHUB_ENV}"
           fi
 
       - name: Download LibRoadRunner Dependencies binaries
@@ -282,7 +282,7 @@ jobs:
           -DBUILD_TESTS=${{ matrix.platform.build_tests }} \
           -DBUILD_RR_PLUGINS=${{ matrix.platform.build_plugins }} \
           -DBUILD_PYTHON=${{ matrix.platform.build_python }} \
-          -DSWIG_EXECUTABLE=${SWIG_EXECUTABLE}
+          ${SWIG_DIR}
 
       - name: Build and install RoadRunner
         shell: bash
