@@ -234,11 +234,16 @@ jobs:
           cd ${RUNNER_WORKSPACE}
           mkdir -p libroadrunner-deps-binaries
           cd libroadrunner-deps-binaries
-          curl -L "https://github.com/${{ matrix.libroadrunner_deps_owner }}/${{ matrix.libroadrunner_deps_repo }}/releases/download/v${{ matrix.libroadrunner_deps_release_version }}/${{ matrix.libroadrunner_deps_repo }}-${{ matrix.platform.os_name }}-${{ matrix.platform.build_type }}.zip" > libroadrunner-deps-${{ matrix.platform.name }}.zip
-          unzip -q libroadrunner-deps-${{ matrix.platform.name }}.zip -d libroadrunner-deps-${{ matrix.platform.name }}
+          if [ "${{ matrix.platform.os_type }}" != 'manylinux' ]; then
+            curl -L "https://github.com/${{ matrix.libroadrunner_deps_owner }}/${{ matrix.libroadrunner_deps_repo }}/releases/download/v${{ matrix.libroadrunner_deps_release_version }}/${{ matrix.libroadrunner_deps_repo }}-${{ matrix.platform.os_name }}-${{ matrix.platform.build_type }}.zip" > libroadrunner-deps-${{ matrix.platform.name }}.zip
+            unzip -q libroadrunner-deps-${{ matrix.platform.name }}.zip -d libroadrunner-deps-${{ matrix.platform.name }}
+            echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${RUNNER_WORKSPACE}/libroadrunner-deps-binaries/libroadrunner-deps-${{ matrix.platform.name }}" >> "${GITHUB_ENV}"
+          else
+            curl -L "https://github.com/sys-bio/libroadrunner-deps/releases/download/v2.1/libroadrunner-deps-manylinux2014-Release.zip" > libroadrunner-deps-${{ matrix.platform.name }}.zip
+            unzip -q libroadrunner-deps-${{ matrix.platform.name }}.zip -d libroadrunner-deps-${{ matrix.platform.name }}
+            echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${RUNNER_WORKSPACE}/libroadrunner-deps-binaries/libroadrunner-deps-manylinux2014-Release/install-azure/Release" >> "${GITHUB_ENV}"
+          fi
           rm libroadrunner-deps-${{ matrix.platform.name }}.zip
-          echo LIBROADRUNNER_DEPENDENCIES_DIR="-DRR_DEPENDENCIES_INSTALL_PREFIX=${RUNNER_WORKSPACE}/libroadrunner-deps-binaries/libroadrunner-deps-${{ matrix.platform.name }}" >> "${GITHUB_ENV}"
-          echo "${RUNNER_WORKSPACE}/libroadrunner-deps-binaries/libroadrunner-deps-${{ matrix.platform.name }}" >> "${GITHUB_PATH}"
 
       - name: Download LLVM binaries
         shell: bash
@@ -256,12 +261,12 @@ jobs:
 
       - name: Create build directory
         shell: bash
-        run: mkdir -p ${RUNNER_WORKSPACE}/roadrunner/build-roadrunner
+        run: mkdir -p ${RUNNER_WORKSPACE}/build-roadrunner
 
       - name: Configure CMake for RoadRunner
         shell: bash
         run: |
-          cd ${RUNNER_WORKSPACE}/roadrunner/build-roadrunner
+          cd ${RUNNER_WORKSPACE}/build-roadrunner
           cmake $GITHUB_WORKSPACE \
           -G "Ninja" \
           -DCMAKE_BUILD_TYPE=${{ matrix.platform.build_type }} \
@@ -274,12 +279,12 @@ jobs:
           -DBUILD_PYTHON=${{ matrix.platform.build_python }} \
           -DBUILD_TESTS=${{ matrix.platform.build_tests }} \
           -DBUILD_RR_PLUGINS=${{ matrix.platform.build_plugins }} \
-          -DCMAKE_INSTALL_PREFIX="${RUNNER_WORKSPACE}/roadrunner/install-roadrunner"
+          -DCMAKE_INSTALL_PREFIX="${RUNNER_WORKSPACE}/install-roadrunner"
 
       - name: Build and Install RoadRunner
         shell: bash
         run: |
-          cd ${RUNNER_WORKSPACE}/roadrunner/build-roadrunner
+          cd ${RUNNER_WORKSPACE}/build-roadrunner
           cmake --build . --target install --config ${{ matrix.platform.build_type }}
 
       - name: Install test dependencies
@@ -302,14 +307,14 @@ jobs:
         if : matrix.platform.build_type == 'Release' && matrix.platform.build_tests == 'ON'
         shell: bash
         run: |
-          cd ${RUNNER_WORKSPACE}/roadrunner/build-roadrunner
+          cd ${RUNNER_WORKSPACE}/build-roadrunner
           ctest -C ${{ matrix.platform.build_type }} --output-on-failure --verbose --extra-verbose --progress
 
       - name: Run RoadRunner Python tests
         if : matrix.platform.build_type == 'Release' && matrix.platform.build_tests == 'ON' && matrix.platform.build_python == 'ON'
         shell: bash
         run: |
-          cd ${RUNNER_WORKSPACE}/roadrunner/build-roadrunner
+          cd ${RUNNER_WORKSPACE}/build-roadrunner
           ctest -C ${{ matrix.platform.build_type }} --output-on-failure --verbose --extra-verbose --tests-regex python_tests*
 
       - name: Set artifacts path and name
