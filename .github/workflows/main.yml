@@ -100,10 +100,10 @@ jobs:
           yum install -y devtoolset-11
           scl enable devtoolset-11 bash
           echo "/opt/rh/devtoolset-11/root/usr/bin" >> $GITHUB_PATH
-          echo "PATH=/opt/rh/devtoolset-11/root/usr/bin/gcc:$PATH" >> $GITHUB_ENV
+          pwd
+          ls /
 
       - name: Setup Ninja
-        if : matrix.platform.os_type != 'manylinux'
         uses: seanmiddleditch/gha-setup-ninja@master
 
       - name: Install ccache
@@ -274,7 +274,7 @@ jobs:
         run: |
           cd ${RUNNER_WORKSPACE}/build-roadrunner
           cmake $GITHUB_WORKSPACE \
-          -G "Unix Makefiles" \
+          -G "Ninja" \
           -DCMAKE_BUILD_TYPE=${{ matrix.platform.build_type }} \
           -DCMAKE_OSX_ARCHITECTURES=${{ matrix.platform.arch }} \
           -DCMAKE_C_COMPILER_LAUNCHER=${COMPILER_LAUNCHER} \
