@@ -100,9 +100,9 @@ jobs:
           yum install -y devtoolset-11
           scl enable devtoolset-11 bash
           echo "/opt/rh/devtoolset-11/root/usr/bin" >> $GITHUB_PATH
-          pwd
-          ls /__w
-          export PATH=/opt/rh/devtoolset-11/root/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+          ls /opt/rh
+          rm -rf /opt/rh/devtoolset-10
+          ls /opt/rh
 
       - name: Setup Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
