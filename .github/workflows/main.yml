@@ -69,7 +69,7 @@ jobs:
         libroadrunner_deps_release_version: [ "v2.1.1" ]
         llvm_owner: [ "sys-bio" ]
         llvm_repo: [ "llvm-13.x" ]
-        llvm_release_version: [ "llvm-13.x" ]
+        llvm_release_version: [ "llvm-v13.x" ]
         python_version:
           #- name: py39
           #  version: "3.9"
