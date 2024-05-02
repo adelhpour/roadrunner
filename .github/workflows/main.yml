@@ -7,7 +7,7 @@ on:
 
 jobs:
   build_on_OSs:
-    name: Build on ${{ matrix.platform.name }}-python${{ matrix.python_version.version }}
+    name: Build RoadRunner on ${{ matrix.platform.name }}-python${{ matrix.python_version.version }}
     strategy:
       fail-fast: false
       matrix:
@@ -324,7 +324,7 @@ jobs:
         shell: bash
         run: |
           cd ${RUNNER_WORKSPACE}
-          echo "artifacts_name=roadrunner-${{ matrix.platform.name }}" >> "${GITHUB_ENV}"
+          echo "artifacts_name=roadrunner-${{ matrix.platform.name }}-python${{ matrix.python_version.version }}" >> "${GITHUB_ENV}"
           # we need to use relative path as actions/upload-artifact@v1 cannot find it on containerized runners
           echo "artifacts_path=../install-roadrunner" >> "${GITHUB_ENV}"
 
