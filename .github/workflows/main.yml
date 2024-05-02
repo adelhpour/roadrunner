@@ -340,13 +340,13 @@ jobs:
         run: |
           cd ${RUNNER_WORKSPACE}/install-roadrunner
           if [ "${{ matrix.platform.os_type }}" == 'windows' ]; then
-            python -m pip install wheel
+            python -m pip install setuptools wheel
             python setup.py bdist_wheel
           elif [ "${{ matrix.platform.os_type }}" == 'manylinux' ]; then
-            python${{ matrix.python_version.version }} -m pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org wheel
+            python${{ matrix.python_version.version }} -m pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org setuptools wheel
             python${{ matrix.python_version.version }} setup.py bdist_wheel
           else
-            python${{ matrix.python_version.version }} -m pip install wheel
+            python${{ matrix.python_version.version }} -m pip install setuptools wheel
             python${{ matrix.python_version.version }} setup.py bdist_wheel
           fi
 
