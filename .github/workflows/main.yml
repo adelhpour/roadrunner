@@ -435,3 +435,4 @@ jobs:
         with:
           name: ${{env.python_wheel_artifacts_name}}
           path: ${{env.python_wheel_artifacts_path}}
+          compression-level: 0
