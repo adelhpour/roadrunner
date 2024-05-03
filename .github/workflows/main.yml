@@ -90,12 +90,12 @@ jobs:
         python_version:
           - name: py39
             version: "3.9"
-          - name: py310
-            version: "3.10"
-          - name: py311
-            version: "3.11"
-          - name: py312
-            version: "3.12"
+          #- name: py310
+          #  version: "3.10"
+          #- name: py311
+          #  version: "3.11"
+          #- name: py312
+          #  version: "3.12"
 
     runs-on: ${{ matrix.platform.os_name }}
     container:
@@ -136,6 +136,7 @@ jobs:
             unzip -q ${{ matrix.libroadrunner_deps_name }}-${os_name_without_build_type}-${host_architecture}-${{ matrix.platform.build_type }}.zip -d ${{ matrix.libroadrunner_deps_name }}-${os_name_without_build_type}-${host_architecture}-${{ matrix.platform.build_type }}
             rm ${{ matrix.libroadrunner_deps_name }}-${os_name_without_build_type}-${host_architecture}-${{ matrix.platform.build_type }}.zip
             echo RR_DEPENDENCIES_INSTALL_PREFIX="${RUNNER_WORKSPACE}/${{ matrix.libroadrunner_deps_name }}-binaries/${{ matrix.libroadrunner_deps_name }}-${os_name_without_build_type}-${host_architecture}-${{ matrix.platform.build_type }}" >> "${GITHUB_ENV}"
+          fi
 
       - name: Download LLVM binaries
         shell: bash
@@ -168,6 +169,7 @@ jobs:
             unzip -q ${{ matrix.llvm_name }}-${os_name_without_build_type}-${host_architecture}-${{ matrix.platform.build_type }}.zip -d ${{ matrix.llvm_name }}-${os_name_without_build_type}-${host_architecture}-${{ matrix.platform.build_type }}
             rm ${{ matrix.llvm_name }}-${os_name_without_build_type}-${host_architecture}-${{ matrix.platform.build_type }}.zip
             echo RR_DEPENDENCIES_INSTALL_PREFIX="${RUNNER_WORKSPACE}/${{ matrix.llvm_name }}-binaries/${{ matrix.llvm_name }}-${os_name_without_build_type}-${host_architecture}-${{ matrix.platform.build_type }}" >> "${GITHUB_ENV}"
+          fi
 
           # make llvm-config executable
           chmod a+x ${RUNNER_WORKSPACE}/llvm-binaries/llvm-${{ matrix.platform.name }}/bin/llvm-config
