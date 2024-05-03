@@ -163,7 +163,7 @@ jobs:
           curl -LO "https://github.com/${{ matrix.libroadrunner_deps_owner }}/${{ matrix.libroadrunner_deps_repo }}/releases/download/${{ matrix.libroadrunner_deps_release_version }}/$binary_file_name.zip"
           unzip -q $binary_file_name.zip
           rm $binary_file_name.zip
-          echo RR_DEPENDENCIES_INSTALL_PREFIX="${RUNNER_WORKSPACE}/${{ matrix.libroadrunner_deps_name }}-binaries/$binary_file_name" >> "${GITHUB_ENV}"
+          echo RR_DEPENDENCIES_INSTALL_PREFIX="${RUNNER_WORKSPACE}/${{ matrix.libroadrunner_deps_name }}-binaries" >> "${GITHUB_ENV}"
 
       - name: Download LLVM binaries
         shell: bash
@@ -188,16 +188,10 @@ jobs:
           curl -LO "https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/${{ matrix.llvm_release_version }}/$binary_file_name.zip"
           unzip -q $binary_file_name.zip
           rm $binary_file_name.zip
-          echo LLVM_INSTALL_PREFIX="${RUNNER_WORKSPACE}/${{ matrix.llvm_name }}-binaries/$binary_file_name" >> "${GITHUB_ENV}"
+          echo LLVM_INSTALL_PREFIX="${RUNNER_WORKSPACE}/${{ matrix.llvm_name }}-binaries" >> "${GITHUB_ENV}"
 
           # make llvm-config executable
-          echo "directory is: ${RUNNER_WORKSPACE}/${{ matrix.llvm_name }}-binaries"
-          ls ${RUNNER_WORKSPACE}/${{ matrix.llvm_name }}-binaries
-          echo "directory is: ${RUNNER_WORKSPACE}/${{ matrix.llvm_name }}-binaries/$binary_file_name"
-          ls ${RUNNER_WORKSPACE}/${{ matrix.llvm_name }}-binaries/$binary_file_name
-          echo "directory is: ${RUNNER_WORKSPACE}/${{ matrix.llvm_name }}-binaries/$binary_file_name/bin"
-          ls ${RUNNER_WORKSPACE}/${{ matrix.llvm_name }}-binaries/$binary_file_name/bin
-          chmod a+x ${RUNNER_WORKSPACE}/${{ matrix.llvm_name }}-binaries/$binary_file_name/bin/llvm-config
+          chmod a+x ${RUNNER_WORKSPACE}/${{ matrix.llvm_name }}-binaries/bin/llvm-config
 
       - name: Install ccache
         shell: bash
