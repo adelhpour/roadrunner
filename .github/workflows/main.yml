@@ -86,7 +86,7 @@ jobs:
         llvm_owner: [ "adelhpour" ]
         llvm_repo: [ "llvm-13.x" ]
         llvm_name: [ "llvm-13.x" ]
-        llvm_release_version: [ "1.0.0" ]
+        llvm_release_version: [ "v1.0.0" ]
         python_version:
           - name: py39
             version: "3.9"
