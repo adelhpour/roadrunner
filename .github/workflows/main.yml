@@ -147,7 +147,7 @@ jobs:
           mkdir -p ${{ matrix.libroadrunner_deps_name }}-binaries
           cd ${{ matrix.libroadrunner_deps_name }}-binaries
           if [ "${{ matrix.platform.os_type }}" == 'windows' ]; then
-            echo "compiler_version=$(ls /"C:\Program Files\Microsoft Visual Studio/")" >> "${GITHUB_ENV}"
+            echo "compiler_version=$(ls '/C/Program Files/Microsoft Visual Studio/')" >> "${GITHUB_ENV}"
             echo "binary_file_name=${{ matrix.libroadrunner_deps_repo }}-${{ matrix.platform.os_type }}-msvc${compiler_version}-${host_architecture}-${{ matrix.platform.build_type }}.zip" >> "${GITHUB_ENV}"
             curl -L "https://github.com/${{ matrix.libroadrunner_deps_owner }}/${{ matrix.llvm_repo }}/releases/download/${{ matrix.libroadrunner_deps_release_version }}/${binary_file_name}.zip" > ${binary_file_name}.zip
             unzip -q ${binary_file_name}.zip -d ${binary_file_name}
