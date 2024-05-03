@@ -140,6 +140,11 @@ jobs:
             echo "OSX_ARCHITECTURES=$architecture" >> "${GITHUB_ENV}"
           fi
 
+      - name: Install wget on Manylinux
+        if: matrix.platform.os_type == 'manylinux'
+        run: |
+          yum install -y wget
+
       - name: Download LibRoadRunner Dependencies binaries
         shell: bash
         run: |
@@ -160,13 +165,8 @@ jobs:
             os_name_without_build_type="${os_name%%-*}"
             binary_file_name=${{ matrix.libroadrunner_deps_name }}-${os_name_without_build_type}-${host_architecture}-${{ matrix.platform.build_type }}
           fi
-          echo "Downloading https://github.com/${{ matrix.libroadrunner_deps_owner }}/${{ matrix.libroadrunner_deps_repo }}/releases/download/${{ matrix.libroadrunner_deps_release_version }}/$binary_file_name.zip"
-          curl -L "https://github.com/${{ matrix.libroadrunner_deps_owner }}/${{ matrix.libroadrunner_deps_repo }}/releases/download/${{ matrix.libroadrunner_deps_release_version }}/$binary_file_name.zip"
-          echo "downloaded"
-          ls
+          wget -L "https://github.com/${{ matrix.libroadrunner_deps_owner }}/${{ matrix.libroadrunner_deps_repo }}/releases/download/${{ matrix.libroadrunner_deps_release_version }}/$binary_file_name.zip"
           unzip -q $binary_file_name.zip
-          echo "unzipped"
-          ls
           rm $binary_file_name.zip
           echo RR_DEPENDENCIES_INSTALL_PREFIX="${RUNNER_WORKSPACE}/${{ matrix.libroadrunner_deps_name }}-binaries/$binary_file_name" >> "${GITHUB_ENV}"
 
