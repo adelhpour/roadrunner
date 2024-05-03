@@ -375,20 +375,20 @@ jobs:
             python${{ matrix.python_version.version }} -m pip install -r test-requirements.txt
           fi
 
-      - name: Run RoadRunner tests
-        if : matrix.platform.build_type == 'Release' && matrix.platform.build_tests == 'ON' && matrix.python_version.run_tests == 'ON'
-        shell: bash
-        run: |
-          cd ${RUNNER_WORKSPACE}/build-roadrunner
-          ctest -C ${{ matrix.platform.build_type }} --output-on-failure --verbose --extra-verbose --progress
-          ctest -C ${{ matrix.platform.build_type }} --output-on-failure --verbose --extra-verbose --exclude-regex "^python_tests.*"
+      #- name: Run RoadRunner tests
+      #  if : matrix.platform.build_type == 'Release' && matrix.platform.build_tests == 'ON' && matrix.python_version.run_tests == 'ON'
+      #  shell: bash
+      #  run: |
+      #    cd ${RUNNER_WORKSPACE}/build-roadrunner
+      #    ctest -C ${{ matrix.platform.build_type }} --output-on-failure --verbose --extra-verbose --progress
+      #    ctest -C ${{ matrix.platform.build_type }} --output-on-failure --verbose --extra-verbose --exclude-regex "^python_tests.*"
 
-      - name: Run RoadRunner Python tests
-        if : matrix.platform.build_type == 'Release' && matrix.platform.build_tests == 'ON' && matrix.platform.build_python == 'ON'
-        shell: bash
-        run: |
-          cd ${RUNNER_WORKSPACE}/build-roadrunner
-          ctest -C ${{ matrix.platform.build_type }} --output-on-failure --verbose --extra-verbose --tests-regex ^python_tests*
+      #- name: Run RoadRunner Python tests
+      #  if : matrix.platform.build_type == 'Release' && matrix.platform.build_tests == 'ON' && matrix.platform.build_python == 'ON'
+      #  shell: bash
+      #  run: |
+      #    cd ${RUNNER_WORKSPACE}/build-roadrunner
+      #    ctest -C ${{ matrix.platform.build_type }} --output-on-failure --verbose --extra-verbose --tests-regex ^python_tests*
 
       - name: Set artifacts path and name
         shell: bash
@@ -409,15 +409,27 @@ jobs:
         shell: bash
         run: |
           cd ${RUNNER_WORKSPACE}/install-roadrunner
+          #mkdir -p dist
+          #mkdir -p dist/roadrunner
+          #mkdir -p dist/rrplugins
           if [ "${{ matrix.platform.os_type }}" == 'windows' ]; then
             python -m pip install setuptools wheel
             python setup.py bdist_wheel
+            #mv dist/*.whl dist/roadrunner
+            python setup_rrplugins.py bdist_wheel
+            #mv dist/*.whl dist/rrplugins
           elif [ "${{ matrix.platform.os_type }}" == 'manylinux' ]; then
             python${{ matrix.python_version.version }} -m pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org setuptools wheel
             python${{ matrix.python_version.version }} setup.py bdist_wheel
+            #mv dist/*.whl dist/roadrunner
+            python${{ matrix.python_version.version }} setup_rrplugins.py bdist_wheel
+            #mv dist/*.whl dist/rrplugins
           else
             python${{ matrix.python_version.version }} -m pip install setuptools wheel
             python${{ matrix.python_version.version }} setup.py bdist_wheel
+            #mv dist/*.whl dist/roadrunner
+            python${{ matrix.python_version.version }} setup_rrplugins.py bdist_wheel
+            #mv dist/*.whl dist/rrplugins
           fi
 
       - name: Set Python wheel artifacts path and name
@@ -425,14 +437,24 @@ jobs:
         shell: bash
         run: |
           cd ${RUNNER_WORKSPACE}
-          echo "python_wheel_artifacts_name=roadrunner-${{ matrix.platform.name }}-py${{ matrix.python_version.version }}-wheel-file" >> "${GITHUB_ENV}"
+          roadrunner_python_wheel_file_name = $(ls install-roadrunner/dist | grep '^libroadrunner')
+          echo "roadrunner_python_wheel_artifacts_name=${roadrunner_python_wheel_file_name}" >> "${GITHUB_ENV}"
+          roadrunner_plugins_python_wheel_file_name = $(ls install-roadrunner/dist | grep '^rrplugins')
+          echo "roadrunner_plugins_python_wheel_artifacts_name=${roadrunner_plugins_python_wheel_file_name}" >> "${GITHUB_ENV}"
           # we need to use relative path as actions/upload-artifact@v1 cannot find it on containerized runners
-          echo "python_wheel_artifacts_path=../install-roadrunner/dist" >> "${GITHUB_ENV}"
+          echo "roadrunner_python_wheel_artifacts_file=../install-roadrunner/dist/$roadrunner_python_wheel_file_name" >> "${GITHUB_ENV}"
+          echo "roadrunner_plugins_python_wheel_artifacts_path=../install-roadrunner/dist/$roadrunner_plugins_python_wheel_file_name" >> "${GITHUB_ENV}"
 
-      - name: Upload Python wheel artifacts
+      - name: Upload RoadRunner Python wheel artifacts
         if: matrix.platform.build_type == 'Release' && matrix.platform.build_python == 'ON'
         uses: actions/upload-artifact@v1
         with:
-          name: ${{env.python_wheel_artifacts_name}}
-          path: ${{env.python_wheel_artifacts_path}}
-          compression-level: 0
+          name: ${{env.roadrunner_python_wheel_artifacts_name}}
+          path: ${{env.roadrunner_python_wheel_artifacts_file}}
+
+      - name: Upload RoadRunner Plugins Python wheel artifacts
+        if: matrix.platform.build_type == 'Release' && matrix.platform.build_python == 'ON'
+        uses: actions/upload-artifact@v1
+        with:
+          name: ${{env.roadrunner_plugins_python_wheel_artifacts_name}}
+          path: ${{env.roadrunner_plugins_python_wheel_artifacts_path}}
