@@ -147,12 +147,11 @@ jobs:
           mkdir -p ${{ matrix.libroadrunner_deps_name }}-binaries
           cd ${{ matrix.libroadrunner_deps_name }}-binaries
           if [ "${{ matrix.platform.os_type }}" == 'windows' ]; then
+            compiler_version=$(ls "C:\Program Files\Microsoft Visual Studio")
             echo "compiler_version=$(ls '/C/Program Files/Microsoft Visual Studio/')" >> "${GITHUB_ENV}"
-            echo "binary_file_name=${{ matrix.libroadrunner_deps_repo }}-${{ matrix.platform.os_type }}-msvc${compiler_version}-${host_architecture}-${{ matrix.platform.build_type }}.zip" >> "${GITHUB_ENV}"
-            curl -L "https://github.com/${{ matrix.libroadrunner_deps_owner }}/${{ matrix.llvm_repo }}/releases/download/${{ matrix.libroadrunner_deps_release_version }}/${binary_file_name}.zip" > ${binary_file_name}.zip
-            unzip -q ${binary_file_name}.zip -d ${binary_file_name}
-            rm ${binary_file_name}.zip
-            echo RR_DEPENDENCIES_INSTALL_PREFIX="${RUNNER_WORKSPACE}/${{ matrix.llvm_name }}-binaries/${binary_file_name}" >> "${GITHUB_ENV}"
+            echo "compiler version is: ${compiler_version}"
+            echo "compiler version is: $compiler_version"
+            binary_file_name=${{ matrix.libroadrunner_deps_repo }}-${{ matrix.platform.os_type }}-msvc${compiler_version}-${host_architecture}-${{ matrix.platform.build_type }}.zip
           elif [ "${{ matrix.platform.os_type }}" == 'macos' ]; then
             echo "os_version=$(sw_vers -productVersion | cut -d '.' -f 1)" >> "${GITHUB_ENV}"
             curl -L "https://github.com/${{ matrix.libroadrunner_deps_owner }}/${{ matrix.llvm_repo }}/releases/download/${{ matrix.libroadrunner_deps_release_version }}/${{ matrix.llvm_repo }}-${{ matrix.platform.os_type }}-${os_version}-${host_architecture}-${{ matrix.platform.build_type }}.zip" > ${{ matrix.llvm_name }}-${{ matrix.platform.os_type }}-${os_version}-${host_architecture}-${{ matrix.platform.build_type }}.zip
@@ -173,6 +172,10 @@ jobs:
             rm ${{ matrix.llvm_name }}-${os_name_without_build_type}-${host_architecture}-${{ matrix.platform.build_type }}.zip
             echo RR_DEPENDENCIES_INSTALL_PREFIX="${RUNNER_WORKSPACE}/${{ matrix.llvm_name }}-binaries/${{ matrix.llvm_name }}-${os_name_without_build_type}-${host_architecture}-${{ matrix.platform.build_type }}" >> "${GITHUB_ENV}"
           fi
+          curl -L "https://github.com/${{ matrix.libroadrunner_deps_owner }}/${{ matrix.llvm_repo }}/releases/download/${{ matrix.libroadrunner_deps_release_version }}/${binary_file_name}.zip" > ${binary_file_name}.zip
+          unzip -q ${binary_file_name}.zip -d ${binary_file_name}
+          rm ${binary_file_name}.zip
+          echo RR_DEPENDENCIES_INSTALL_PREFIX="${RUNNER_WORKSPACE}/${{ matrix.llvm_name }}-binaries/${binary_file_name}" >> "${GITHUB_ENV}"
 
       - name: Download LLVM binaries
         shell: bash
