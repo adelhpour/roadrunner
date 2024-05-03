@@ -161,8 +161,12 @@ jobs:
             binary_file_name=${{ matrix.llvm_name }}-${os_name_without_build_type}-${host_architecture}-${{ matrix.platform.build_type }}
           fi
           echo "Downloading $binary_file_name"
-          curl -L "https://github.com/${{ matrix.libroadrunner_deps_owner }}/${{ matrix.llvm_repo }}/releases/download/${{ matrix.libroadrunner_deps_release_version }}/$binary_file_name.zip" > $binary_file_name.zip
-          unzip -q $binary_file_name.zip -d $binary_file_name.zip
+          curl -L "https://github.com/${{ matrix.libroadrunner_deps_owner }}/${{ matrix.llvm_repo }}/releases/download/${{ matrix.libroadrunner_deps_release_version }}/$binary_file_name.zip"
+          echo "downloaded"
+          ls
+          unzip -q $binary_file_name.zip
+          echo "unzipped"
+          ls
           rm $binary_file_name.zip
           echo RR_DEPENDENCIES_INSTALL_PREFIX="${RUNNER_WORKSPACE}/${{ matrix.llvm_name }}-binaries/$binary_file_name" >> "${GITHUB_ENV}"
 
