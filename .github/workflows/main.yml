@@ -88,15 +88,15 @@ jobs:
         llvm_name: [ "llvm-13.x" ]
         llvm_release_version: [ "v1.0.0" ]
         python_version:
-          #- name: py39
-          #  version: "3.9"
-          #  run_tests: OFF
-          #- name: py310
-          #  version: "3.10"
-          #  run_tests: OFF
-          #- name: py311
-          #  version: "3.11"
-          #  run_tests: OFF
+          - name: py39
+            version: "3.9"
+            run_tests: OFF
+          - name: py310
+            version: "3.10"
+            run_tests: OFF
+          - name: py311
+            version: "3.11"
+            run_tests: OFF
           - name: py312
             version: "3.12"
             run_tests: ON
@@ -375,20 +375,20 @@ jobs:
             python${{ matrix.python_version.version }} -m pip install -r test-requirements.txt
           fi
 
-      #- name: Run RoadRunner tests
-      #  if : matrix.platform.build_type == 'Release' && matrix.platform.build_tests == 'ON' && matrix.python_version.run_tests == 'ON'
-      #  shell: bash
-      #  run: |
-      #    cd ${RUNNER_WORKSPACE}/build-roadrunner
-      #    ctest -C ${{ matrix.platform.build_type }} --output-on-failure --verbose --extra-verbose --progress
-      #    ctest -C ${{ matrix.platform.build_type }} --output-on-failure --verbose --extra-verbose --exclude-regex "^python_tests.*"
+      - name: Run RoadRunner tests
+        if : matrix.platform.build_type == 'Release' && matrix.platform.build_tests == 'ON' && matrix.python_version.run_tests == 'ON'
+        shell: bash
+        run: |
+          cd ${RUNNER_WORKSPACE}/build-roadrunner
+          ctest -C ${{ matrix.platform.build_type }} --output-on-failure --verbose --extra-verbose --progress
+          ctest -C ${{ matrix.platform.build_type }} --output-on-failure --verbose --extra-verbose --exclude-regex "^python_tests.*"
 
-      #- name: Run RoadRunner Python tests
-      #  if : matrix.platform.build_type == 'Release' && matrix.platform.build_tests == 'ON' && matrix.platform.build_python == 'ON'
-      #  shell: bash
-      #  run: |
-      #    cd ${RUNNER_WORKSPACE}/build-roadrunner
-      #    ctest -C ${{ matrix.platform.build_type }} --output-on-failure --verbose --extra-verbose --tests-regex ^python_tests*
+      - name: Run RoadRunner Python tests
+        if : matrix.platform.build_type == 'Release' && matrix.platform.build_tests == 'ON' && matrix.platform.build_python == 'ON'
+        shell: bash
+        run: |
+          cd ${RUNNER_WORKSPACE}/build-roadrunner
+          ctest -C ${{ matrix.platform.build_type }} --output-on-failure --verbose --extra-verbose --tests-regex ^python_tests*
 
       - name: Set artifacts path and name
         shell: bash
