@@ -443,7 +443,7 @@ jobs:
           cd ${RUNNER_WORKSPACE}
           roadrunner_python_wheel_file_name=$(ls install-roadrunner/dist | grep '^libroadrunner')
           echo "roadrunner_python_wheel_artifacts_name=${roadrunner_python_wheel_file_name}" >> "${GITHUB_ENV}"
-          roadrunner_plugins_python_wheel_file_name = $(ls install-roadrunner/dist | grep '^rrplugins')
+          roadrunner_plugins_python_wheel_file_name=$(ls install-roadrunner/dist | grep '^rrplugins')
           echo "roadrunner_plugins_python_wheel_artifacts_name=${roadrunner_plugins_python_wheel_file_name}" >> "${GITHUB_ENV}"
           # we need to use relative path as actions/upload-artifact@v1 cannot find it on containerized runners
           echo "roadrunner_python_wheel_artifacts_file=../install-roadrunner/dist/$roadrunner_python_wheel_file_name" >> "${GITHUB_ENV}"
