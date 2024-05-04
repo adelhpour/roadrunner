@@ -455,7 +455,6 @@ jobs:
         with:
           name: ${{env.roadrunner_python_wheel_artifacts_name}}
           path: ${{env.roadrunner_python_wheel_artifacts_file}}
-          compression-level: 0
 
       - name: Upload RoadRunner Plugins Python wheel artifacts
         if: matrix.platform.build_type == 'Release' && matrix.platform.build_python == 'ON'
@@ -463,4 +462,3 @@ jobs:
         with:
           name: ${{env.roadrunner_plugins_python_wheel_artifacts_name}}
           path: ${{env.roadrunner_plugins_python_wheel_artifacts_file}}
-          compression-level: 0
