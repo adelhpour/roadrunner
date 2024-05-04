@@ -447,7 +447,7 @@ jobs:
           echo "roadrunner_plugins_python_wheel_artifacts_name=${roadrunner_plugins_python_wheel_file_name}" >> "${GITHUB_ENV}"
           # we need to use relative path as actions/upload-artifact@v1 cannot find it on containerized runners
           echo "roadrunner_python_wheel_artifacts_file=../install-roadrunner/dist/$roadrunner_python_wheel_file_name" >> "${GITHUB_ENV}"
-          echo "roadrunner_plugins_python_wheel_artifacts_path=../install-roadrunner/dist/$roadrunner_plugins_python_wheel_file_name" >> "${GITHUB_ENV}"
+          echo "roadrunner_plugins_python_wheel_artifacts_file=../install-roadrunner/dist/$roadrunner_plugins_python_wheel_file_name" >> "${GITHUB_ENV}"
 
       - name: Upload RoadRunner Python wheel artifacts
         if: matrix.platform.build_type == 'Release' && matrix.platform.build_python == 'ON'
@@ -455,10 +455,12 @@ jobs:
         with:
           name: ${{env.roadrunner_python_wheel_artifacts_name}}
           path: ${{env.roadrunner_python_wheel_artifacts_file}}
+          compression-level: 0
 
       - name: Upload RoadRunner Plugins Python wheel artifacts
         if: matrix.platform.build_type == 'Release' && matrix.platform.build_python == 'ON'
         uses: actions/upload-artifact@v1
         with:
           name: ${{env.roadrunner_plugins_python_wheel_artifacts_name}}
-          path: ${{env.roadrunner_plugins_python_wheel_artifacts_path}}
+          path: ${{env.roadrunner_plugins_python_wheel_artifacts_file}}
+          compression-level: 0
