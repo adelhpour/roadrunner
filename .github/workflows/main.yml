@@ -409,27 +409,31 @@ jobs:
         shell: bash
         run: |
           cd ${RUNNER_WORKSPACE}/install-roadrunner
-          #mkdir -p dist
-          #mkdir -p dist/roadrunner
-          #mkdir -p dist/rrplugins
           if [ "${{ matrix.platform.os_type }}" == 'windows' ]; then
             python -m pip install setuptools wheel
             python setup.py bdist_wheel
-            #mv dist/*.whl dist/roadrunner
             python setup_rrplugins.py bdist_wheel
-            #mv dist/*.whl dist/rrplugins
           elif [ "${{ matrix.platform.os_type }}" == 'manylinux' ]; then
             python${{ matrix.python_version.version }} -m pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org setuptools wheel
             python${{ matrix.python_version.version }} setup.py bdist_wheel
-            #mv dist/*.whl dist/roadrunner
             python${{ matrix.python_version.version }} setup_rrplugins.py bdist_wheel
-            #mv dist/*.whl dist/rrplugins
           else
             python${{ matrix.python_version.version }} -m pip install setuptools wheel
             python${{ matrix.python_version.version }} setup.py bdist_wheel
-            #mv dist/*.whl dist/roadrunner
             python${{ matrix.python_version.version }} setup_rrplugins.py bdist_wheel
-            #mv dist/*.whl dist/rrplugins
+          fi
+
+      - name: Rename Python wheel artifacts
+        if: matrix.platform.build_type == 'Release' && matrix.platform.build_python == 'ON'
+        shell: bash
+        run: |
+          cd ${RUNNER_WORKSPACE}/install-roadrunner/dist
+          if [ "${{ matrix.platform.os_type }}" == 'macos' ]; then
+            mv libroadrunner*.whl $(echo libroadrunner*.whl | sed "s/universal2/${host_architecture}/g")
+            mv rrplugins*.whl $(echo rrplugins*.whl | sed "s/universal2/${host_architecture}/g")
+          elif [ "${{ matrix.platform.os_type }}" == 'manylinux' ]; then
+            mv libroadrunner*.whl $(echo libroadrunner*.whl | sed "s/linux/manylinux2014/g")
+            mv rrplugins*.whl $(echo rrplugins*.whl | sed "s/linux/manylinux2014/g")
           fi
 
       - name: Set Python wheel artifacts path and name
@@ -437,7 +441,7 @@ jobs:
         shell: bash
         run: |
           cd ${RUNNER_WORKSPACE}
-          roadrunner_python_wheel_file_name = $(ls install-roadrunner/dist | grep '^libroadrunner')
+          roadrunner_python_wheel_file_name=$(ls install-roadrunner/dist | grep '^libroadrunner')
           echo "roadrunner_python_wheel_artifacts_name=${roadrunner_python_wheel_file_name}" >> "${GITHUB_ENV}"
           roadrunner_plugins_python_wheel_file_name = $(ls install-roadrunner/dist | grep '^rrplugins')
           echo "roadrunner_plugins_python_wheel_artifacts_name=${roadrunner_plugins_python_wheel_file_name}" >> "${GITHUB_ENV}"
