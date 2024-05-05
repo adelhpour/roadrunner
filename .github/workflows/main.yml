@@ -79,24 +79,24 @@ jobs:
             build_tests: ON
             build_plugins: ON
             build_python: ON
-        libroadrunner_deps_owner: [ "adelhpour" ]
+        libroadrunner_deps_owner: [ "sys-bio" ]
         libroadrunner_deps_repo: [ "libroadrunner-deps" ]
         libroadrunner_deps_name: [ "libroadrunner-deps" ]
         libroadrunner_deps_release_version: [ "v2.1.1" ]
-        llvm_owner: [ "adelhpour" ]
+        llvm_owner: [ "sys-bio" ]
         llvm_repo: [ "llvm-13.x" ]
         llvm_name: [ "llvm-13.x" ]
-        llvm_release_version: [ "v1.0.0" ]
+        llvm_release_version: [ "v13.0" ]
         python_version:
-          - name: py39
-            version: "3.9"
-            run_tests: OFF
-          - name: py310
-            version: "3.10"
-            run_tests: OFF
-          - name: py311
-            version: "3.11"
-            run_tests: OFF
+          #- name: py39
+          #  version: "3.9"
+          #  run_tests: OFF
+          #- name: py310
+          #  version: "3.10"
+          #  run_tests: OFF
+          #- name: py311
+          #  version: "3.11"
+          #  run_tests: OFF
           - name: py312
             version: "3.12"
             run_tests: ON
