@@ -323,7 +323,6 @@ jobs:
             os_name_without_build_type="${os_name%%-*}"
             binary_file_name=${{ matrix.llvm_name }}-${os_name_without_build_type}-${host_architecture}-${{ matrix.platform.build_type }}
           fi
-          echo "Downloading https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/${{ matrix.llvm_release_version }}/$binary_file_name.zip"
           curl -LO "https://github.com/${{ matrix.llvm_owner }}/${{ matrix.llvm_repo }}/releases/download/${{ matrix.llvm_release_version }}/$binary_file_name.zip"
           unzip -q $binary_file_name.zip
           rm $binary_file_name.zip
