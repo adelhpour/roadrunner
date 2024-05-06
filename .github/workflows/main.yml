@@ -109,7 +109,7 @@ jobs:
       - name: Checkout RoadRunner
         uses: actions/checkout@v3
         with:
-          ref: v2.5.0
+          ref: v2.1.1
 
       - name: Set MSVC as the default compiler on Windows
         if: matrix.platform.os_type == 'windows'
