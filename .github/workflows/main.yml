@@ -108,8 +108,6 @@ jobs:
     steps:
       - name: Checkout RoadRunner
         uses: actions/checkout@v3
-        with:
-          ref: v2.6.0
 
       - name: Set MSVC as the default compiler on Windows
         if: matrix.platform.os_type == 'windows'
@@ -382,8 +380,7 @@ jobs:
         shell: bash
         run: |
           cd ${RUNNER_WORKSPACE}/build-roadrunner
-          ctest -C ${{ matrix.platform.build_type }} --output-on-failure --verbose --extra-verbose --progress
-          ctest -C ${{ matrix.platform.build_type }} --output-on-failure --verbose --extra-verbose --exclude-regex "^python_tests.*"
+          ctest -C ${{ matrix.platform.build_type }} --output-on-failure --verbose --extra-verbose --progress --exclude-regex "^python_tests.*"
 
       - name: Run RoadRunner Python tests
         if : matrix.platform.build_type == 'Release' && matrix.platform.build_tests == 'ON' && matrix.platform.build_python == 'ON'
