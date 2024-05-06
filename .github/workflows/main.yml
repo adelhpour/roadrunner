@@ -21,49 +21,49 @@ jobs:
             build_type: Release
             build_tests: ON
             build_plugins: ON
-            build_python: OFF
+            build_python: ON
           - name: macos-11-debug
             os_type: macos
             os_name: macos-11
             build_type: Debug
             build_tests: ON
             build_plugins: ON
-            build_python: OFF
+            build_python: ON
           - name: macos-latest-release
             os_type: macos
             os_name: macos-latest
             build_type: Release
-            build_tests: ON
+            build_tests: OFF
             build_plugins: ON
-            build_python: OFF
+            build_python: ON
           - name: macos-latest-debug
             os_type: macos
             os_name: macos-latest
             build_type: Debug
             build_tests: ON
             build_plugins: ON
-            build_python: OFF
+            build_python: ON
           - name: ubuntu-latest-release
             os_type: ubuntu
             os_name: ubuntu-latest
             build_type: Release
             build_tests: ON
             build_plugins: ON
-            build_python: OFF
+            build_python: ON
           - name: ubuntu-latest-debug
             os_type: ubuntu
             os_name: ubuntu-latest
             build_type: Debug
             build_tests: ON
             build_plugins: ON
-            build_python: OFF
+            build_python: ON
           - name: windows-latest-release
             os_type: windows
             os_name: windows-latest
             build_type: Release
             build_tests: ON
             build_plugins: ON
-            build_python: OFF
+            build_python: ON
           - name: windows-latest-debug
             os_type: windows
             os_name: windows-latest
@@ -78,7 +78,7 @@ jobs:
             build_type: Release
             build_tests: ON
             build_plugins: ON
-            build_python: OFF
+            build_python: ON
         libroadrunner_deps_owner: [ "sys-bio" ]
         libroadrunner_deps_repo: [ "libroadrunner-deps" ]
         libroadrunner_deps_name: [ "libroadrunner-deps" ]
@@ -88,18 +88,18 @@ jobs:
         llvm_name: [ "llvm-13.x" ]
         llvm_release_version: [ "v13.0" ]
         python_version:
-          #- name: py39
-          #  version: "3.9"
-          #  run_tests: OFF
-          #- name: py310
-          #  version: "3.10"
-          #  run_tests: OFF
+          - name: py39
+            version: "3.9"
+            run_tests: OFF
+          - name: py310
+            version: "3.10"
+            run_tests: OFF
           - name: py311
             version: "3.11"
+            run_tests: OFF
+          - name: py312
+            version: "3.12"
             run_tests: ON
-          #- name: py312
-          #  version: "3.12"
-          #  run_tests: ON
 
     runs-on: ${{ matrix.platform.os_name }}
     container:
@@ -108,8 +108,6 @@ jobs:
     steps:
       - name: Checkout RoadRunner
         uses: actions/checkout@v3
-        with:
-          ref: v2.3.2
 
       - name: Set MSVC as the default compiler on Windows
         if: matrix.platform.os_type == 'windows'
