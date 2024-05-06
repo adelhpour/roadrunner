@@ -362,7 +362,7 @@ jobs:
           cmake --build . --target install --config ${{ matrix.platform.build_type }}
 
       - name: Install test dependencies
-        if: matrix.platform.build_tests == 'ON'
+        if: matrix.platform.build_tests == 'ON' && matrix.platform.build_python == 'ON'
         shell: bash
         run: |
           cd ${RUNNER_WORKSPACE}/roadrunner
